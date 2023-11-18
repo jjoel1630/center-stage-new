@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.drive.opmode.vision;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -11,6 +12,7 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
 import java.util.List;
 
+@Autonomous
 public class AprilTagPipeline extends LinearOpMode {
     public static boolean USE_WEBCAM = true;
 
@@ -54,6 +56,7 @@ public class AprilTagPipeline extends LinearOpMode {
         telemetry.addLine("\nkey:\nXYZ = X (Right), Y (Forward), Z (Up) dist.");
         telemetry.addLine("PRY = Pitch, Roll & Yaw (XYZ Rotation)");
         telemetry.addLine("RBE = Range, Bearing & Elevation");
+        telemetry.update();
 
     }
 
@@ -63,18 +66,14 @@ public class AprilTagPipeline extends LinearOpMode {
 
         waitForStart();
 
-        if (opModeIsActive()) {
-            while (opModeIsActive()) {
+        while (opModeIsActive()) {
 
-                telemetryAprilTag();
+            telemetryAprilTag();
 
-                telemetry.update();
+            telemetry.update();
 
-                if (gamepad1.dpad_down) visionPortal.stopStreaming();
-                else if (gamepad1.dpad_up) visionPortal.resumeStreaming();
-
-                sleep(20);
-            }
+            visionPortal.resumeStreaming();
+//                sleep(20);
         }
 
         visionPortal.close();
