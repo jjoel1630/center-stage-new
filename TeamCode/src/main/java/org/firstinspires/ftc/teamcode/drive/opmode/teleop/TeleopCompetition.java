@@ -104,7 +104,7 @@ public class TeleopCompetition extends LinearOpMode {
 
             /* ------- INTAKE ------- */
             double power = gamepad2.right_stick_y;
-            intakeMotor.setPower(0.05 * power);
+            intakeMotor.setPower(power);
 
             /*--------OUTTAKE---------*/
             double servoRight = 1.0;
