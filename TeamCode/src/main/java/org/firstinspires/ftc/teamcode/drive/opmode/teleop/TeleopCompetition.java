@@ -36,8 +36,10 @@ public class TeleopCompetition extends LinearOpMode {
     public static double AIRPLANE_MIN = 0.0;
 
     // linearslide constants
+    // black black, red red for both
     public static int leftDir = 1;
     public static int rightDir = 1;
+    public static double axialLSCoefficient = 0.05;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -59,6 +61,11 @@ public class TeleopCompetition extends LinearOpMode {
         intakeMotor = hardwareMap.get(DcMotorEx.class, "intake");
         // reverse intake
         intakeMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        rightServo = hardwareMap.servo.get("rightServo");
+        leftServo = hardwareMap.servo.get("leftServo");
+
+        waitForStart();
 
         while (opModeIsActive()) {
             /* ------- DRIVETRAIN ------- */
@@ -109,24 +116,23 @@ public class TeleopCompetition extends LinearOpMode {
             if(gamepad2.left_trigger == 1) servoLeft = SERVO_MIN_LEFT;
             if(gamepad2.right_trigger == 1) servoLeft = SERVO_MAX_LEFT;
 
-            rightServo.setPosition(servoRight);
-            leftServo.setPosition(servoLeft);
+//            rightServo.setPosition(servoRight);
+//            leftServo.setPosition(servoLeft);
 
             // linear slide
             double axialLS = -gamepad2.left_stick_y;  // forward, back
-            double axialLSCoefficient = 1;
             axialLS = axialLS * axialLSCoefficient;
 
             rightLS.setPower(axialLS * rightDir);
-            leftLS.setPower(axialLS * leftDir);
+            leftLS.setPower(-axialLS * leftDir);
 
             /*-----------AIRPLANE LAUNCHER-----------*/
-            double airplanePos = AIRPLANE_MAX;
-
-            if(gamepad2.b) airplanePos = AIRPLANE_MAX;
-            if(gamepad2.a) airplanePos = AIRPLANE_MIN;
-
-            airplane.setPosition(airplanePos);
+//            double airplanePos = AIRPLANE_MAX;
+//
+//            if(gamepad2.b) airplanePos = AIRPLANE_MAX;
+//            if(gamepad2.a) airplanePos = AIRPLANE_MIN;
+//
+//            airplane.setPosition(airplanePos);
         }
     }
 }
