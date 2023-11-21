@@ -73,7 +73,7 @@ public class AprilTagPipeline extends LinearOpMode {
             telemetry.update();
 
             visionPortal.resumeStreaming();
-//                sleep(20);
+            sleep(20);
         }
 
         visionPortal.close();
