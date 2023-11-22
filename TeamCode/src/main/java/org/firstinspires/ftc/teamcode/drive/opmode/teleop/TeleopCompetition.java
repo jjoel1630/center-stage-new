@@ -107,14 +107,11 @@ public class TeleopCompetition extends LinearOpMode {
             intakeMotor.setPower(power);
 
             /*--------OUTTAKE---------*/
-            double servoRight = 1.0;
-            double servoLeft = 1.0;
+            double servoOuttake = 1.0;
 
             // if right bumper pressed first servo releases
-            if(gamepad2.left_bumper) servoRight = SERVO_MIN_RIGHT;
-            if(gamepad2.right_bumper) servoRight = SERVO_MAX_RIGHT;
-            if(gamepad2.left_trigger == 1) servoLeft = SERVO_MIN_LEFT;
-            if(gamepad2.right_trigger == 1) servoLeft = SERVO_MAX_LEFT;
+            if(gamepad2.left_bumper) servoOuttake = SERVO_MIN_RIGHT;
+            if(gamepad2.right_trigger == 1) servoOuttake = SERVO_MAX_LEFT;
 
 //            rightServo.setPosition(servoRight);
 //            leftServo.setPosition(servoLeft);
