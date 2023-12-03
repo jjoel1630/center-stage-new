@@ -18,14 +18,14 @@ public class BlueLeftAuto {
                 // Option: Set theme. Default = ColorSchemeRedDark()
                 .followTrajectorySequence(drive ->
                         // place pixel 1
-                        drive.trajectorySequenceBuilder(new Pose2d(-36.37, -62.20, Math.toRadians(90.00)))
-                                .splineTo(new Vector2d(-35.93, -48.84), Math.toRadians(90.00))
-                                .lineToLinearHeading(new Pose2d(-43.94, -41.57, Math.toRadians(124.11)))
-                                .lineToLinearHeading(new Pose2d(-51.66, -53.59, Math.toRadians(0.00)))
-                                .splineToConstantHeading(new Vector2d(-16.63, -60.42), Math.toRadians(0.00))
-                                .splineToConstantHeading(new Vector2d(27.46, -56.26), Math.toRadians(0.00))
-                                .splineToConstantHeading(new Vector2d(50.77, -36.67), Math.toRadians(0.00))
-                                .build()
+//                        drive.trajectorySequenceBuilder(new Pose2d(-36.37, -62.20, Math.toRadians(90.00)))
+//                                .splineTo(new Vector2d(-35.93, -48.84), Math.toRadians(90.00))
+//                                .lineToLinearHeading(new Pose2d(-43.94, -41.57, Math.toRadians(124.11)))
+//                                .lineToLinearHeading(new Pose2d(-51.66, -53.59, Math.toRadians(0.00)))
+//                                .splineToConstantHeading(new Vector2d(-16.63, -60.42), Math.toRadians(0.00))
+//                                .splineToConstantHeading(new Vector2d(27.46, -56.26), Math.toRadians(0.00))
+//                                .splineToConstantHeading(new Vector2d(50.77, -36.67), Math.toRadians(0.00))
+//                                .build()
                         // place pixel 2
 //                        drive.trajectorySequenceBuilder(new Pose2d(-36.37, -62.20, Math.toRadians(90.00)))
 //                                .splineTo(new Vector2d(-35.93, -48.84), Math.toRadians(90.00))
@@ -44,6 +44,14 @@ public class BlueLeftAuto {
 //                                .splineToConstantHeading(new Vector2d(27.46, -56.26), Math.toRadians(0.00))
 //                                .splineToConstantHeading(new Vector2d(50.77, -36.67), Math.toRadians(0.00))
 //                                .build()
+                        // updated place pixel 1
+                        drive.trajectorySequenceBuilder(new Pose2d(-36.37, -62.20, Math.toRadians(90.00)))
+                                .splineTo(new Vector2d(-36.37, -49.44), Math.toRadians(90.00))
+                                .lineToLinearHeading(new Pose2d(-44.39, -40.38, Math.toRadians(124.11)))
+                                .lineToLinearHeading(new Pose2d(-54.19, -60.57, Math.toRadians(0.00)))
+                                .splineTo(new Vector2d(12.17, -60.57), Math.toRadians(0.00))
+                                .splineTo(new Vector2d(50.77, -36.67), Math.toRadians(0.00))
+                                .build()
                 );
 
         // Set field image
