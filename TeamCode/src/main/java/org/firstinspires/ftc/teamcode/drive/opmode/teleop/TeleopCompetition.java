@@ -17,7 +17,8 @@ public class TeleopCompetition extends LinearOpMode {
     private DcMotorEx rearLeft = null;
     private DcMotorEx rearRight = null;
 
-    private DcMotorEx intakeMotor = null; //setting intake motor variable
+    private DcMotorEx intakeMotor1 = null; //setting intake motor variable
+    private DcMotorEx intakeMotor2 = null; //setting 2nd intake motor variable
     private Servo rightServo, leftServo;
 
     private Servo airplane;
@@ -39,7 +40,7 @@ public class TeleopCompetition extends LinearOpMode {
     // black black, red red for both
     public static int leftDir = 1;
     public static int rightDir = 1;
-    public static double axialLSCoefficient = 0.05;
+    public static double axialLSCoefficient = 1;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -56,11 +57,16 @@ public class TeleopCompetition extends LinearOpMode {
         // linearSlide
         leftLS = hardwareMap.get(DcMotorEx.class, "linearSlideLeft");
         rightLS = hardwareMap.get(DcMotorEx.class, "linearSlideRight");
+        //reverse ls motors
+        leftLS.setDirection(DcMotorSimple.Direction.REVERSE);
+        rightLS.setDirection(DcMotorSimple.Direction.REVERSE);
 
         // intake
-        intakeMotor = hardwareMap.get(DcMotorEx.class, "intake");
+        intakeMotor1 = hardwareMap.get(DcMotorEx.class, "intake1");
+        intakeMotor2 = hardwareMap.get(DcMotorEx.class, "intake2");
         // reverse intake
-        intakeMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        intakeMotor1.setDirection(DcMotorSimple.Direction.REVERSE);
+        intakeMotor2.setDirection(DcMotorSimple.Direction.REVERSE);
 
         rightServo = hardwareMap.servo.get("rightServo");
         leftServo = hardwareMap.servo.get("leftServo");
@@ -104,7 +110,8 @@ public class TeleopCompetition extends LinearOpMode {
 
             /* ------- INTAKE ------- */
             double power = gamepad2.right_stick_y;
-            intakeMotor.setPower(power);
+            intakeMotor1.setPower(power);
+            intakeMotor2.setPower(power);
 
             /*--------OUTTAKE---------*/
             double servoOuttake = 1.0;
