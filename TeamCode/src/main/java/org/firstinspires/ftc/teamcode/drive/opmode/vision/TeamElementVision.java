@@ -16,7 +16,7 @@ public class TeamElementVision extends LinearOpMode {
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         OpenCvCamera camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
 
-        TeamElementPipeline elementPipe = new TeamElementPipeline();
+        CustomElementPipeline elementPipe = new CustomElementPipeline();
 
         camera.setPipeline(elementPipe);
         camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
