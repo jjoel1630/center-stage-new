@@ -1,15 +1,19 @@
 package org.firstinspires.ftc.teamcode.drive.opmode.vision;
 
+import com.acmerobotics.dashboard.config.Config;
+
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
+import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
 import org.openftc.easyopencv.OpenCvPipeline;
 
 import java.util.Arrays;
 import java.util.List;
 
+@Config
 public class CustomElementPipeline extends OpenCvPipeline {
 
     int CAMERA_WIDTH = 640/*800*/;
@@ -24,7 +28,16 @@ public class CustomElementPipeline extends OpenCvPipeline {
 
     static int color_zone = 1;
 
-    int toggleShow = 1;
+    public static int toggleShow = 1;
+    public static boolean blue = true;
+    public static int sizex = 31;
+    public static int sizey = 31;
+    public static int sigma = 9;
+    public static int lowR = 150, lowG = 60, lowB = 60;
+    public static int highR = 180, highG = 255, highB = 255;
+    public static int blowR = 110, blowG = 50, blowB = 50;
+    public static int bhighR = 130, bhighG = 255, bhighB = 255;
+    public static boolean gblur = true;
 
     //public SplitAveragePipeline(/*Telemetry telemetry, */int iCAMERA_HEIGHT, int iCAMERA_WIDTH){
     //    //this.telemetry = telemetry;
@@ -32,16 +45,29 @@ public class CustomElementPipeline extends OpenCvPipeline {
     //    this.CAMERA_WIDTH = iCAMERA_WIDTH;
     //}
 
+    public Scalar lowHSV = blue ? new Scalar(blowR, blowG, blowB) : new Scalar(lowR, lowG, lowB);
+    public Scalar highHSV = blue ? new Scalar(bhighB, bhighG, bhighR) : new Scalar(highR, highG, highB);
+
     @Override
     public Mat processFrame(Mat input) {
 
         //Creating duplicate of original frame with no edits
         Mat original = input.clone();
 
-        Imgproc.cvtColor(input, input, Imgproc.COLOR_RGB2HSV);
-        Scalar lowHSV = new Scalar(0,68, 57);
-        Scalar highHSV = new Scalar(30, 255, 255);
-        Core.inRange(input, lowHSV, highHSV, input);
+        if(gblur) {
+            Imgproc.GaussianBlur(input, input, new Size(sizex, sizey), sigma);
+            Mat originalBlur = input.clone();
+            Imgproc.cvtColor(input, input, Imgproc.COLOR_RGB2HSV);
+            Mat mask = input.clone();
+            Core.inRange(input, lowHSV, highHSV, mask);
+            Core.bitwise_and(originalBlur, originalBlur, input, mask);
+        } else {
+            Imgproc.cvtColor(input, input, Imgproc.COLOR_RGB2HSV);
+            Mat mask = input.clone();
+            Core.inRange(input, lowHSV, highHSV, mask);
+            Core.bitwise_and(original, original, input, mask);
+        }
+
 
         //input = input.submat(new Rect(0));
 
@@ -74,7 +100,7 @@ public class CustomElementPipeline extends OpenCvPipeline {
         }else if (max_distance == distance2){
             //telemetry.addData("Zone 2 Has Element", distance2);
             color_zone = 2;
-        }else{
+        }else {
             //telemetry.addData("Zone 2 Has Element", distance3);
             color_zone = 3;
         }
