@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.drive.opmode.vision;
 
+import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
@@ -15,8 +16,9 @@ public class TeamElementVision extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         OpenCvCamera camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
+        FtcDashboard.getInstance().startCameraStream(camera, 0);
 
-        TeamElementPipeline elementPipe = new TeamElementPipeline();
+        CustomElementPipeline elementPipe = new CustomElementPipeline();
 
         camera.setPipeline(elementPipe);
         camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
