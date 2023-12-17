@@ -10,7 +10,7 @@ import com.noahbres.meepmeep.roadrunner.entity.RoadRunnerBotEntity;
         public static void main(String[] args) {
             // Declare a MeepMeep instance
             // With a field size of 800 pixels
-            MeepMeep meepMeep = new MeepMeep(800);
+            MeepMeep meepMeep = new MeepMeep(600);
 
             RoadRunnerBotEntity myBot = new DefaultBotBuilder(meepMeep)
                     // Required: Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
@@ -19,30 +19,26 @@ import com.noahbres.meepmeep.roadrunner.entity.RoadRunnerBotEntity;
                     .followTrajectorySequence(drive ->
 
                             // place pixel 1
-                               drive.trajectorySequenceBuilder(new Pose2d(-36.74, -60.32, Math.toRadians(90.00)))
-                                     .splineTo(new Vector2d(-47.36, -34.62), Math.toRadians(112.45))
-                                     .build()
-/*
-                             //place pixel 2
-                               drive.trajectorySequenceBuilder(new Pose2d(-36.18, -59.77, Math.toRadians(90.00)))
-                                     .splineTo(new Vector2d(-41.20, -24.84), Math.toRadians(98.16))
-                                     .build()
+                                /*drive.trajectorySequenceBuilder(new Pose2d(-38.44, -63.29, Math.toRadians(90.00)))
+                                        .splineTo(new Vector2d(-47.36, -34.41), Math.toRadians(91.47))
+                                        .build()
+                            //place pixel 2
+                                    drive.trajectorySequenceBuilder(new Pose2d(-38.65, -62.65, Math.toRadians(90.00)))
+                                            .splineTo(new Vector2d(-52.67, -30.16), Math.toRadians(96.57))
+                                            .build() */
 
 
-                            //place pixel 3
-                               drive.trajectorySequenceBuilder(new Pose2d(-36.63, -61.39, Math.toRadians(90.00)))
-                                    .splineTo(new Vector2d(-24.84, -35.45), Math.toRadians(65.56))
-                                    .build() */
+                                 //place pixel 3
+                                    drive.trajectorySequenceBuilder(new Pose2d(-38.44, -63.08, Math.toRadians(90.00)))
+                                            .build()
 
+//
+                );
 
-
-                    );
-
-
-// Set field image
+            // Set field image
             meepMeep.setBackground(MeepMeep.Background.FIELD_CENTERSTAGE_OFFICIAL)
                     .setDarkMode(true)
-// Background opacity from 0-1
+                    // Background opacity from 0-1
                     .setBackgroundAlpha(0.95f)
                     .addEntity(myBot)
                     .start();
