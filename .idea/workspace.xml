@@ -5,18 +5,18 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5ac5ecb0-9f45-42b2-867a-bc1d4d0d808e" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/MeepMeepPathing/src/main/java/com/example/meepmeeppathing/BlueLeft/BlueLeftAuto2.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/MeepMeepPathing/src/main/java/com/example/meepmeeppathing/RedLeft/RedLeftAuto2.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/7.4.2/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.4.2/executionHistory/executionHistory.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/7.4.2/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.4.2/executionHistory/executionHistory.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/7.4.2/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.4.2/fileHashes/fileHashes.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/7.4.2/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.4.2/fileHashes/fileHashes.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/7.4.2/fileHashes/resourceHashesCache.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.4.2/fileHashes/resourceHashesCache.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/file-system.probe" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/file-system.probe" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MeepMeepPathing/src/main/java/com/example/meepmeeppathing/BlueLeft/BlueLeftAuto.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/MeepMeepPathing/src/main/java/com/example/meepmeeppathing/RightLeft/RedLeftAutoExact.java" beforeDir="false" afterPath="$PROJECT_DIR$/MeepMeepPathing/src/main/java/com/example/meepmeeppathing/RedLeft/RedLeftAutoExact.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MeepMeepPathing/src/main/java/com/example/meepmeeppathing/RightLeft/RedLeftAuto.java" beforeDir="false" afterPath="$PROJECT_DIR$/MeepMeepPathing/src/main/java/com/example/meepmeeppathing/RedLeft/RedLeftAuto1.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MeepMeepPathing/src/main/java/com/example/meepmeeppathing/RightLeft/RedLeftAutoExact.java" beforeDir="false" afterPath="$PROJECT_DIR$/MeepMeepPathing/src/main/java/com/example/meepmeeppathing/RedLeft/RedLeftAutoExact1.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MeepMeepPathing/src/main/java/com/example/meepmeeppathing/RightRed/RedRightAuto.java" beforeDir="false" afterPath="$PROJECT_DIR$/MeepMeepPathing/src/main/java/com/example/meepmeeppathing/RedRight/RedRightAuto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MeepMeepPathing/src/main/java/com/example/meepmeeppathing/RightRed/RedRightAutoExact.java" beforeDir="false" afterPath="$PROJECT_DIR$/MeepMeepPathing/src/main/java/com/example/meepmeeppathing/RedRight/RedRightAutoExact.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -64,24 +64,10 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.cidr.known.project.marker&quot;: &quot;true&quot;,
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;cidr.known.project.marker&quot;: &quot;true&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.17&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;
-  }
-}</component>
-  <component name="RecentsManager">
-    <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
-      <recent name="com.example.meepmeeppathing.BlueLeft" />
-    </key>
+  <component name="PropertiesComponent">
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
   </component>
-  <component name="RunManager" selected="Application.BlueLeftAuto2">
+  <component name="RunManager" selected="Application.RedLeftAuto2">
     <configuration name="TeamCode" type="AndroidRunConfigurationType" factoryName="Android App" activateToolWindowBeforeRun="false">
       <module name="center-stage-new.TeamCode.main" />
       <option name="DEPLOY" value="true" />
@@ -131,6 +117,7 @@
         <option name="STARTUP_CPU_PROFILING_CONFIGURATION_NAME" value="Java/Kotlin Method Sample (legacy)" />
         <option name="STARTUP_NATIVE_MEMORY_PROFILING_ENABLED" value="false" />
         <option name="NATIVE_MEMORY_SAMPLE_RATE_BYTES" value="2048" />
+        <option name="PROFILING_MODE" value="NOT_SET" />
       </Profilers>
       <option name="DEEP_LINK" value="" />
       <option name="ACTIVITY_CLASS" value="" />
@@ -141,22 +128,8 @@
       </method>
     </configuration>
     <configuration name="BlueLeft" type="Application" factoryName="Application">
-      <option name="MAIN_CLASS_NAME" value="com.example.meepmeeppathing.BlueLeft.BlueLeftAuto1" />
+      <option name="MAIN_CLASS_NAME" value="com.example.meepmeeppathing.BlueLeft.BlueLeftAuto" />
       <module name="center-stage-new.MeepMeepPathing.main" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="BlueLeftAuto1" type="Application" factoryName="Application">
-      <option name="MAIN_CLASS_NAME" value="com.example.meepmeeppathing.BlueLeft.BlueLeftAuto1" />
-      <module name="center-stage-new.MeepMeepPathing.test" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="BlueLeftAuto2" type="Application" factoryName="Application">
-      <option name="MAIN_CLASS_NAME" value="com.example.meepmeeppathing.BlueLeft.BlueLeftAuto2" />
-      <module name="center-stage-new.MeepMeepPathing.test" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -168,12 +141,19 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="RedLeftAutoExact" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="com.example.meepmeeppathing.RightLeft.RedLeftAutoExact" />
+    <configuration name="RedLeftAuto2" type="Application" factoryName="Application">
+      <option name="MAIN_CLASS_NAME" value="com.example.meepmeeppathing.RedLeft.RedLeftAuto2" />
+      <module name="center-stage-new.MeepMeepPathing.test" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="RedLeftAutoExact1" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.example.meepmeeppathing.RedLeft.RedLeftAutoExact1" />
       <module name="center-stage-new.MeepMeepPathing.main" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="com.example.meepmeeppathing.RightRed.*" />
+          <option name="PATTERN" value="com.example.meepmeeppathing.RedRight.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -184,10 +164,9 @@
     <list>
       <item itemvalue="Android App.TeamCode" />
       <item itemvalue="Application.BlueLeftAutoExact" />
-      <item itemvalue="Application.BlueLeftAuto1" />
-      <item itemvalue="Application.BlueLeftAuto2" />
       <item itemvalue="Application.BlueLeft" />
-      <item itemvalue="Application.RedLeftAutoExact" />
+      <item itemvalue="Application.RedLeftAuto2" />
+      <item itemvalue="Application.RedLeftAutoExact1" />
     </list>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
