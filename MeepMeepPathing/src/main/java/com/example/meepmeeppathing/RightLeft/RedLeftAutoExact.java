@@ -1,4 +1,4 @@
-package com.example.meepmeeppathing;
+package com.example.meepmeeppathing.RightLeft;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
@@ -21,17 +21,19 @@ import com.noahbres.meepmeep.roadrunner.entity.RoadRunnerBotEntity;
                             // place pixel 1
                                drive.trajectorySequenceBuilder(new Pose2d(-36.74, -60.32, Math.toRadians(90.00)))
                                      .splineTo(new Vector2d(-47.36, -34.62), Math.toRadians(112.45))
-                                     .build
-
+                                     .build()
+/*
                              //place pixel 2
-                               drive.trajectorySequenceBuilder(new Pose2d(-36.32, -60.96, Math.toRadians(90.00)))
-                                    .splineTo(new Vector2d(-40.14, -24.85), Math.toRadians(96.04))
-                                    .build()
+                               drive.trajectorySequenceBuilder(new Pose2d(-36.18, -59.77, Math.toRadians(90.00)))
+                                     .splineTo(new Vector2d(-41.20, -24.84), Math.toRadians(98.16))
+                                     .build()
+
 
                             //place pixel 3
-                               drive.trajectorySequenceBuilder(new Pose2d(-37.59, -59.68, Math.toRadians(90.00)))
-                                    .splineTo(new Vector2d(-24.85, -34.19), Math.toRadians(63.43))
-                                    .build()
+                               drive.trajectorySequenceBuilder(new Pose2d(-36.63, -61.39, Math.toRadians(90.00)))
+                                    .splineTo(new Vector2d(-24.84, -35.45), Math.toRadians(65.56))
+                                    .build() */
+
 
 
                     );

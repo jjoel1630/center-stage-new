@@ -1,4 +1,4 @@
-package com.example.meepmeeppathing;
+package com.example.meepmeeppathing.RightRed;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
@@ -19,20 +19,22 @@ import com.noahbres.meepmeep.roadrunner.entity.RoadRunnerBotEntity;
                     .followTrajectorySequence(drive ->
 
                             //place pixel 1
-                            drive.trajectorySequenceBuilder(new Pose2d(10.83, -60.32, Math.toRadians(90.00)))
-                                    .splineTo(new Vector2d(0.42, -34.41), Math.toRadians(111.88))
-                                    .build()
-
-                            //place pixel 2
-                            drive.trajectorySequenceBuilder(new Pose2d(11.04, -60.96, Math.toRadians(90.00)))
-                                    .splineTo(new Vector2d(7.43, -24.85), Math.toRadians(95.71))
+                            drive.trajectorySequenceBuilder(new Pose2d(11.42, -61.68, Math.toRadians(90.00)))
+                                    .splineTo(new Vector2d(0.81, -35.45), Math.toRadians(112.02))
                                     .build()
 
 
-                            //place pixel 3
-                            drive.trajectorySequenceBuilder(new Pose2d(11.47, -60.74, Math.toRadians(90.00)))
-                                    .splineTo(new Vector2d(23.15, -34.62), Math.toRadians(65.91))
-                                    .build()
+//                            //place pixel 2
+//                            drive.trajectorySequenceBuilder(new Pose2d(11.42, -61.68, Math.toRadians(90.00)))
+//                    .splineTo(new Vector2d(0.81, -35.45), Math.toRadians(112.02))
+//                    .build()
+//
+//
+//                        //place pixel 3
+//                             drive.trajectorySequenceBuilder(new Pose2d(11.42, -61.68, Math.toRadians(90.00)))
+//                    .splineTo(new Vector2d(0.81, -35.45), Math.toRadians(112.02))
+//                    .build()
+
 
         );
 
