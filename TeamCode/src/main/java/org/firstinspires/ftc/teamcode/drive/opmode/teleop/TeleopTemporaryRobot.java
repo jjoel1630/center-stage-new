@@ -26,9 +26,11 @@ public class TeleopTemporaryRobot extends LinearOpMode {
 
     // outtake constants
     public static double CLAW_MAX = 1.0;
-    public static double CLAW_MIN = 0.0;
+    public static double CLAW_MIN = 0.5;
     public static double ARM_MAX = 1.0;
     public static double ARM_MIN = 0.0;
+    double clawPos = CLAW_MAX;
+    double armPos = ARM_MAX;
 
     // airplane constants
     public static double AIRPLANE_MAX = 1.0;
@@ -38,6 +40,7 @@ public class TeleopTemporaryRobot extends LinearOpMode {
     // black black, red red for both
     public static double slideDir = 1;
     public static double slideCoeff = 1;
+    public static int slidePositionMax = 4000;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -53,9 +56,13 @@ public class TeleopTemporaryRobot extends LinearOpMode {
 
         // linearSlide
         linearSlide = hardwareMap.get(DcMotorEx.class, "linearSlide");
+        linearSlide.setDirection(DcMotorSimple.Direction.REVERSE);
+        linearSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        linearSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         arm = hardwareMap.servo.get("arm");
         claw = hardwareMap.servo.get("claw");
+        airplane = hardwareMap.servo.get("airplane");
 
         waitForStart();
 
@@ -95,9 +102,6 @@ public class TeleopTemporaryRobot extends LinearOpMode {
             rearRight.setPower(rightBackPower);
 
             /*--------OUTTAKE---------*/
-            double clawPos = 1.0;
-            double armPos = 1.0;
-
             // if right bumper pressed first servo releases
             if(gamepad2.left_bumper) clawPos = CLAW_MAX;
             if(gamepad2.right_bumper) clawPos = CLAW_MIN;
@@ -109,7 +113,12 @@ public class TeleopTemporaryRobot extends LinearOpMode {
 
             // linear slide
             double axialLS = -gamepad2.left_stick_y;  // forward, back
-            axialLS = axialLS * slideCoeff;
+
+            if(Math.abs(linearSlide.getCurrentPosition()) >= Math.abs(slidePositionMax) && !gamepad2.a) {
+                axialLS = 0;
+            } else {
+                axialLS = axialLS * slideCoeff;
+            }
 
             linearSlide.setPower(axialLS * slideDir);
 
@@ -120,6 +129,9 @@ public class TeleopTemporaryRobot extends LinearOpMode {
             if(gamepad2.a) airplanePos = AIRPLANE_MIN;
 
             airplane.setPosition(airplanePos);
+
+            telemetry.addData("slide position", linearSlide.getCurrentPosition());
+            telemetry.update();
         }
     }
 }
