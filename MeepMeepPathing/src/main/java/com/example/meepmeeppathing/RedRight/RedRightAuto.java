@@ -1,4 +1,4 @@
-package com.example.meepmeeppathing.RightRed;
+package com.example.meepmeeppathing.RedRight;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
