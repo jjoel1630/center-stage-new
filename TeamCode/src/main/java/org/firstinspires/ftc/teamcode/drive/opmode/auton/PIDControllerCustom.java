@@ -24,6 +24,12 @@ public class PIDControllerCustom {
         timer.reset();
     }
 
+    public void setPID(double Kp, double Ki, double Kd) {
+        this.Kp = Kp;
+        this.Ki = Ki;
+        this.Kd = Kd;
+    }
+
     /**
      * update the PID controller output
      * @param target where we would like to be, also called the reference
