@@ -27,7 +27,7 @@ public class TeleopTemporaryRobot extends LinearOpMode {
     // outtake constants
     public static double CLAW_MAX = 1.0;
     public static double CLAW_MIN = 0.5;
-    public static double ARM_MAX = 1.0;
+    public static double ARM_MAX = 0.58;
     public static double ARM_MIN = 0.0;
     double clawPos = CLAW_MAX;
     double armPos = ARM_MAX;
@@ -40,7 +40,8 @@ public class TeleopTemporaryRobot extends LinearOpMode {
     // black black, red red for both
     public static double slideDir = 1;
     public static double slideCoeff = 1;
-    public static int slidePositionMax = 4000;
+    public static double linearF = 0.05;
+    public static int slidePositionMax = 3000;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -118,6 +119,10 @@ public class TeleopTemporaryRobot extends LinearOpMode {
                 axialLS = 0;
             } else {
                 axialLS = axialLS * slideCoeff;
+            }
+
+            if(linearSlide.getCurrentPosition() >= 500) {
+                axialLS += linearF;
             }
 
             linearSlide.setPower(axialLS * slideDir);
