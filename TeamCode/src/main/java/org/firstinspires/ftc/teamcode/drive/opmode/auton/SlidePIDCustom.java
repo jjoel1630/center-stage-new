@@ -19,13 +19,11 @@ public class SlidePIDCustom extends LinearOpMode {
     public ElapsedTime timer = new ElapsedTime();
 
     public static double p = 0.1, i = 0, d = 0.001, f = 0.3; // long belt
-//    public static double p = 0.045, i = 0, d = 0.001, f = 0.3; // short belt
     public PIDControllerCustom pidController = new PIDControllerCustom(p, i, d);
 
     public static double target = 500;
-    public static double divisor = 500;
-    public static double powerMultiplier = 0.15; // short belt = 1;
-    public static double thresholdPower = -1.0;
+    public static double divisor = 1;
+    public static double powerMultiplier = 1; // short belt = 1;
     public static boolean reversed = true;
 
     public DcMotorEx slide;
@@ -48,9 +46,7 @@ public class SlidePIDCustom extends LinearOpMode {
 
             double curPos = slide.getCurrentPosition();
             double pid = pidController.update(target / divisor, curPos / divisor);
-            if(thresholdPower != -1) {
-                pid = Math.abs(pid) <= thresholdPower ? 0 : pid;
-            }
+
             if(f >= 0) {
                 pid = pid + f;
             }

@@ -27,10 +27,11 @@ public class TeleopTemporaryRobot extends LinearOpMode {
     // outtake constants
     public static double CLAW_MAX = 1.0;
     public static double CLAW_MIN = 0.5;
+    public static double ARM_GROUND = 0.2;
     public static double ARM_MAX = 0.58;
     public static double ARM_MIN = 0.0;
-    double clawPos = CLAW_MAX;
-    double armPos = ARM_MAX;
+    double clawPos = CLAW_MIN;
+    double armPos = ARM_MIN;
 
     // airplane constants
     public static double AIRPLANE_MAX = 1.0;
@@ -41,6 +42,8 @@ public class TeleopTemporaryRobot extends LinearOpMode {
     public static double slideDir = 1;
     public static double slideCoeff = 1;
     public static double linearF = 0.05;
+    public static double linearFThreshold = 500;
+    public static double armPreventionThreshold = 500;
     public static int slidePositionMax = 3000;
 
     @Override
@@ -103,11 +106,16 @@ public class TeleopTemporaryRobot extends LinearOpMode {
             rearRight.setPower(rightBackPower);
 
             /*--------OUTTAKE---------*/
+            // hot buttons
+            // pick up pixel + raise
+            // pick drop pixel + reduce
+
             // if right bumper pressed first servo releases
             if(gamepad2.left_bumper) clawPos = CLAW_MAX;
             if(gamepad2.right_bumper) clawPos = CLAW_MIN;
             if(gamepad2.left_trigger == 1) armPos = ARM_MAX;
-            if(gamepad2.right_trigger == 1) armPos = ARM_MIN;
+            if(gamepad2.right_trigger == 1 && linearSlide.getCurrentPosition() >= armPreventionThreshold) armPos = ARM_MIN;
+            if(gamepad2.dpad_up) armPos = ARM_GROUND;
 
             claw.setPosition(clawPos);
             arm.setPosition(armPos);
@@ -117,11 +125,13 @@ public class TeleopTemporaryRobot extends LinearOpMode {
 
             if(Math.abs(linearSlide.getCurrentPosition()) >= Math.abs(slidePositionMax) && !gamepad2.a) {
                 axialLS = 0;
+            } else if(linearSlide.getCurrentPosition() >= armPreventionThreshold && armPos == ARM_MAX) {
+                axialLS = 0;
             } else {
                 axialLS = axialLS * slideCoeff;
             }
 
-            if(linearSlide.getCurrentPosition() >= 500) {
+            if(linearSlide.getCurrentPosition() >= linearFThreshold) {
                 axialLS += linearF;
             }
 
