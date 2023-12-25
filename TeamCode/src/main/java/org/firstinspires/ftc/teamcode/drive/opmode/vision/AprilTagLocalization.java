@@ -1,7 +1,9 @@
 package org.firstinspires.ftc.teamcode.drive.opmode.vision;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
@@ -14,8 +16,12 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
 import java.util.List;
 
+@Config
+@Autonomous
 public class AprilTagLocalization extends LinearOpMode {
     public static boolean USE_WEBCAM = true;
+
+    public static double gap = 4, multiplier = -1, initialHeading = 0;
 
     private AprilTagProcessor aprilTag;
     private VisionPortal visionPortal;
@@ -28,7 +34,7 @@ public class AprilTagLocalization extends LinearOpMode {
         // Create the vision portal the easy way.
         if (USE_WEBCAM) {
             visionPortal = VisionPortal.easyCreateWithDefaults(
-                    hardwareMap.get(WebcamName.class, "BlizzardNewCam"), aprilTag);
+                    hardwareMap.get(WebcamName.class, "Webcam 1"), aprilTag);
         } else {
             visionPortal = VisionPortal.easyCreateWithDefaults(
                     BuiltinCameraDirection.BACK, aprilTag);
@@ -54,12 +60,12 @@ public class AprilTagLocalization extends LinearOpMode {
 //        }   // end for() loop
 
         // Add "key" information to telemetry
-        telemetry.addLine("\nkey:\nXYZ = X (Right), Y (Forward), Z (Up) dist.");
-        telemetry.addLine("PRY = Pitch, Roll & Yaw (XYZ Rotation)");
-        telemetry.addLine("RBE = Range, Bearing & Elevation");
-        telemetry.update();
+//        telemetry.addLine("\nkey:\nXYZ = X (Right), Y (Forward), Z (Up) dist.");
+//        telemetry.addLine("PRY = Pitch, Roll & Yaw (XYZ Rotation)");
+//        telemetry.addLine("RBE = Range, Bearing & Elevation");
+//        telemetry.update();
 
-        return currentDetections.get(0);
+        return currentDetections.size() >= 1 ? currentDetections.get(0) : null;
     }
 
     @Override
@@ -68,33 +74,28 @@ public class AprilTagLocalization extends LinearOpMode {
 
         initAprilTag();
 
-        Pose2d start = new Pose2d(0,0, Math.toRadians(90.00));
+        Pose2d start = new Pose2d(0,0, Math.toRadians(initialHeading));
         drive.setPoseEstimate(start);
-
-        TrajectorySequence traj1 = drive.trajectorySequenceBuilder(start)
-                .lineToConstantHeading(new Vector2d(-36.22, -36.15))
-                .build();
 
         waitForStart();
 
         while(opModeIsActive()) {
-            drive.followTrajectorySequence(traj1);
-
             AprilTagDetection tag = telemetryAprilTag();
-
-            telemetry.update();
 
             visionPortal.resumeStreaming();
             sleep(20);
 
             drive.update();
-            Pose2d currentPosition = drive.getPoseEstimate();
 
-            TrajectorySequence tagPose = drive.trajectorySequenceBuilder(currentPosition)
-                    .lineToConstantHeading(new Vector2d(tag.ftcPose.x, tag.ftcPose.y))
-                    .build();
+            if(tag != null) {
+                TrajectorySequence tagPose = drive.trajectorySequenceBuilder(start)
+                        .lineToConstantHeading(new Vector2d(multiplier * (tag.ftcPose.y-gap), 0))
+                        .build();
 
-            drive.followTrajectorySequence(tagPose);
+                drive.followTrajectorySequence(tagPose);
+                telemetry.addLine("pose " + tag.ftcPose.y);
+                telemetry.update();
+            }
         }
     }
 }
