@@ -7,6 +7,9 @@ import com.noahbres.meepmeep.roadrunner.DefaultBotBuilder;
 import com.noahbres.meepmeep.roadrunner.entity.RoadRunnerBotEntity;
 
 public class BlueLeftAuto {
+    public static double spline1x = 30, spline1y = -30, spline1heading = 180, spline1splineheading = 90;
+    public static double line1x = 40, line1y = -30;
+
     public static void main(String[] args) {
         // Declare a MeepMeep instance
         // With a field size of 800 pixels
@@ -18,15 +21,20 @@ public class BlueLeftAuto {
                 // Option: Set theme. Default = ColorSchemeRedDark()
                 .followTrajectorySequence(drive ->
                         // place pixel 1
-                        drive.trajectorySequenceBuilder(new Pose2d(-36.37, -62.20, Math.toRadians(90.00)))
-                                .splineTo(new Vector2d(-35.93, -48.84), Math.toRadians(90.00))
-                                .lineToLinearHeading(new Pose2d(-43.94, -41.57, Math.toRadians(124.11)))
-                                .lineToLinearHeading(new Pose2d(-51.66, -53.59, Math.toRadians(0.00)))
-                                .splineToConstantHeading(new Vector2d(-16.63, -60.42), Math.toRadians(0.00))
-                                .splineToConstantHeading(new Vector2d(27.46, -56.26), Math.toRadians(0.00))
-                                .splineToConstantHeading(new Vector2d(50.77, -36.67), Math.toRadians(0.00))
-                                .build()
-                        // place pixel 2
+//                        drive.trajectorySequenceBuilder(new Pose2d(-36.37, -62.20, Math.toRadians(90.00)))
+//                                .splineTo(new Vector2d(-35.93, -48.84), Math.toRadians(90.00))
+//                                .lineToLinearHeading(new Pose2d(-43.94, -41.57, Math.toRadians(124.11)))
+//                                .lineToLinearHeading(new Pose2d(-51.66, -53.59, Math.toRadians(0.00)))
+//                                .splineToConstantHeading(new Vector2d(-16.63, -60.42), Math.toRadians(0.00))
+//                                .splineToConstantHeading(new Vector2d(27.46, -56.26), Math.toRadians(0.00))
+//                                .splineToConstantHeading(new Vector2d(50.77, -36.67), Math.toRadians(0.00))
+//                                .build()
+                                drive.trajectorySequenceBuilder(new Pose2d(0.00, 0.00, Math.toRadians(0.00)))
+                                        .splineToLinearHeading(new Pose2d(10, -25, Math.toRadians(-70)), Math.toRadians(-70))
+                                        .splineToLinearHeading(new Pose2d(30.00, -30.00, Math.toRadians(180.00)), Math.toRadians(180.00))
+                                        .build()
+
+        // place pixel 2
 //                        drive.trajectorySequenceBuilder(new Pose2d(-36.37, -62.20, Math.toRadians(90.00)))
 //                                .splineTo(new Vector2d(-35.93, -48.84), Math.toRadians(90.00))
 //                                .lineToLinearHeading(new Pose2d(-35.78, -32.66, Math.toRadians(90.00)))
