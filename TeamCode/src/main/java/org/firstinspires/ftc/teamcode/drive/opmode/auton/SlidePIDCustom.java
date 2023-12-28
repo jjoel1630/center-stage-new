@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.drive.opmode.auton.PIDControllerCustom;
@@ -18,7 +19,7 @@ import org.firstinspires.ftc.teamcode.drive.opmode.auton.PIDControllerCustom;
 public class SlidePIDCustom extends LinearOpMode {
     public ElapsedTime timer = new ElapsedTime();
 
-    public static double p = 0.1, i = 0, d = 0.001, f = 0.3; // long belt
+    public static double p = 0.011, i = 0, d = 0.00018, f = 0.3; // long belt
     public PIDControllerCustom pidController = new PIDControllerCustom(p, i, d);
 
     public static double target = 500;
@@ -26,7 +27,12 @@ public class SlidePIDCustom extends LinearOpMode {
     public static double powerMultiplier = 1; // short belt = 1;
     public static boolean reversed = true;
 
+    public static double ARM_MAX = 0.58;
+    public static double ARM_MIN = 0.0;
+    double armPos = ARM_MIN;
+
     public DcMotorEx slide;
+    public Servo arm;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -34,6 +40,9 @@ public class SlidePIDCustom extends LinearOpMode {
         slide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         slide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         if(reversed) slide.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        arm = hardwareMap.servo.get("arm");
+        arm.setPosition(armPos);
 
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
