@@ -87,9 +87,9 @@ public class TeleOpFiniteStates extends LinearOpMode {
     OuttakeState outState = OuttakeState.LIFT_MANUAL;
 
     DriverState driverState = DriverState.DRIVER;
-    public static double aprilTagGap = 6;
-    public static double aprilTagOffset = 2;
-    public static double currentHeading = 270;
+    public static double aprilTagGap = -6;
+    public static double aprilTagOffset = -1;
+    public double currentHeading = 180;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -157,9 +157,9 @@ public class TeleOpFiniteStates extends LinearOpMode {
                     sleep(20);
                     if(tags != null && gamepad1.dpad_up) {
                         AprilTagDetection tag = tags.get(0);
-                        drive.setPoseEstimate(new Pose2d(0,0, Math.toRadians(270-tag.ftcPose.yaw)));
-                        Trajectory tagPose = drive.trajectoryBuilder(new Pose2d(0, 0, Math.toRadians(270-tag.ftcPose.yaw)))
-                                .lineToLinearHeading(new Pose2d(tag.ftcPose.x+aprilTagOffset,tag.ftcPose.y-aprilTagGap, 270))
+                        drive.setPoseEstimate(new Pose2d(0,0, Math.toRadians(currentHeading)));
+                        Trajectory tagPose = drive.trajectoryBuilder(new Pose2d(0, 0, Math.toRadians(currentHeading)))
+                                .lineToLinearHeading(new Pose2d(tag.ftcPose.y+aprilTagGap,-1*tag.ftcPose.x+aprilTagOffset, Math.toRadians(180)))
                                 .build();
 
                         drive.followTrajectoryAsync(tagPose);
