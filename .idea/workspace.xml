@@ -5,18 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5ac5ecb0-9f45-42b2-867a-bc1d4d0d808e" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/MeepMeepPathing/src/main/java/com/example/meepmeeppathing/RedLeft/RedLeftAuto2.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/7.4.2/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.4.2/executionHistory/executionHistory.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/7.4.2/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.4.2/executionHistory/executionHistory.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/7.4.2/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.4.2/fileHashes/fileHashes.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/7.4.2/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.4.2/fileHashes/fileHashes.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/7.4.2/fileHashes/resourceHashesCache.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.4.2/fileHashes/resourceHashesCache.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MeepMeepPathing/src/main/java/com/example/meepmeeppathing/RightLeft/RedLeftAuto.java" beforeDir="false" afterPath="$PROJECT_DIR$/MeepMeepPathing/src/main/java/com/example/meepmeeppathing/RedLeft/RedLeftAuto1.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MeepMeepPathing/src/main/java/com/example/meepmeeppathing/RightLeft/RedLeftAutoExact.java" beforeDir="false" afterPath="$PROJECT_DIR$/MeepMeepPathing/src/main/java/com/example/meepmeeppathing/RedLeft/RedLeftAutoExact1.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MeepMeepPathing/src/main/java/com/example/meepmeeppathing/RightRed/RedRightAuto.java" beforeDir="false" afterPath="$PROJECT_DIR$/MeepMeepPathing/src/main/java/com/example/meepmeeppathing/RedRight/RedRightAuto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MeepMeepPathing/src/main/java/com/example/meepmeeppathing/RightRed/RedRightAutoExact.java" beforeDir="false" afterPath="$PROJECT_DIR$/MeepMeepPathing/src/main/java/com/example/meepmeeppathing/RedRight/RedRightAutoExact.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
