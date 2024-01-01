@@ -1,0 +1,128 @@
+Index: .idea/workspace.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<project version=\"4\">\n  <component name=\"AutoImportSettings\">\n    <option name=\"autoReloadType\" value=\"NONE\" />\n  </component>\n  <component name=\"ChangeListManager\">\n    <list default=\"true\" id=\"5ac5ecb0-9f45-42b2-867a-bc1d4d0d808e\" name=\"Changes\" comment=\"\">\n      <change afterPath=\"$PROJECT_DIR$/.idea/vcs.xml\" afterDir=\"false\" />\n      <change beforePath=\"$PROJECT_DIR$/.idea/workspace.xml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.idea/workspace.xml\" afterDir=\"false\" />\n      <change beforePath=\"$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/drive/SampleMecanumDrive.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/drive/SampleMecanumDrive.java\" afterDir=\"false\" />\n      <change beforePath=\"$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/drive/StandardTrackingWheelLocalizer.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/drive/StandardTrackingWheelLocalizer.java\" afterDir=\"false\" />\n    </list>\n    <option name=\"SHOW_DIALOG\" value=\"false\" />\n    <option name=\"HIGHLIGHT_CONFLICTS\" value=\"true\" />\n    <option name=\"HIGHLIGHT_NON_ACTIVE_CHANGELIST\" value=\"false\" />\n    <option name=\"LAST_RESOLUTION\" value=\"IGNORE\" />\n  </component>\n  <component name=\"ExecutionTargetManager\" SELECTED_TARGET=\"device_and_snapshot_combo_box_target[192.168.43.1:5555]\" />\n  <component name=\"ExternalProjectsData\">\n    <projectState path=\"$PROJECT_DIR$\">\n      <ProjectState />\n    </projectState>\n  </component>\n  <component name=\"ExternalProjectsManager\">\n    <system id=\"GRADLE\">\n      <state>\n        <projects_view>\n          <tree_state>\n            <expand>\n              <path>\n                <item name=\"\" type=\"6a2764b6:ExternalProjectsStructure$RootNode\" />\n                <item name=\"center-stage-new\" type=\"f1a62948:ProjectNode\" />\n              </path>\n            </expand>\n            <select />\n          </tree_state>\n        </projects_view>\n      </state>\n    </system>\n  </component>\n  <component name=\"FileTemplateManagerImpl\">\n    <option name=\"RECENT_TEMPLATES\">\n      <list>\n        <option value=\"Class\" />\n      </list>\n    </option>\n  </component>\n  <component name=\"Git.Settings\">\n    <option name=\"RECENT_GIT_ROOT_PATH\" value=\"$PROJECT_DIR$\" />\n  </component>\n  <component name=\"MarkdownSettingsMigration\">\n    <option name=\"stateVersion\" value=\"1\" />\n  </component>\n  <component name=\"ProjectId\" id=\"2YStNoRyHhoIs1nJ9BAM3e2bVRp\" />\n  <component name=\"ProjectLevelVcsManager\" settingsEditedManually=\"true\" />\n  <component name=\"ProjectViewState\">\n    <option name=\"hideEmptyMiddlePackages\" value=\"true\" />\n    <option name=\"showLibraryContents\" value=\"true\" />\n  </component>\n  <component name=\"PropertiesComponent\">\n    <property name=\"RunOnceActivity.OpenProjectViewOnStart\" value=\"true\" />\n    <property name=\"RunOnceActivity.ShowReadmeOnStart\" value=\"true\" />\n    <property name=\"RunOnceActivity.cidr.known.project.marker\" value=\"true\" />\n    <property name=\"SHARE_PROJECT_CONFIGURATION_FILES\" value=\"true\" />\n    <property name=\"cidr.known.project.marker\" value=\"true\" />\n    <property name=\"last_opened_file_path\" value=\"$PROJECT_DIR$\" />\n  </component>\n  <component name=\"RunManager\" selected=\"Android App.TeamCode\">\n    <configuration name=\"TeamCode\" type=\"AndroidRunConfigurationType\" factoryName=\"Android App\" activateToolWindowBeforeRun=\"false\">\n      <module name=\"center-stage-new.TeamCode.main\" />\n      <option name=\"DEPLOY\" value=\"true\" />\n      <option name=\"DEPLOY_APK_FROM_BUNDLE\" value=\"false\" />\n      <option name=\"DEPLOY_AS_INSTANT\" value=\"false\" />\n      <option name=\"ARTIFACT_NAME\" value=\"\" />\n      <option name=\"PM_INSTALL_OPTIONS\" value=\"\" />\n      <option name=\"ALL_USERS\" value=\"false\" />\n      <option name=\"ALWAYS_INSTALL_WITH_PM\" value=\"false\" />\n      <option name=\"CLEAR_APP_STORAGE\" value=\"false\" />\n      <option name=\"DYNAMIC_FEATURES_DISABLED_LIST\" value=\"\" />\n      <option name=\"ACTIVITY_EXTRA_FLAGS\" value=\"\" />\n      <option name=\"MODE\" value=\"do_nothing\" />\n      <option name=\"CLEAR_LOGCAT\" value=\"false\" />\n      <option name=\"SHOW_LOGCAT_AUTOMATICALLY\" value=\"false\" />\n      <option name=\"INSPECTION_WITHOUT_ACTIVITY_RESTART\" value=\"false\" />\n      <option name=\"TARGET_SELECTION_MODE\" value=\"DEVICE_AND_SNAPSHOT_COMBO_BOX\" />\n      <option name=\"SELECTED_CLOUD_MATRIX_CONFIGURATION_ID\" value=\"-1\" />\n      <option name=\"SELECTED_CLOUD_MATRIX_PROJECT_ID\" value=\"\" />\n      <option name=\"DEBUGGER_TYPE\" value=\"Auto\" />\n      <Auto>\n        <option name=\"USE_JAVA_AWARE_DEBUGGER\" value=\"false\" />\n        <option name=\"SHOW_STATIC_VARS\" value=\"true\" />\n        <option name=\"WORKING_DIR\" value=\"\" />\n        <option name=\"TARGET_LOGGING_CHANNELS\" value=\"lldb process:gdb-remote packets\" />\n        <option name=\"SHOW_OPTIMIZED_WARNING\" value=\"true\" />\n      </Auto>\n      <Hybrid>\n        <option name=\"USE_JAVA_AWARE_DEBUGGER\" value=\"false\" />\n        <option name=\"SHOW_STATIC_VARS\" value=\"true\" />\n        <option name=\"WORKING_DIR\" value=\"\" />\n        <option name=\"TARGET_LOGGING_CHANNELS\" value=\"lldb process:gdb-remote packets\" />\n        <option name=\"SHOW_OPTIMIZED_WARNING\" value=\"true\" />\n      </Hybrid>\n      <Java />\n      <Native>\n        <option name=\"USE_JAVA_AWARE_DEBUGGER\" value=\"false\" />\n        <option name=\"SHOW_STATIC_VARS\" value=\"true\" />\n        <option name=\"WORKING_DIR\" value=\"\" />\n        <option name=\"TARGET_LOGGING_CHANNELS\" value=\"lldb process:gdb-remote packets\" />\n        <option name=\"SHOW_OPTIMIZED_WARNING\" value=\"true\" />\n      </Native>\n      <Profilers>\n        <option name=\"ADVANCED_PROFILING_ENABLED\" value=\"false\" />\n        <option name=\"STARTUP_PROFILING_ENABLED\" value=\"false\" />\n        <option name=\"STARTUP_CPU_PROFILING_ENABLED\" value=\"false\" />\n        <option name=\"STARTUP_CPU_PROFILING_CONFIGURATION_NAME\" value=\"Java/Kotlin Method Sample (legacy)\" />\n        <option name=\"STARTUP_NATIVE_MEMORY_PROFILING_ENABLED\" value=\"false\" />\n        <option name=\"NATIVE_MEMORY_SAMPLE_RATE_BYTES\" value=\"2048\" />\n        <option name=\"PROFILING_MODE\" value=\"NOT_SET\" />\n      </Profilers>\n      <option name=\"DEEP_LINK\" value=\"\" />\n      <option name=\"ACTIVITY_CLASS\" value=\"\" />\n      <option name=\"SEARCH_ACTIVITY_IN_GLOBAL_SCOPE\" value=\"false\" />\n      <option name=\"SKIP_ACTIVITY_VALIDATION\" value=\"false\" />\n      <method v=\"2\">\n        <option name=\"Android.Gradle.BeforeRunTask\" enabled=\"true\" />\n      </method>\n    </configuration>\n    <configuration name=\"BlueLeft\" type=\"Application\" factoryName=\"Application\">\n      <option name=\"MAIN_CLASS_NAME\" value=\"com.example.meepmeeppathing.BlueLeftAuto\" />\n      <module name=\"center-stage-new.MeepMeepPathing.main\" />\n      <method v=\"2\">\n        <option name=\"Make\" enabled=\"true\" />\n      </method>\n    </configuration>\n    <configuration name=\"BlueLeftAutoExact\" type=\"Application\" factoryName=\"Application\">\n      <option name=\"MAIN_CLASS_NAME\" value=\"com.example.meepmeeppathing.BlueLeftAutoExact\" />\n      <module name=\"center-stage-new.MeepMeepPathing.main\" />\n      <method v=\"2\">\n        <option name=\"Make\" enabled=\"true\" />\n      </method>\n    </configuration>\n    <configuration name=\"RedLeftAutoExact\" type=\"Application\" factoryName=\"Application\" temporary=\"true\" nameIsGenerated=\"true\">\n      <option name=\"MAIN_CLASS_NAME\" value=\"com.example.meepmeeppathing.RedLeftAutoExact\" />\n      <module name=\"center-stage-new.MeepMeepPathing.main\" />\n      <extension name=\"coverage\">\n        <pattern>\n          <option name=\"PATTERN\" value=\"com.example.meepmeeppathing.*\" />\n          <option name=\"ENABLED\" value=\"true\" />\n        </pattern>\n      </extension>\n      <method v=\"2\">\n        <option name=\"Make\" enabled=\"true\" />\n      </method>\n    </configuration>\n    <list>\n      <item itemvalue=\"Android App.TeamCode\" />\n      <item itemvalue=\"Application.BlueLeftAutoExact\" />\n      <item itemvalue=\"Application.BlueLeft\" />\n      <item itemvalue=\"Application.RedLeftAutoExact\" />\n    </list>\n    <recent_temporary>\n      <list>\n        <item itemvalue=\"Application.RedLeftAutoExact\" />\n      </list>\n    </recent_temporary>\n  </component>\n  <component name=\"SpellCheckerSettings\" RuntimeDictionaries=\"0\" Folders=\"0\" CustomDictionaries=\"0\" DefaultDictionary=\"application-level\" UseSingleDictionary=\"true\" transferred=\"true\" />\n  <component name=\"TaskManager\">\n    <task active=\"true\" id=\"Default\" summary=\"Default task\">\n      <changelist id=\"5ac5ecb0-9f45-42b2-867a-bc1d4d0d808e\" name=\"Changes\" comment=\"\" />\n      <created>1700530771245</created>\n      <option name=\"number\" value=\"Default\" />\n      <option name=\"presentableId\" value=\"Default\" />\n      <updated>1700530771245</updated>\n    </task>\n    <servers />\n  </component>\n  <component name=\"Vcs.Log.Tabs.Properties\">\n    <option name=\"TAB_STATES\">\n      <map>\n        <entry key=\"MAIN\">\n          <value>\n            <State />\n          </value>\n        </entry>\n      </map>\n    </option>\n  </component>\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/workspace.xml b/.idea/workspace.xml
+--- a/.idea/workspace.xml	
++++ b/.idea/workspace.xml	
+@@ -5,17 +5,28 @@
+   </component>
+   <component name="ChangeListManager">
+     <list default="true" id="5ac5ecb0-9f45-42b2-867a-bc1d4d0d808e" name="Changes" comment="">
+-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
++      <change afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
++      <change afterPath="$PROJECT_DIR$/.idea/jarRepositories.xml" afterDir="false" />
++      <change afterPath="$PROJECT_DIR$/MeepMeepPathing/src/main/java/com/example/meepmeeppathing/BlueRightAuto.java" afterDir="false" />
++      <change afterPath="$PROJECT_DIR$/local.properties" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/.gradle/7.4.2/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.4.2/executionHistory/executionHistory.bin" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/.gradle/7.4.2/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.4.2/executionHistory/executionHistory.lock" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/.gradle/7.4.2/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.4.2/fileHashes/fileHashes.bin" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/.gradle/7.4.2/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.4.2/fileHashes/fileHashes.lock" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/.gradle/7.4.2/fileHashes/resourceHashesCache.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.4.2/fileHashes/resourceHashesCache.bin" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/.gradle/file-system.probe" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/file-system.probe" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/drive/SampleMecanumDrive.java" beforeDir="false" afterPath="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/drive/SampleMecanumDrive.java" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/drive/StandardTrackingWheelLocalizer.java" beforeDir="false" afterPath="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/drive/StandardTrackingWheelLocalizer.java" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/MeepMeepPathing/src/main/java/com/example/meepmeeppathing/RedRightAutoExact.java" beforeDir="false" afterPath="$PROJECT_DIR$/MeepMeepPathing/src/main/java/com/example/meepmeeppathing/RedRightAutoExact.java" afterDir="false" />
+     </list>
+     <option name="SHOW_DIALOG" value="false" />
+     <option name="HIGHLIGHT_CONFLICTS" value="true" />
+     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+     <option name="LAST_RESOLUTION" value="IGNORE" />
+   </component>
+-  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[192.168.43.1:5555]" />
+   <component name="ExternalProjectsData">
+     <projectState path="$PROJECT_DIR$">
+       <ProjectState />
+@@ -57,15 +68,18 @@
+     <option name="hideEmptyMiddlePackages" value="true" />
+     <option name="showLibraryContents" value="true" />
+   </component>
+-  <component name="PropertiesComponent">
+-    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+-    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+-    <property name="RunOnceActivity.cidr.known.project.marker" value="true" />
+-    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+-    <property name="cidr.known.project.marker" value="true" />
+-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+-  </component>
+-  <component name="RunManager" selected="Android App.TeamCode">
++  <component name="PropertiesComponent"><![CDATA[{
++  "keyToString": {
++    "RunOnceActivity.cidr.known.project.marker": "true",
++    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
++    "cidr.known.project.marker": "true",
++    "memory.settings.postsync.last.time.stamp": "1704061209185",
++    "project.structure.last.edited": "Modules",
++    "project.structure.proportion": "0.17",
++    "project.structure.side.proportion": "0.2"
++  }
++}]]></component>
++  <component name="RunManager" selected="Application.BlueLeft">
+     <configuration name="TeamCode" type="AndroidRunConfigurationType" factoryName="Android App" activateToolWindowBeforeRun="false">
+       <module name="center-stage-new.TeamCode.main" />
+       <option name="DEPLOY" value="true" />
+@@ -115,7 +129,6 @@
+         <option name="STARTUP_CPU_PROFILING_CONFIGURATION_NAME" value="Java/Kotlin Method Sample (legacy)" />
+         <option name="STARTUP_NATIVE_MEMORY_PROFILING_ENABLED" value="false" />
+         <option name="NATIVE_MEMORY_SAMPLE_RATE_BYTES" value="2048" />
+-        <option name="PROFILING_MODE" value="NOT_SET" />
+       </Profilers>
+       <option name="DEEP_LINK" value="" />
+       <option name="ACTIVITY_CLASS" value="" />
+@@ -127,13 +140,6 @@
+     </configuration>
+     <configuration name="BlueLeft" type="Application" factoryName="Application">
+       <option name="MAIN_CLASS_NAME" value="com.example.meepmeeppathing.BlueLeftAuto" />
+-      <module name="center-stage-new.MeepMeepPathing.main" />
+-      <method v="2">
+-        <option name="Make" enabled="true" />
+-      </method>
+-    </configuration>
+-    <configuration name="BlueLeftAutoExact" type="Application" factoryName="Application">
+-      <option name="MAIN_CLASS_NAME" value="com.example.meepmeeppathing.BlueLeftAutoExact" />
+       <module name="center-stage-new.MeepMeepPathing.main" />
+       <method v="2">
+         <option name="Make" enabled="true" />
+@@ -152,9 +158,16 @@
+         <option name="Make" enabled="true" />
+       </method>
+     </configuration>
++    <configuration name="RedRight" type="Application" factoryName="Application">
++      <option name="MAIN_CLASS_NAME" value="com.example.meepmeeppathing.RedRightAuto" />
++      <module name="center-stage-new.MeepMeepPathing.main" />
++      <method v="2">
++        <option name="Make" enabled="true" />
++      </method>
++    </configuration>
+     <list>
+       <item itemvalue="Android App.TeamCode" />
+-      <item itemvalue="Application.BlueLeftAutoExact" />
++      <item itemvalue="Application.RedRight" />
+       <item itemvalue="Application.BlueLeft" />
+       <item itemvalue="Application.RedLeftAutoExact" />
+     </list>
+Index: MeepMeepPathing/src/main/java/com/example/meepmeeppathing/RedRightAutoExact.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>//package com.example.meepmeeppathing;\n//\n//import com.acmerobotics.roadrunner.geometry.Pose2d;\n//import com.acmerobotics.roadrunner.geometry.Vector2d;\n//import com.noahbres.meepmeep.MeepMeep;\n//import com.noahbres.meepmeep.roadrunner.DefaultBotBuilder;\n//import com.noahbres.meepmeep.roadrunner.entity.RoadRunnerBotEntity;\n//\n//    public class RedRightAutoExact {\n//        public static void main(String[] args) {\n//            // Declare a MeepMeep instance\n//            // With a field size of 800 pixels\n//            MeepMeep meepMeep = new MeepMeep(800);\n//\n////            RoadRunnerBotEntity myBot = new DefaultBotBuilder(meepMeep)\n////                    // Required: Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width\n////                    .setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 13)\n//                    // Option: Set theme. Default = ColorSchemeRedDark()\n////                    .followTrajectorySequence(drive ->\n////\n////                            //place pixel 1\n////                            drive.trajectorySequenceBuilder(new Pose2d(10.83, -60.32, Math.toRadians(90.00)))\n////                                    .splineTo(new Vector2d(0.42, -34.41), Math.toRadians(111.88))\n////                                    .build()\n////\n////                            //place pixel 2\n////                            drive.trajectorySequenceBuilder(new Pose2d(11.04, -60.96, Math.toRadians(90.00)))\n////                                    .splineTo(new Vector2d(7.43, -24.85), Math.toRadians(95.71))\n////                                    .build()\n////\n////\n////                            //place pixel 3\n////                            drive.trajectorySequenceBuilder(new Pose2d(11.47, -60.74, Math.toRadians(90.00)))\n////                                    .splineTo(new Vector2d(23.15, -34.62), Math.toRadians(65.91))\n////                                    .build()\n//\n//        );\n//\n//\n//// Set field image\n//meepMeep.setBackground(MeepMeep.Background.FIELD_CENTERSTAGE_OFFICIAL)\n//        .setDarkMode(true)\n//// Background opacity from 0-1\n//        .setBackgroundAlpha(0.95f)\n//        .addEntity(myBot)\n//        .start();\n//        }\n//    }\n
+===================================================================
+diff --git a/MeepMeepPathing/src/main/java/com/example/meepmeeppathing/RedRightAutoExact.java b/MeepMeepPathing/src/main/java/com/example/meepmeeppathing/RedRightAutoExact.java
+--- a/MeepMeepPathing/src/main/java/com/example/meepmeeppathing/RedRightAutoExact.java	
++++ b/MeepMeepPathing/src/main/java/com/example/meepmeeppathing/RedRightAutoExact.java	
+@@ -18,7 +18,7 @@
+ //                    // Option: Set theme. Default = ColorSchemeRedDark()
+ ////                    .followTrajectorySequence(drive ->
+ ////
+-////                            //place pixel 1
++////                            /place pixel 1
+ ////                            drive.trajectorySequenceBuilder(new Pose2d(10.83, -60.32, Math.toRadians(90.00)))
+ ////                                    .splineTo(new Vector2d(0.42, -34.41), Math.toRadians(111.88))
+ ////                                    .build()
