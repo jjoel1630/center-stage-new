@@ -10,7 +10,7 @@ public class RedRightAuto {
     public static void main(String[] args) {
         // Declare a MeepMeep instance
         // With a field size of 800 pixels
-        MeepMeep meepMeep = new MeepMeep(800);
+        MeepMeep meepMeep = new MeepMeep(600);
 
         RoadRunnerBotEntity myBot = new DefaultBotBuilder(meepMeep)
                 // Required: Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
@@ -18,19 +18,32 @@ public class RedRightAuto {
                 // Option: Set theme. Default = ColorSchemeRedDark()
                 .followTrajectorySequence(drive ->
                                 // place pixel 1
-                                drive.trajectorySequenceBuilder(new Pose2d(12.45, 62.86, Math.toRadians(-90.00)))
-                                        .splineTo(new Vector2d(5.53, 32.20), Math.toRadians(257.27))
-                                        .splineTo(new Vector2d(9.06, 26.16), Math.toRadians(-23.70))
-                                        .splineTo(new Vector2d(51.22, 30.73), Math.toRadians(4.56))
-                                        .splineTo(new Vector2d(49.74, 33.09), Math.toRadians(122.01))
-                                        .splineTo(new Vector2d(46.35, 42.37), Math.toRadians(110.06))
-                                        .splineTo(new Vector2d(51.07, 56.97), Math.toRadians(72.09))
-                                        .splineTo(new Vector2d(63.30, 59.03), Math.toRadians(-8.97))
+//                                drive.trajectorySequenceBuilder(new Pose2d(8.28, -63.29, Math.toRadians(90.00)))
+//                                        .splineTo(new Vector2d(17.42, -38.23), Math.toRadians(83.85))
+//                                        .splineTo(new Vector2d(0.64, -35.26), Math.toRadians(167.16))
+//                                        .splineTo(new Vector2d(24.64, -36.53), Math.toRadians(3.47))
+//                                        .splineTo(new Vector2d(43.12, -36.11), Math.toRadians(0.95))
+//                                        .splineTo(new Vector2d(50.76, -14.02), Math.toRadians(7.05))
+//                                        .splineTo(new Vector2d(60.96, -13.17), Math.toRadians(-2.49))
+//                                        .build()
+                        // place pixel 2
+//                        drive.trajectorySequenceBuilder(new Pose2d(9.56, -62.65, Math.toRadians(90.00)))
+//                                .splineTo(new Vector2d(16.35, -25.06), Math.toRadians(83.85))
+//                                .splineTo(new Vector2d(16.35, -9.13), Math.toRadians(-0.88))
+//                                .splineTo(new Vector2d(40.14, -20.39), Math.toRadians(-74.20))
+//                                .splineTo(new Vector2d(43.33, -31.65), Math.toRadians(-2.39))
+//                                .splineTo(new Vector2d(44.81, -32.92), Math.toRadians(-1.40))
+//                                .splineTo(new Vector2d(44.39, -11.89), Math.toRadians(3.47))
+//                                .splineTo(new Vector2d(61.17, -11.26), Math.toRadians(0.62))
+//                                .build()
+
+                        // place pixel 3
+                                drive.trajectorySequenceBuilder(new Pose2d(7.01, -61.59, Math.toRadians(90.00)))
+                                        .splineTo(new Vector2d(23.36, -35.26), Math.toRadians(58.16))
+                                        .splineTo(new Vector2d(44.39, -32.28), Math.toRadians(0.00))
+                                        .splineTo(new Vector2d(52.25, -18.48), Math.toRadians(38.37))
+                                        .splineTo(new Vector2d(62.23, -14.87), Math.toRadians(2.16))
                                         .build()
-                       /* // place pixel 2
-
-
-/*                        // place pixel 3
 
 
                 );
