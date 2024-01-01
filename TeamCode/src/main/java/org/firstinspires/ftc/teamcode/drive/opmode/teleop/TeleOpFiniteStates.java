@@ -69,8 +69,8 @@ public class TeleOpFiniteStates extends LinearOpMode {
     public static double slowModePower = 0.3, regularPower = 0.8;
 
     // outtake constants
-    public static double CLAW_MAX = 0.65, CLAW_MIN = 0.5;
-    public static double ARM_GROUND = 0.2, ARM_MAX = 0.58, ARM_MIN = 0.0;
+    public static double CLAW_MAX = 1, CLAW_MIN = 0.7;
+    public static double ARM_GROUND = 0.3, ARM_MAX = 0.58, ARM_MIN = 0.0;
     public static double clawTime = 0.5, armTime = 0.7;
     double clawPos = CLAW_MIN, armPos = ARM_MIN;
 
@@ -87,8 +87,8 @@ public class TeleOpFiniteStates extends LinearOpMode {
     OuttakeState outState = OuttakeState.LIFT_MANUAL;
 
     DriverState driverState = DriverState.DRIVER;
-    public static double aprilTagGap = -6;
-    public static double aprilTagOffset = -1;
+    public static double aprilTagGap = 6;
+    public static double aprilTagOffset = 0;
     public double currentHeading = 180;
 
     @Override
@@ -130,8 +130,8 @@ public class TeleOpFiniteStates extends LinearOpMode {
                 case DRIVER:
                     // gamepad input
                     double axial = -gamepad1.left_stick_y * axialCoefficient;  // forward, back
-                    double lateral = gamepad1.right_stick_x * lateralCoefficient; // side to side
-                    double yaw = gamepad1.left_stick_x * yawCoefficient; // turning
+                    double lateral = gamepad1.left_stick_x * lateralCoefficient; // side to side
+                    double yaw = gamepad1.right_stick_x * yawCoefficient; // turning
 
                     double dtDenominator = Math.max(Math.abs(axial) + Math.abs(lateral) + Math.abs(yaw), 1);
 
@@ -157,9 +157,9 @@ public class TeleOpFiniteStates extends LinearOpMode {
                     sleep(20);
                     if(tags != null && gamepad1.dpad_up) {
                         AprilTagDetection tag = tags.get(0);
-                        drive.setPoseEstimate(new Pose2d(0,0, Math.toRadians(currentHeading)));
-                        Trajectory tagPose = drive.trajectoryBuilder(new Pose2d(0, 0, Math.toRadians(currentHeading)))
-                                .lineToLinearHeading(new Pose2d(tag.ftcPose.y+aprilTagGap,-1*tag.ftcPose.x+aprilTagOffset, Math.toRadians(180)))
+                        drive.setPoseEstimate(new Pose2d(-1*tag.ftcPose.y,tag.ftcPose.x, Math.toRadians(180-tag.ftcPose.yaw)));
+                        Trajectory tagPose = drive.trajectoryBuilder(new Pose2d(-1*tag.ftcPose.y,tag.ftcPose.x, Math.toRadians(180-tag.ftcPose.yaw)))
+                                .lineToLinearHeading(new Pose2d(-aprilTagGap,-aprilTagOffset, Math.toRadians(180)))
                                 .build();
 
                         drive.followTrajectoryAsync(tagPose);
@@ -215,7 +215,7 @@ public class TeleOpFiniteStates extends LinearOpMode {
                     armPos = ARM_MAX;
                     arm.setPosition(armPos);
                     if(timer.seconds() >= armTime && clawPos != CLAW_MIN) {
-                        clawPos = CLAW_MIN;
+                        clawPos = CLAW_MIN-0.08;
                         claw.setPosition(clawPos);
                     }
 
