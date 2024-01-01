@@ -1,0 +1,188 @@
+Index: .idea/gradle.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<project version=\"4\">\n  <component name=\"GradleMigrationSettings\" migrationVersion=\"1\" />\n  <component name=\"GradleSettings\">\n    <option name=\"linkedExternalProjectsSettings\">\n      <GradleProjectSettings>\n        <option name=\"testRunner\" value=\"GRADLE\" />\n        <option name=\"distributionType\" value=\"DEFAULT_WRAPPED\" />\n        <option name=\"externalProjectPath\" value=\"$PROJECT_DIR$\" />\n      </GradleProjectSettings>\n    </option>\n  </component>\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/gradle.xml b/.idea/gradle.xml
+--- a/.idea/gradle.xml	
++++ b/.idea/gradle.xml	
+@@ -7,6 +7,14 @@
+         <option name="testRunner" value="GRADLE" />
+         <option name="distributionType" value="DEFAULT_WRAPPED" />
+         <option name="externalProjectPath" value="$PROJECT_DIR$" />
++        <option name="modules">
++          <set>
++            <option value="$PROJECT_DIR$" />
++            <option value="$PROJECT_DIR$/FtcRobotController" />
++            <option value="$PROJECT_DIR$/MeepMeepPathing" />
++            <option value="$PROJECT_DIR$/TeamCode" />
++          </set>
++        </option>
+       </GradleProjectSettings>
+     </option>
+   </component>
+Index: .idea/misc.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<project version=\"4\">\n  <component name=\"ExternalStorageConfigurationManager\" enabled=\"true\" />\n  <component name=\"ProjectRootManager\" version=\"2\" languageLevel=\"JDK_11\" default=\"true\" project-jdk-name=\"11\" project-jdk-type=\"JavaSDK\">\n    <output url=\"file://$PROJECT_DIR$/build/classes\" />\n  </component>\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/misc.xml b/.idea/misc.xml
+--- a/.idea/misc.xml	
++++ b/.idea/misc.xml	
+@@ -1,7 +1,7 @@
+ <?xml version="1.0" encoding="UTF-8"?>
+ <project version="4">
+   <component name="ExternalStorageConfigurationManager" enabled="true" />
+-  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="11" project-jdk-type="JavaSDK">
++  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" project-jdk-name="11" project-jdk-type="JavaSDK">
+     <output url="file://$PROJECT_DIR$/build/classes" />
+   </component>
+ </project>
+\ No newline at end of file
+Index: MeepMeepPathing/src/main/java/com/example/meepmeeppathing/BlueRightAuto.java
+===================================================================
+diff --git a/MeepMeepPathing/src/main/java/com/example/meepmeeppathing/BlueRightAuto.java b/MeepMeepPathing/src/main/java/com/example/meepmeeppathing/BlueRightAuto.java
+new file mode 100644
+--- /dev/null	
++++ b/MeepMeepPathing/src/main/java/com/example/meepmeeppathing/BlueRightAuto.java	
+@@ -0,0 +1,57 @@
++package com.example.meepmeeppathing;
++
++import com.acmerobotics.roadrunner.geometry.Pose2d;
++import com.acmerobotics.roadrunner.geometry.Vector2d;
++import com.noahbres.meepmeep.MeepMeep;
++import com.noahbres.meepmeep.roadrunner.DefaultBotBuilder;
++import com.noahbres.meepmeep.roadrunner.entity.RoadRunnerBotEntity;
++
++public class BlueRightAuto {
++    public static void main(String[] args) {
++        // Declare a MeepMeep instance
++        // With a field size of 800 pixels
++        MeepMeep meepMeep = new MeepMeep(800);
++
++        RoadRunnerBotEntity myBot = new DefaultBotBuilder(meepMeep)
++                // Required: Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
++                .setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 13)
++                // Option: Set theme. Default = ColorSchemeRedDark()
++                .followTrajectorySequence(drive ->
++                                // place pixel 1
++                                drive.trajectorySequenceBuilder(new Pose2d(-36.37, -62.20, Math.toRadians(90.00)))
++                                        .splineTo(new Vector2d(-35.93, -48.84), Math.toRadians(90.00))
++                                        .lineToLinearHeading(new Pose2d(-43.94, -41.57, Math.toRadians(124.11)))
++                                        .lineToLinearHeading(new Pose2d(-51.66, -53.59, Math.toRadians(0.00)))
++                                        .splineToConstantHeading(new Vector2d(-16.63, -60.42), Math.toRadians(0.00))
++                                        .splineToConstantHeading(new Vector2d(27.46, -56.26), Math.toRadians(0.00))
++                                        .splineToConstantHeading(new Vector2d(50.77, -36.67), Math.toRadians(0.00))
++                                        .build()
++                        // place pixel 2
++//                        drive.trajectorySequenceBuilder(new Pose2d(-36.37, -62.20, Math.toRadians(90.00)))
++//                                .splineTo(new Vector2d(-35.93, -48.84), Math.toRadians(90.00))
++//                                .lineToLinearHeading(new Pose2d(-35.78, -32.66, Math.toRadians(90.00)))
++//                                .lineToLinearHeading(new Pose2d(-51.66, -53.59, Math.toRadians(0.00)))
++//                                .splineToConstantHeading(new Vector2d(-16.63, -60.42), Math.toRadians(0.00))
++//                                .splineToConstantHeading(new Vector2d(27.46, -56.26), Math.toRadians(0.00))
++//                                .splineToConstantHeading(new Vector2d(50.77, -36.67), Math.toRadians(0.00))
++//                                .build()
++                        // place pixel 3
++//                        drive.trajectorySequenceBuilder(new Pose2d(-36.37, -62.20, Math.toRadians(90.00)))
++//                                .splineTo(new Vector2d(-35.93, -48.84), Math.toRadians(90.00))
++//                                .lineToLinearHeading(new Pose2d(-33.70, -35.93, Math.toRadians(34.11)))
++//                                .lineToLinearHeading(new Pose2d(-51.66, -53.59, Math.toRadians(0.00)))
++//                                .splineToConstantHeading(new Vector2d(-16.63, -60.42), Math.toRadians(0.00))
++//                                .splineToConstantHeading(new Vector2d(27.46, -56.26), Math.toRadians(0.00))
++//                                .splineToConstantHeading(new Vector2d(50.77, -36.67), Math.toRadians(0.00))
++//                                .build()
++                );
++
++        // Set field image
++        meepMeep.setBackground(MeepMeep.Background.FIELD_CENTERSTAGE_OFFICIAL)
++                .setDarkMode(true)
++                // Background opacity from 0-1
++                .setBackgroundAlpha(0.95f)
++                .addEntity(myBot)
++                .start();
++    }
++}
+\ No newline at end of file
+Index: .idea/compiler.xml
+===================================================================
+diff --git a/.idea/compiler.xml b/.idea/compiler.xml
+new file mode 100644
+--- /dev/null	
++++ b/.idea/compiler.xml	
+@@ -0,0 +1,6 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<project version="4">
++  <component name="CompilerConfiguration">
++    <bytecodeTargetLevel target="1.8" />
++  </component>
++</project>
+\ No newline at end of file
+Index: .idea/jarRepositories.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/jarRepositories.xml b/.idea/jarRepositories.xml
+new file mode 100644
+--- /dev/null	
++++ b/.idea/jarRepositories.xml	
+@@ -0,0 +1,35 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<project version="4">
++  <component name="RemoteRepositoriesConfiguration">
++    <remote-repository>
++      <option name="id" value="central" />
++      <option name="name" value="Maven Central repository" />
++      <option name="url" value="https://repo1.maven.org/maven2" />
++    </remote-repository>
++    <remote-repository>
++      <option name="id" value="jboss.community" />
++      <option name="name" value="JBoss Community repository" />
++      <option name="url" value="https://repository.jboss.org/nexus/content/repositories/public/" />
++    </remote-repository>
++    <remote-repository>
++      <option name="id" value="MavenRepo" />
++      <option name="name" value="MavenRepo" />
++      <option name="url" value="https://repo.maven.apache.org/maven2/" />
++    </remote-repository>
++    <remote-repository>
++      <option name="id" value="Google" />
++      <option name="name" value="Google" />
++      <option name="url" value="https://dl.google.com/dl/android/maven2/" />
++    </remote-repository>
++    <remote-repository>
++      <option name="id" value="maven2" />
++      <option name="name" value="maven2" />
++      <option name="url" value="https://maven.brott.dev/" />
++    </remote-repository>
++    <remote-repository>
++      <option name="id" value="maven" />
++      <option name="name" value="maven" />
++      <option name="url" value="https://jitpack.io" />
++    </remote-repository>
++  </component>
++</project>
+\ No newline at end of file
+Index: local.properties
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>ISO-8859-1
+===================================================================
+diff --git a/local.properties b/local.properties
+new file mode 100644
+--- /dev/null	
++++ b/local.properties	
+@@ -0,0 +1,8 @@
++## This file must *NOT* be checked into Version Control Systems,
++# as it contains information specific to your local configuration.
++#
++# Location of the SDK. This is only used by Gradle.
++# For customization when using a Version Control System, please read the
++# header note.
++#Sun Dec 31 14:19:30 PST 2023
++sdk.dir=/Users/avni/Library/Android/sdk
