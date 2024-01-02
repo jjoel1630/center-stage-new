@@ -18,17 +18,32 @@ public class BlueLeftAutoYT {
                 // Option: Set theme. Default = ColorSchemeRedDark()
                 .followTrajectorySequence(drive ->
                         // place pixel 1
-                                drive.trajectorySequenceBuilder(new Pose2d(-38.87, -62.65, Math.toRadians(90.00)))
-                                        .splineTo(new Vector2d(-47.36, -35.47), Math.toRadians(103.83))
-                                        .lineToLinearHeading(new Pose2d(-33.35, -11.47, Math.toRadians(0.77)))
-                                        .splineTo(new Vector2d(34.62, -13.59), Math.toRadians(0.00))
-                                        .splineToConstantHeading(new Vector2d(49.06, -34.83), Math.toRadians(-45.00))
-                                        .build()
+//                        drive.trajectorySequenceBuilder(new Pose2d(-33.13, 62.65, Math.toRadians(270.00)))
+//                                .lineToLinearHeading(new Pose2d(-47.36, 36.11, Math.toRadians(270.00)))
+//                                .lineToSplineHeading(new Pose2d(-39.50, 9.98, Math.toRadians(0.00)))
+//                                .lineToSplineHeading(new Pose2d(23.36, 9.98, Math.toRadians(0.00)))
+//                                .lineToLinearHeading(new Pose2d(48.21, 35.26, Math.toRadians(0.00)))
+//                                .build()
+
+
 
                         // place pixel 2
-
+//                        drive.trajectorySequenceBuilder(new Pose2d(-33.13, 62.65, Math.toRadians(270.00)))
+//                                .lineToLinearHeading(new Pose2d(-40.57, 24.64, Math.toRadians(270.00)))
+//                                .lineToSplineHeading(new Pose2d(-39.50, 9.98, Math.toRadians(0.00)))
+//                                .lineToSplineHeading(new Pose2d(23.36, 9.98, Math.toRadians(0.00)))
+//                                .lineToLinearHeading(new Pose2d(48.21, 35.26, Math.toRadians(0.00)))
+//                                .build()
 
                         // place pixel 3
+                        drive.trajectorySequenceBuilder(new Pose2d(-33.56, 63.29, Math.toRadians(270.00)))
+                                .lineToLinearHeading(new Pose2d(-33.13, 38.02, Math.toRadians(270.00)))
+                                .lineToLinearHeading(new Pose2d(-24.85, 35.26, Math.toRadians(270.00)))
+                                .lineToSplineHeading(new Pose2d(-49.06, 25.70, Math.toRadians(0.00)))
+                                .lineToLinearHeading(new Pose2d(-32.71, 8.92, Math.toRadians(0.00)))
+                                .lineToLinearHeading(new Pose2d(15.08, 8.92, Math.toRadians(0.00)))
+                                .lineToLinearHeading(new Pose2d(49.06, 28.04, Math.toRadians(0.00)))
+                                .build()
 
 
                 );

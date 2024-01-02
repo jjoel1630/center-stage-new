@@ -17,33 +17,25 @@ public class BlueLeftAuto {
                 .setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 13)
                 // Option: Set theme. Default = ColorSchemeRedDark()
                 .followTrajectorySequence(drive ->
-                                // place pixel 1
-                                drive.trajectorySequenceBuilder(new Pose2d(-36.37, -62.20, Math.toRadians(90.00)))
-                                        .splineTo(new Vector2d(-35.93, -48.84), Math.toRadians(90.00))
-                                        .lineToLinearHeading(new Pose2d(-43.94, -41.57, Math.toRadians(124.11)))
-                                        .lineToLinearHeading(new Pose2d(-51.66, -53.59, Math.toRadians(0.00)))
-                                        .splineToConstantHeading(new Vector2d(-16.63, -60.42), Math.toRadians(0.00))
-                                        .splineToConstantHeading(new Vector2d(27.46, -56.26), Math.toRadians(0.00))
-                                        .splineToConstantHeading(new Vector2d(50.77, -36.67), Math.toRadians(0.00))
+                            // place pixel 1
+//                            drive.trajectorySequenceBuilder(new Pose2d(-33.13, 62.87, Math.toRadians(270.00)))
+//                                .lineToLinearHeading(new Pose2d(-47.15, 34.83, Math.toRadians(270.00)))
+//                                .lineToSplineHeading(new Pose2d(-37.81, 34.83, Math.toRadians(0.00)))
+//                                .lineToLinearHeading(new Pose2d(48.64, 34.83, Math.toRadians(0.00)))
+//                                .build()
+                            // place pixel 2
+//                              drive.trajectorySequenceBuilder(new Pose2d(-33.13, 62.87, Math.toRadians(270.00)))
+//                                  .lineToLinearHeading(new Pose2d(-40.78, 24.64, Math.toRadians(270.00)))
+//                                  .lineToSplineHeading(new Pose2d(-37.81, 34.83, Math.toRadians(0.00)))
+//                                  .lineToLinearHeading(new Pose2d(48.64, 34.83, Math.toRadians(0.00)))
+//                                  .build()
+
+                            // place pixel 3
+                                drive.trajectorySequenceBuilder(new Pose2d(-33.35, 62.87, Math.toRadians(270.00)))
+                                        .splineTo(new Vector2d(-30.37, 35.68), Math.toRadians(0.00))
+                                        .lineToLinearHeading(new Pose2d(48.64, 36.11, Math.toRadians(1.15)))
                                         .build()
-                        // place pixel 2
-//                        drive.trajectorySequenceBuilder(new Pose2d(-36.37, -62.20, Math.toRadians(90.00)))
-//                                .splineTo(new Vector2d(-35.93, -48.84), Math.toRadians(90.00))
-//                                .lineToLinearHeading(new Pose2d(-35.78, -32.66, Math.toRadians(90.00)))
-//                                .lineToLinearHeading(new Pose2d(-51.66, -53.59, Math.toRadians(0.00)))
-//                                .splineToConstantHeading(new Vector2d(-16.63, -60.42), Math.toRadians(0.00))
-//                                .splineToConstantHeading(new Vector2d(27.46, -56.26), Math.toRadians(0.00))
-//                                .splineToConstantHeading(new Vector2d(50.77, -36.67), Math.toRadians(0.00))
-//                                .build()
-                        // place pixel 3
-//                        drive.trajectorySequenceBuilder(new Pose2d(-36.37, -62.20, Math.toRadians(90.00)))
-//                                .splineTo(new Vector2d(-35.93, -48.84), Math.toRadians(90.00))
-//                                .lineToLinearHeading(new Pose2d(-33.70, -35.93, Math.toRadians(34.11)))
-//                                .lineToLinearHeading(new Pose2d(-51.66, -53.59, Math.toRadians(0.00)))
-//                                .splineToConstantHeading(new Vector2d(-16.63, -60.42), Math.toRadians(0.00))
-//                                .splineToConstantHeading(new Vector2d(27.46, -56.26), Math.toRadians(0.00))
-//                                .splineToConstantHeading(new Vector2d(50.77, -36.67), Math.toRadians(0.00))
-//                                .build()
+
                 );
 
         // Set field image

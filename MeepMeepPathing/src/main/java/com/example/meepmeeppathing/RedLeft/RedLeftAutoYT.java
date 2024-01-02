@@ -39,7 +39,7 @@ public class RedLeftAutoYT {
                                         .lineToLinearHeading(new Pose2d(-47.36, -37.59, Math.toRadians(90.00)))
                                         .lineToLinearHeading(new Pose2d(-25.06, -35.89, Math.toRadians(90.00)))
                                         .lineToLinearHeading(new Pose2d(-50.76, -30.37, Math.toRadians(90.00)))
-                                        .splineTo(new Vector2d(-24.64, -9.77), Math.toRadians(0.00))
+                                        .splineToConstantHeading(new Vector2d(-24.64, -9.77), Math.toRadians(0.00))
                                         .splineTo(new Vector2d(27.61, -10.41), Math.toRadians(-2.39))
                                         .lineToSplineHeading(new Pose2d(49.06, -32.92, Math.toRadians(0.00)))
                                         .build()
