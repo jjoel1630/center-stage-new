@@ -31,9 +31,11 @@ public class BlueLeftAuto {
 //                                  .build()
 
                             // place pixel 3
-                                drive.trajectorySequenceBuilder(new Pose2d(-33.35, 62.87, Math.toRadians(270.00)))
-                                        .splineTo(new Vector2d(-30.37, 35.68), Math.toRadians(0.00))
-                                        .lineToLinearHeading(new Pose2d(48.64, 36.11, Math.toRadians(1.15)))
+                                drive.trajectorySequenceBuilder(new Pose2d(-32.125, 65.50, Math.toRadians(270.00)))
+                                        .lineToConstantHeading(new Vector2d(-47.00, 42.50))
+                                        .lineToLinearHeading(new Pose2d(-48.00, 60.00, Math.toRadians(0.00)))
+                                        .splineToConstantHeading(new Vector2d(24.00, 60.00), Math.toRadians(-0.71))
+                                        .splineToConstantHeading(new Vector2d(48.00, 36.00), Math.toRadians(0.00))
                                         .build()
 
                 );
