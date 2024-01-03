@@ -10,7 +10,7 @@ public class RedRightAuto {
     public static void main(String[] args) {
         // Declare a MeepMeep instance
         // With a field size of 800 pixels
-        MeepMeep meepMeep = new MeepMeep(800);
+        MeepMeep meepMeep = new MeepMeep(600);
 
         RoadRunnerBotEntity myBot = new DefaultBotBuilder(meepMeep)
                 // Required: Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
@@ -18,26 +18,29 @@ public class RedRightAuto {
                 // Option: Set theme. Default = ColorSchemeRedDark()
                 .followTrajectorySequence(drive ->
                                 // place pixel 1
-                                drive.trajectorySequenceBuilder(new Pose2d(11.63, -62.20, Math.toRadians(90.00)))
-                                        .splineTo(new Vector2d(11.63, -44.09), Math.toRadians(90.00))
-                                        .lineToLinearHeading(new Pose2d(5.79, -38.00, Math.toRadians(124.11)))
-                                        .lineToLinearHeading(new Pose2d(18.85, -56.56, Math.toRadians(0.00)))
-                                        .splineToConstantHeading(new Vector2d(51.22, -37.56), Math.toRadians(0.00))
+                               /* drive.trajectorySequenceBuilder(new Pose2d(9.13, -62.44, Math.toRadians(90.00)))
+                                        .lineToLinearHeading(new Pose2d(15.93, -35.89, Math.toRadians(90.00)))
+                                        .lineToLinearHeading(new Pose2d(0.85, -35.47, Math.toRadians(90.00)))
+                                        .lineToSplineHeading(new Pose2d(48.85, -36.53, Math.toRadians(0.00)))
+                                        .lineToLinearHeading(new Pose2d(48.64, -16.99, Math.toRadians(0.00)))
                                         .build()
                         // place pixel 2
-//                        drive.trajectorySequenceBuilder(new Pose2d(11.63, -62.20, Math.toRadians(90.00)))
-//                                .splineTo(new Vector2d(11.88, -48.69), Math.toRadians(90.00))
-//                                .lineToLinearHeading(new Pose2d(11.58, -33.40, Math.toRadians(90.00)))
-//                                .lineToLinearHeading(new Pose2d(18.85, -56.56, Math.toRadians(0.00)))
-//                                .splineToConstantHeading(new Vector2d(51.22, -37.56), Math.toRadians(0.00))
-//                                .build()
+                                drive.trajectorySequenceBuilder(new Pose2d(9.13, -62.44, Math.toRadians(90.00)))
+                                        .lineToLinearHeading(new Pose2d(17.20, -24.85, Math.toRadians(90.00)))
+                                        .lineToSplineHeading(new Pose2d(48.85, -36.53, Math.toRadians(0.00)))
+                                        .lineToLinearHeading(new Pose2d(48.64, -16.99, Math.toRadians(0.00)))
+                                        .build() */
+
                         // place pixel 3
-//                                drive.trajectorySequenceBuilder(new Pose2d(11.63, -62.20, Math.toRadians(90.00)))
-//                                        .splineTo(new Vector2d(11.88, -48.69), Math.toRadians(90.00))
-//                                        .lineToLinearHeading(new Pose2d(16.63, -39.19, Math.toRadians(34.11)))
-//                                        .lineToLinearHeading(new Pose2d(18.85, -56.56, Math.toRadians(0.00)))
-//                                        .splineToConstantHeading(new Vector2d(51.22, -37.56), Math.toRadians(0.00))
-//                                        .build()
+                        drive.trajectorySequenceBuilder(new Pose2d(9.13, -62.44, Math.toRadians(90.00)))
+                                .lineToLinearHeading(new Pose2d(23.58, -35.89, Math.toRadians(90.00)))
+                                .lineToSplineHeading(new Pose2d(48.85, -36.53, Math.toRadians(0.00)))
+                                .lineToLinearHeading(new Pose2d(48.64, -16.99, Math.toRadians(0.00)))
+                                .build()
+
+
+
+
                 );
 
         // Set field image
