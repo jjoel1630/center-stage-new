@@ -14,6 +14,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.teamcode.drive.PoseStorage;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.drive.opmode.auton.PIDControllerCustom;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
@@ -40,6 +41,7 @@ public class TeleOpFiniteStates extends LinearOpMode {
     }
 
     public static boolean USE_WEBCAM = true;
+    public static String cameraName = "Webcam 1";
     private AprilTagProcessor aprilTag;
     private VisionPortal visionPortal;
     public void initAprilTag() {
@@ -47,7 +49,7 @@ public class TeleOpFiniteStates extends LinearOpMode {
         aprilTag = AprilTagProcessor.easyCreateWithDefaults();
 
         // Create the vision portal the easy way.
-        if (USE_WEBCAM) visionPortal = VisionPortal.easyCreateWithDefaults(hardwareMap.get(WebcamName.class, "Webcam 1"), aprilTag);
+        if (USE_WEBCAM) visionPortal = VisionPortal.easyCreateWithDefaults(hardwareMap.get(WebcamName.class, cameraName), aprilTag);
         else visionPortal = VisionPortal.easyCreateWithDefaults(BuiltinCameraDirection.BACK, aprilTag);
     }
     public List<AprilTagDetection> telemetryAprilTag() {
@@ -69,7 +71,7 @@ public class TeleOpFiniteStates extends LinearOpMode {
     public static double slowModePower = 0.3, regularPower = 0.8;
 
     // outtake constants
-    public static double CLAW_MAX = 1, CLAW_MIN = 0.7;
+    public static double CLAW_MAX = 1, CLAW_MIN = 0.63;
     public static double ARM_GROUND = 0.3, ARM_MAX = 0.58, ARM_MIN = 0.0;
     public static double clawTime = 0.5, armTime = 0.7;
     double clawPos = CLAW_MIN, armPos = ARM_MIN;
@@ -103,7 +105,9 @@ public class TeleOpFiniteStates extends LinearOpMode {
         frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
 
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
-        drive.setPoseEstimate(new Pose2d(0,0, Math.toRadians(currentHeading)));
+        drive.setPoseEstimate(PoseStorage.currentPose);
+        drive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         // linearSlide
         linearSlide = hardwareMap.get(DcMotorEx.class, "linearSlide");
@@ -171,6 +175,9 @@ public class TeleOpFiniteStates extends LinearOpMode {
                     if (!drive.isBusy()) {
                         driverState = DriverState.DRIVER;
                     }
+                    if(-gamepad1.left_stick_y != 0 || gamepad1.left_stick_x != 0 || gamepad1.right_stick_x != 0) {
+                        drive.breakFollowing();
+                    }
                     break;
             }
 
@@ -215,7 +222,7 @@ public class TeleOpFiniteStates extends LinearOpMode {
                     armPos = ARM_MAX;
                     arm.setPosition(armPos);
                     if(timer.seconds() >= armTime && clawPos != CLAW_MIN) {
-                        clawPos = CLAW_MIN-0.08;
+                        clawPos = CLAW_MIN;
                         claw.setPosition(clawPos);
                     }
 
@@ -246,8 +253,8 @@ public class TeleOpFiniteStates extends LinearOpMode {
                     // if right bumper pressed first servo releases
                     if(gamepad2.left_bumper) clawPos = CLAW_MAX;
                     if(gamepad2.right_bumper) clawPos = CLAW_MIN;
-                    if(gamepad2.left_trigger == 1) armPos = ARM_MAX;
-                    if(gamepad2.right_trigger == 1 && linearSlide.getCurrentPosition() >= armPreventionThreshold) armPos = ARM_MIN;
+                    if(gamepad2.left_trigger == 1 && linearSlide.getCurrentPosition() >= armPreventionThreshold) armPos = ARM_MAX;
+                    if(gamepad2.right_trigger == 1) armPos = ARM_MIN;
                     if(gamepad2.dpad_up) armPos = ARM_GROUND;
 
                     claw.setPosition(clawPos);
@@ -278,6 +285,9 @@ public class TeleOpFiniteStates extends LinearOpMode {
 
             airplane.setPosition(airplanePos);
 
+            telemetry.addData("left", drive.leftRear.getCurrentPosition());
+            telemetry.addData("right", drive.rightRear.getCurrentPosition());
+            telemetry.addData("front", drive.rightFront.getCurrentPosition());
             if(tags != null) {
                 for (AprilTagDetection detection : tags) {
                     if (detection.metadata != null) {
