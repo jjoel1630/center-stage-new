@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.drive.opmode.vision;
 
+import com.acmerobotics.dashboard.config.Config;
+
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.Rect;
@@ -10,13 +12,19 @@ import org.openftc.easyopencv.OpenCvPipeline;
 import java.util.Arrays;
 import java.util.List;
 
-
+@Config
 public class TeamElementPipeline extends OpenCvPipeline {
 
     int CAMERA_WIDTH = 640/*800*/;
     int CAMERA_HEIGHT = 480/*448*/;
 
-    List<Integer> ELEMENT_COLOR = Arrays.asList(255, 0, 0); //(red, green, blue)
+    public static int x1 = 25, y1 = 400, w1 = 250, h1 = 250;
+    public static int x2 = 560, y2 = 340, w2 = 250, h2 = 250;
+    public static int x3 = 1030, y3 = 340, w3 = 250, h3 = 250;
+
+    public static int red = 225;
+
+    List<Integer> ELEMENT_COLOR = Arrays.asList(red, 0, 0); //(red, green, blue)
 
     int line1x = CAMERA_WIDTH / 3;
     int line2x = (CAMERA_WIDTH / 3) * 2;
@@ -43,9 +51,9 @@ public class TeamElementPipeline extends OpenCvPipeline {
 
         //Defining Zones
         //Rect(top left x, top left y, bottom right x, bottom right y)
-        Mat zone1 = input.submat(new Rect(0, 180, 50, 50));
-        Mat zone2 = input.submat(new Rect(316, 180, 50, 50));
-        Mat zone3 = input.submat(new Rect(590, 180, 50, 50));
+        Mat zone1 = input.submat(new Rect(x1, y1, w1, h1));
+        Mat zone2 = input.submat(new Rect(x2, y2, w2, h2));
+        Mat zone3 = input.submat(new Rect(x3, y3, w3, h3));
 
         //Averaging the colors in the zones
         Scalar avgColor1 = Core.mean(zone1);

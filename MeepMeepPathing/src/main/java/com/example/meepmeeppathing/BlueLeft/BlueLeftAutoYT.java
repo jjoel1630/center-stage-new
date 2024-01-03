@@ -26,12 +26,25 @@ public class BlueLeftAutoYT {
 //                                .splineToConstantHeading(new Vector2d(27.46, -56.26), Math.toRadians(0.00))
 //                                .splineToConstantHeading(new Vector2d(50.77, -36.67), Math.toRadians(0.00))
 //                                .build()
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD:MeepMeepPathing/src/main/java/com/example/meepmeeppathing/BlueLeftAuto.java
+                        drive.trajectorySequenceBuilder(new Pose2d(0,0, Math.toRadians(204)))
+                                .lineToLinearHeading(new Pose2d(13.7, 1.4, Math.toRadians(180)))
+                                .build()
+                        // place pixel 2
+=======
+>>>>>>> 9cc7fb20a6d8193db325cdb79e209640311f342a
                                 drive.trajectorySequenceBuilder(new Pose2d(0.00, 0.00, Math.toRadians(0.00)))
                                         .splineToLinearHeading(new Pose2d(10, -25, Math.toRadians(-70)), Math.toRadians(-70))
                                         .splineToLinearHeading(new Pose2d(30.00, -30.00, Math.toRadians(180.00)), Math.toRadians(180.00))
                                         .build()
 
         // place pixel 2
+<<<<<<< HEAD
+=======
+>>>>>>> 43852f0cfd467e6a964fe9a4ae85efbcd3c4546a:MeepMeepPathing/src/main/java/com/example/meepmeeppathing/BlueLeft/BlueLeftAutoYT.java
+>>>>>>> 9cc7fb20a6d8193db325cdb79e209640311f342a
 //                        drive.trajectorySequenceBuilder(new Pose2d(-36.37, -62.20, Math.toRadians(90.00)))
 //                                .splineTo(new Vector2d(-35.93, -48.84), Math.toRadians(90.00))
 //                                .lineToLinearHeading(new Pose2d(-35.78, -32.66, Math.toRadians(90.00)))
