@@ -20,7 +20,7 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
 import java.util.List;
 
-public class BlueRight extends LinearOpMode {
+public class BlueLeft extends LinearOpMode {
     public enum DriverState {
         AUTOMATIC,
         TAGS,
@@ -68,7 +68,7 @@ public class BlueRight extends LinearOpMode {
     public static double aprilTagGap = 6;
     public static double aprilTagOffset = 0;
 
-    public Pose2d start = new Pose2d(-32.125, 65.50, Math.toRadians(270.00));
+    public Pose2d start = new Pose2d(15.875, 65.50, Math.toRadians(270.00));
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -89,10 +89,8 @@ public class BlueRight extends LinearOpMode {
 
         // Paths
         TrajectorySequence path1 = drive.trajectorySequenceBuilder(start)
-                .lineToConstantHeading(new Vector2d(-47.00, 42.50))
-                .lineToLinearHeading(new Pose2d(-48.00, 60.00, Math.toRadians(0.00)))
-                .splineToConstantHeading(new Vector2d(24.00, 60.00), Math.toRadians(0.00))
-                .splineToConstantHeading(new Vector2d(48.00, 36.00), Math.toRadians(0.00))
+                .lineToConstantHeading(new Vector2d(23.00, 42.50))
+                .lineToLinearHeading(new Pose2d(48.00, 36.00, Math.toRadians(0.00)))
                 .build();
 
         waitForStart();
