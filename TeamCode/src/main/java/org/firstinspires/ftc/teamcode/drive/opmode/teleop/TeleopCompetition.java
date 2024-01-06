@@ -88,7 +88,7 @@ public class TeleopCompetition extends LinearOpMode {
             boolean slowModeOn = false;
             if (gamepad1.left_bumper) slowModeOn = true;
 
-            double powerModifier = slowModeOn ? 0.3 : 0.8;
+            double powerModifier = slowModeOn ? 0.3 : 1.0;
 
             //making the equations in order to have the directions synchronous
             double leftFrontPower = (axial + lateral + yaw) * powerModifier;
