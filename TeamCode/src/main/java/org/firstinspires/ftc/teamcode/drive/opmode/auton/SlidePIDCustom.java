@@ -19,7 +19,8 @@ import org.firstinspires.ftc.teamcode.drive.opmode.auton.PIDControllerCustom;
 public class SlidePIDCustom extends LinearOpMode {
     public ElapsedTime timer = new ElapsedTime();
 
-    public static double p = 0.011, i = 0, d = 0.00018, f = 0.3; // long belt
+    public static double p = 0.011, i = 0, d = 0.00018, f = 0.16; // long belt
+    public static double decreasingPower = -0.15;
     public PIDControllerCustom pidController = new PIDControllerCustom(p, i, d);
 
     public static double target = 500;
@@ -27,8 +28,7 @@ public class SlidePIDCustom extends LinearOpMode {
     public static double powerMultiplier = 1; // short belt = 1;
     public static boolean reversed = true;
 
-    public static double ARM_MAX = 0.58;
-    public static double ARM_MIN = 0.0;
+    public static double ARM_GROUND = 0.25, ARM_MAX = 0.55, ARM_MIN = 0.0;
     double armPos = ARM_MIN;
 
     public DcMotorEx slide;
@@ -38,7 +38,8 @@ public class SlidePIDCustom extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         slide = hardwareMap.get(DcMotorEx.class, "linearSlide");
         slide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        slide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+//        slide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        slide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         if(reversed) slide.setDirection(DcMotorSimple.Direction.REVERSE);
 
         arm = hardwareMap.servo.get("arm");
@@ -54,13 +55,15 @@ public class SlidePIDCustom extends LinearOpMode {
             pidController.setPID(p, i, d);
 
             double curPos = slide.getCurrentPosition();
+
             double pid = pidController.update(target / divisor, curPos / divisor);
 
             if(f >= 0) {
                 pid = pid + f;
             }
 
-            slide.setPower(powerMultiplier * pid);
+//            slide.setPower(powerMultiplier * pid);
+            slide.setVelocity(pid);
 
             mx = Math.max(mx, Math.abs(powerMultiplier * pid));
 

@@ -15,12 +15,12 @@ import java.util.List;
 @Config
 public class TeamElementPipeline extends OpenCvPipeline {
 
-    int CAMERA_WIDTH = 640/*800*/;
-    int CAMERA_HEIGHT = 480/*448*/;
+    int CAMERA_WIDTH = 2304/*800*/;
+    int CAMERA_HEIGHT = 1536/*448*/;
 
-    public static int x1 = 25, y1 = 400, w1 = 250, h1 = 250;
-    public static int x2 = 560, y2 = 340, w2 = 250, h2 = 250;
-    public static int x3 = 1030, y3 = 340, w3 = 250, h3 = 250;
+    public static int x1 = 0, y1 = 1300, w1 = 300, h1 = 300;
+    public static int x2 = 500, y2 = 1200, w2 = 400, h2 = 400;
+    public static int x3 = 1200, y3 = 1200, w3 = 300, h3 = 300;
 
     public static int red = 225;
 

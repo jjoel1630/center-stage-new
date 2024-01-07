@@ -17,7 +17,7 @@ import java.util.List;
 public class CustomElementPipeline extends OpenCvPipeline {
 
     int CAMERA_WIDTH = 640/*800*/;
-    int CAMERA_HEIGHT = 480/*448*/;
+    int CAMERA_HEIGHT = 360/*448*/;
 
     List<Integer> ELEMENT_COLOR = Arrays.asList(255, 0, 0); //(red, green, blue)
 

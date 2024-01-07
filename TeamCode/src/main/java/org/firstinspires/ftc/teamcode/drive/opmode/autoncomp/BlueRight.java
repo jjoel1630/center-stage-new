@@ -1,8 +1,10 @@
 package org.firstinspires.ftc.teamcode.drive.opmode.autoncomp;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -20,6 +22,8 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
 import java.util.List;
 
+@Autonomous
+@Config
 public class BlueRight extends LinearOpMode {
     public enum DriverState {
         AUTOMATIC,
@@ -68,7 +72,7 @@ public class BlueRight extends LinearOpMode {
     public static double aprilTagGap = 6;
     public static double aprilTagOffset = 0;
 
-    public Pose2d start = new Pose2d(-32.125, 65.50, Math.toRadians(270.00));
+    public Pose2d start = new Pose2d(-39.87, 65.50, Math.toRadians(270.00));
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -89,10 +93,20 @@ public class BlueRight extends LinearOpMode {
 
         // Paths
         TrajectorySequence path1 = drive.trajectorySequenceBuilder(start)
-                .lineToConstantHeading(new Vector2d(-47.00, 42.50))
+                .lineToConstantHeading(new Vector2d(-47.00, 42.00))
                 .lineToLinearHeading(new Pose2d(-48.00, 60.00, Math.toRadians(0.00)))
-                .splineToConstantHeading(new Vector2d(24.00, 60.00), Math.toRadians(0.00))
-                .splineToConstantHeading(new Vector2d(48.00, 36.00), Math.toRadians(0.00))
+                .build();
+        TrajectorySequence path2 = drive.trajectorySequenceBuilder(start)
+                .splineTo(new Vector2d(-36.00, 30.50), Math.toRadians(90.00))
+                .lineToLinearHeading(new Pose2d(-48.00, 60.00, Math.toRadians(0.00)))
+                .build();
+        TrajectorySequence path3 = drive.trajectorySequenceBuilder(new Pose2d(-39.88, -65.50, Math.toRadians(90.00)))
+                .splineTo(new Vector2d(-30.00, -38.00), Math.toRadians(45.00))
+                .lineToLinearHeading(new Pose2d(-48.00, -60.00, Math.toRadians(0.00)))
+                .build();
+        TrajectorySequence scorePixel = drive.trajectorySequenceBuilder(path1.end())
+                .splineToConstantHeading(new Vector2d(24.00, -60.00), Math.toRadians(0.00))
+                .lineToLinearHeading(new Pose2d(48.00, -36.00, Math.toRadians(180.00)))
                 .build();
 
         waitForStart();

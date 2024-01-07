@@ -7,6 +7,8 @@ import com.noahbres.meepmeep.roadrunner.DefaultBotBuilder;
 import com.noahbres.meepmeep.roadrunner.entity.RoadRunnerBotEntity;
 
 public class BlueLeftAuto {
+    public static Pose2d start = new Pose2d(-39.87, 65.50, Math.toRadians(270.00));
+
     public static void main(String[] args) {
         // Declare a MeepMeep instance
         // With a field size of 800 pixels
@@ -31,12 +33,10 @@ public class BlueLeftAuto {
 //                                  .build()
 
                             // place pixel 3
-                                drive.trajectorySequenceBuilder(new Pose2d(-32.125, 65.50, Math.toRadians(270.00)))
-                                        .lineToConstantHeading(new Vector2d(-47.00, 42.50))
-                                        .lineToLinearHeading(new Pose2d(-48.00, 60.00, Math.toRadians(0.00)))
-                                        .splineToConstantHeading(new Vector2d(24.00, 60.00), Math.toRadians(-0.71))
-                                        .splineToConstantHeading(new Vector2d(48.00, 36.00), Math.toRadians(0.00))
-                                        .build()
+                        drive.trajectorySequenceBuilder(new Pose2d(-48.00, -60.00, Math.toRadians(0.00)))
+                                .splineToConstantHeading(new Vector2d(24.00, -60.00), Math.toRadians(0.00))
+                                .lineToLinearHeading(new Pose2d(48.00, -36.00, Math.toRadians(180.00)))
+                                .build()
 
                 );
 

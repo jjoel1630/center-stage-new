@@ -1,8 +1,10 @@
 package org.firstinspires.ftc.teamcode.drive.opmode.autoncomp;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -13,6 +15,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.drive.opmode.auton.PIDControllerCustom;
+import org.firstinspires.ftc.teamcode.drive.opmode.teleop.TeleOpFiniteStates;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
@@ -20,6 +23,8 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
 import java.util.List;
 
+@Autonomous
+@Config
 public class RedRight extends LinearOpMode {
     public enum DriverState {
         AUTOMATIC,
@@ -50,9 +55,8 @@ public class RedRight extends LinearOpMode {
     private DcMotorEx linearSlide = null;
     private Servo claw, arm;
     private ElapsedTime timer;
-
-    public static double CLAW_MAX = 1, CLAW_MIN = 0.7;
-    public static double ARM_GROUND = 0.3, ARM_MAX = 0.58, ARM_MIN = 0.0;
+    public static double CLAW_MAX = 1, CLAW_MIN = 0.12;
+    public static double ARM_GROUND = 0.2, ARM_MAX = 0.50, ARM_MIN = 0.0;
     public static double clawTime = 0.5, armTime = 0.7;
     double clawPos = CLAW_MIN, armPos = ARM_MIN;
 
@@ -65,10 +69,11 @@ public class RedRight extends LinearOpMode {
     PIDControllerCustom linearController = new PIDControllerCustom(linearKp, linearKi, linearKd);
     DriverState driverState = DriverState.AUTOMATIC;
 
-    public static double aprilTagGap = 6;
-    public static double aprilTagOffset = 0;
+    public static double aprilTagGap = -4;
+    public static double aprilTagOffset = -5;
 
-    public Pose2d start = new Pose2d(-32.125, 65.50, Math.toRadians(270.00));
+
+    public static Pose2d start = new Pose2d(15.875, -65.50, Math.toRadians(90));
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -83,14 +88,17 @@ public class RedRight extends LinearOpMode {
         arm = hardwareMap.servo.get("arm");
         claw = hardwareMap.servo.get("claw");
 
+        claw.setPosition(clawPos);
+        arm.setPosition(armPos);
+
         initAprilTag();
 
         timer = new ElapsedTime();
 
         // Paths
-        TrajectorySequence path1 = drive.trajectorySequenceBuilder(new Pose2d(15.875, 65.50, Math.toRadians(270.00)))
-                .lineToConstantHeading(new Vector2d(23.00, 42.50))
-                .lineToLinearHeading(new Pose2d(48.00, 36.00, Math.toRadians(0.00)))
+        TrajectorySequence path1 = drive.trajectorySequenceBuilder(start)
+                .lineToConstantHeading(new Vector2d(23.00, -42.50))
+                .lineToLinearHeading(new Pose2d(48.00, -36.00, Math.toRadians(180)))
                 .build();
 
         waitForStart();
@@ -124,8 +132,62 @@ public class RedRight extends LinearOpMode {
 
                         drive.followTrajectory(tagPose);
 
-                        driverState = DriverState.DONE;
+                        driverState = DriverState.LIFT_PICKUP;
                     }
+                    break;
+                case LIFT_PICKUP:
+                    clawPos = CLAW_MIN;
+                    claw.setPosition(clawPos);
+                    if(timer.seconds() >= clawTime && armPos != ARM_MIN) {
+                        armPos = ARM_MIN;
+                        arm.setPosition(armPos);
+                        timer.reset();
+                    }
+
+                    if(timer.seconds() >= armTime) driverState = DriverState.LIFT_RAISE;
+                    break;
+                case LIFT_RAISE:
+                    linearCurPos = linearSlide.getCurrentPosition();
+                    pid = linearController.update(linearHigh, linearCurPos);
+                    linearSlide.setPower(pid * slideCoeff);
+
+                    if(Math.abs(linearHigh - linearCurPos) <= linearError) {
+                        driverState = DriverState.LIFT_DROP;
+                        timer.reset();
+                    }
+                    break;
+                case LIFT_DROP:
+                    linearSlide.setPower(linearF);
+
+                    armPos = ARM_MAX;
+                    arm.setPosition(armPos);
+                    if(timer.seconds() >= armTime && clawPos != CLAW_MAX) {
+                        clawPos = CLAW_MAX;
+                        claw.setPosition(clawPos);
+                    }
+
+                    if(timer.seconds() >= clawTime + armTime) driverState = DriverState.LIFT_RETRACT;
+                    break;
+                case LIFT_RETRACT:
+                    clawPos = CLAW_MAX;
+                    claw.setPosition(clawPos);
+                    if(timer.seconds() >= clawTime && armPos != ARM_MIN) {
+                        armPos = ARM_MIN;
+                        arm.setPosition(armPos);
+                        timer.reset();
+                    }
+
+                    linearCurPos = linearSlide.getCurrentPosition();
+                    if(timer.seconds() >= armTime) {
+                        pid = linearController.update(linearLow, linearCurPos);
+                        linearSlide.setPower(pid * slideCoeff);
+                    }
+
+                    if(Math.abs(linearLow - linearCurPos) <= linearError) {
+                        driverState = DriverState.DONE;
+                        timer.reset();
+                    }
+
                     break;
                 case DONE:
                     break;

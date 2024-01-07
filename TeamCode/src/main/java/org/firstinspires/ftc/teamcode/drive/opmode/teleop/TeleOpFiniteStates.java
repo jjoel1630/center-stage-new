@@ -68,11 +68,11 @@ public class TeleOpFiniteStates extends LinearOpMode {
 
     // drivetrain constants
     public static double axialCoefficient = 1, yawCoefficient = 1, lateralCoefficient = 1.1;
-    public static double slowModePower = 0.3, regularPower = 0.8;
+    public static double slowModePower = 0.5, regularPower = 1;
 
     // outtake constants
-    public static double CLAW_MAX = 1, CLAW_MIN = 0.63;
-    public static double ARM_GROUND = 0.3, ARM_MAX = 0.58, ARM_MIN = 0.0;
+    public static double CLAW_MAX = 1, CLAW_MIN = 0.9;
+    public static double ARM_GROUND = 0.26, ARM_MAX = 0.6, ARM_MIN = 0.0;
     public static double clawTime = 0.5, armTime = 0.7;
     double clawPos = CLAW_MIN, armPos = ARM_MIN;
 
@@ -81,10 +81,10 @@ public class TeleOpFiniteStates extends LinearOpMode {
 
     // linearslide constants: black black, red red for both
     public static double slideCoeff = 1;
-    public static double linearF = 0.05, linearFThreshold = 500;
-    public static double armPreventionThreshold = 500, slidePositionMax = 3000;
-    public static double linearLow = 0, linearHigh = 2500, linearError = 50;
-    public static double linearKp = 0.011, linearKi = 0, linearKd = 0.00018;
+    public static double linearF = 0.05, linearFThreshold = 1500;
+    public static double armPreventionThreshold = 500, slidePositionMax = 2100;
+    public static double linearLow = 0, linearHigh = 2000, linearError = 50;
+    public static double linearKp = 4.8, linearKi = 0, linearKd = 0.5;
     PIDControllerCustom linearController = new PIDControllerCustom(linearKp, linearKi, linearKd);
     OuttakeState outState = OuttakeState.LIFT_MANUAL;
 
@@ -174,6 +174,7 @@ public class TeleOpFiniteStates extends LinearOpMode {
                 case AUTOMATIC:
                     if (!drive.isBusy()) {
                         driverState = DriverState.DRIVER;
+//                        outState = OuttakeState.LIFT_PICKUP;
                     }
                     if(-gamepad1.left_stick_y != 0 || gamepad1.left_stick_x != 0 || gamepad1.right_stick_x != 0) {
                         drive.breakFollowing();
@@ -188,15 +189,15 @@ public class TeleOpFiniteStates extends LinearOpMode {
             linearController.setPID(linearKp, linearKi, linearKd);
 
             if(gamepad2.x) outState = OuttakeState.LIFT_MANUAL;
-            if(gamepad2.b) {
+            if(gamepad2.y) {
                 timer.reset();
-                outState = OuttakeState.LIFT_PICKUP;
+                outState = OuttakeState.LIFT_RAISE;
             }
 
             double linearCurPos, pid;
             switch (outState) {
                 case LIFT_PICKUP:
-                    clawPos = CLAW_MAX;
+                    clawPos = CLAW_MIN;
                     claw.setPosition(clawPos);
                     if(timer.seconds() >= clawTime && armPos != ARM_MIN) {
                         armPos = ARM_MIN;
@@ -207,12 +208,14 @@ public class TeleOpFiniteStates extends LinearOpMode {
                     if(timer.seconds() >= armTime) outState = OuttakeState.LIFT_RAISE;
                     break;
                 case LIFT_RAISE:
+                    linearSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                     linearCurPos = linearSlide.getCurrentPosition();
                     pid = linearController.update(linearHigh, linearCurPos);
-                    linearSlide.setPower(pid * slideCoeff);
+                    linearSlide.setVelocity(pid);
 
                     if(Math.abs(linearHigh - linearCurPos) <= linearError) {
-                        outState = OuttakeState.LIFT_DROP;
+                        outState = OuttakeState.LIFT_MANUAL;
+                        linearSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                         timer.reset();
                     }
                     break;
@@ -221,14 +224,15 @@ public class TeleOpFiniteStates extends LinearOpMode {
 
                     armPos = ARM_MAX;
                     arm.setPosition(armPos);
-                    if(timer.seconds() >= armTime && clawPos != CLAW_MIN) {
-                        clawPos = CLAW_MIN;
+                    if(timer.seconds() >= armTime && clawPos != CLAW_MAX) {
+                        clawPos = CLAW_MAX;
                         claw.setPosition(clawPos);
                     }
 
                     if(timer.seconds() >= clawTime + armTime) outState = OuttakeState.LIFT_RETRACT;
                     break;
                 case LIFT_RETRACT:
+
                     clawPos = CLAW_MAX;
                     claw.setPosition(clawPos);
                     if(timer.seconds() >= clawTime && armPos != ARM_MIN) {
@@ -237,19 +241,23 @@ public class TeleOpFiniteStates extends LinearOpMode {
                         timer.reset();
                     }
 
+                    linearSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                     linearCurPos = linearSlide.getCurrentPosition();
                     if(timer.seconds() >= armTime) {
                         pid = linearController.update(linearLow, linearCurPos);
-                        linearSlide.setPower(pid * slideCoeff);
+                        linearSlide.setVelocity(pid);
                     }
 
                     if(Math.abs(linearLow - linearCurPos) <= linearError) {
                         outState = OuttakeState.LIFT_MANUAL;
+                        linearSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                         timer.reset();
                     }
 
                     break;
                 case LIFT_MANUAL:
+                    linearSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
                     // if right bumper pressed first servo releases
                     if(gamepad2.left_bumper) clawPos = CLAW_MAX;
                     if(gamepad2.right_bumper) clawPos = CLAW_MIN;
@@ -282,8 +290,8 @@ public class TeleOpFiniteStates extends LinearOpMode {
 
             if(gamepad2.dpad_left) airplanePos = AIRPLANE_MAX;
             if(gamepad2.dpad_right) airplanePos = AIRPLANE_MIN;
-
             airplane.setPosition(airplanePos);
+
 
             telemetry.addData("left", drive.leftRear.getCurrentPosition());
             telemetry.addData("right", drive.rightRear.getCurrentPosition());
@@ -304,7 +312,6 @@ public class TeleOpFiniteStates extends LinearOpMode {
             telemetry.addData("slide position", linearSlide.getCurrentPosition());
             telemetry.addData("lift state", outState);
             telemetry.addData("timer", timer.seconds());
-            telemetry.addData("heading", currentHeading);
             telemetry.update();
         }
     }
