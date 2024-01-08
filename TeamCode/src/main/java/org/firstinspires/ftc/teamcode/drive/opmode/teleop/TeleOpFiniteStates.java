@@ -71,7 +71,7 @@ public class TeleOpFiniteStates extends LinearOpMode {
     public static double slowModePower = 0.5, regularPower = 1;
 
     // outtake constants
-    public static double CLAW_MAX = 1, CLAW_MIN = 0.9;
+    public static double CLAW_MAX = 1, CLAW_MIN = 0.8;
     public static double ARM_GROUND = 0.26, ARM_MAX = 0.6, ARM_MIN = 0.0;
     public static double clawTime = 0.5, armTime = 0.7;
     double clawPos = CLAW_MIN, armPos = ARM_MIN;

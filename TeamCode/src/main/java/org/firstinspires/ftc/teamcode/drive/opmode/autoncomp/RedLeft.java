@@ -37,10 +37,7 @@ public class RedLeft extends LinearOpMode {
     public enum DriverState {
         AUTOMATIC,
         TAGS,
-        LIFT_PICKUP,
-        LIFT_RAISE,
-        LIFT_DROP,
-        LIFT_RETRACT,
+        PARK,
         DONE
     }
 
@@ -182,18 +179,18 @@ public class RedLeft extends LinearOpMode {
 
                     drive.followTrajectorySequence(scorePixel);
 
-//                    linearSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//                    while(Math.abs(linearHigh - linearCurPos) >= linearError) {
-//                        linearCurPos = linearSlide.getCurrentPosition();
-//                        pid = linearController.update(linearHigh, linearCurPos);
-//                        linearSlide.setVelocity(pid);
-//                    }
+                    linearSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                    while(Math.abs(linearHigh - linearCurPos) >= linearError) {
+                        linearCurPos = linearSlide.getCurrentPosition();
+                        pid = linearController.update(linearHigh, linearCurPos);
+                        linearSlide.setVelocity(pid);
+                    }
 
                     driverState = DriverState.TAGS;
                     break;
                 case TAGS:
-//                    linearSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-//                    linearSlide.setPower(linearF);
+                    linearSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                    linearSlide.setPower(linearF);
 
                     if(tags != null) {
                         AprilTagDetection tag = tags.get(0);
@@ -209,8 +206,10 @@ public class RedLeft extends LinearOpMode {
 
                         drive.followTrajectory(tagPose);
 
-                        driverState = DriverState.DONE;
+                        driverState = DriverState.PARK;
                     }
+                    break;
+                case PARK:
                     break;
                 case DONE:
                     break;
