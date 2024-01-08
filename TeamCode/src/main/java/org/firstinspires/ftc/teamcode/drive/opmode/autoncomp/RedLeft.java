@@ -31,7 +31,7 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 
 import java.util.List;
 
-@Autonomous
+@Autonomous(group = "autonomous")
 @Config
 public class RedLeft extends LinearOpMode {
     public enum DriverState {

@@ -19,8 +19,8 @@ import org.openftc.easyopencv.OpenCvInternalCamera;
 
 import java.util.List;
 
-@Autonomous
 @Config
+@Autonomous(group = "vision")
 public class TeamElementVision extends LinearOpMode {
     public static int zone;
     public static boolean original = true;

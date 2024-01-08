@@ -25,7 +25,7 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 import java.util.List;
 
 @Config
-@TeleOp
+@TeleOp(group="teleop")
 public class TeleOpFiniteStates extends LinearOpMode {
     public enum OuttakeState {
         LIFT_PICKUP,
@@ -191,7 +191,7 @@ public class TeleOpFiniteStates extends LinearOpMode {
             if(gamepad2.x) outState = OuttakeState.LIFT_MANUAL;
             if(gamepad2.y) {
                 timer.reset();
-                outState = OuttakeState.LIFT_RAISE;
+                outState = OuttakeState.LIFT_PICKUP;
             }
 
             double linearCurPos, pid;
@@ -214,7 +214,7 @@ public class TeleOpFiniteStates extends LinearOpMode {
                     linearSlide.setVelocity(pid);
 
                     if(Math.abs(linearHigh - linearCurPos) <= linearError) {
-                        outState = OuttakeState.LIFT_MANUAL;
+                        outState = OuttakeState.LIFT_DROP;
                         linearSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                         timer.reset();
                     }

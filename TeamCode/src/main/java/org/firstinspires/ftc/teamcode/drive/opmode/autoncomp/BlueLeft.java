@@ -23,7 +23,7 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
 import java.util.List;
 
-@Autonomous
+@Autonomous(group = "autonomous")
 @Config
 public class BlueLeft extends LinearOpMode {
     public enum DriverState {

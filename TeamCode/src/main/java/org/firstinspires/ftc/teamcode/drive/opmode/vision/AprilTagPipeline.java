@@ -20,7 +20,7 @@ import org.openftc.easyopencv.OpenCvCameraFactory;
 
 import java.util.List;
 
-@Config
+@Disabled
 @Autonomous
 public class AprilTagPipeline extends LinearOpMode {
     public static boolean USE_WEBCAM = true;
