@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.drive.opmode.autoncomp;
 
+import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
@@ -15,11 +16,18 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.drive.opmode.auton.PIDControllerCustom;
-import org.firstinspires.ftc.teamcode.drive.opmode.teleop.TeleOpFiniteStates;
+import org.firstinspires.ftc.teamcode.drive.opmode.vision.TeamElementPipeline;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
+import org.openftc.easyopencv.OpenCvCamera;
+import org.openftc.easyopencv.OpenCvCameraFactory;
+import org.openftc.easyopencv.OpenCvCameraRotation;
+
+import static org.firstinspires.ftc.teamcode.drive.opmode.Constants.*;
+
+import android.util.Size;
 
 import java.util.List;
 
@@ -29,21 +37,30 @@ public class RedRight extends LinearOpMode {
     public enum DriverState {
         AUTOMATIC,
         TAGS,
+        PARK,
+        DONE,
         LIFT_PICKUP,
         LIFT_RAISE,
         LIFT_DROP,
         LIFT_RETRACT,
-        DONE
     }
 
     private AprilTagProcessor aprilTag;
     private VisionPortal visionPortal;
+    public static int zone = 1;
+    public static int width = 2304, height = 1536;
     public void initAprilTag() {
-        // Create the AprilTag processor the easy way.
         aprilTag = AprilTagProcessor.easyCreateWithDefaults();
-
-        // Create the vision portal the easy way.
-        visionPortal = VisionPortal.easyCreateWithDefaults(hardwareMap.get(WebcamName.class, "Webcam 1"), aprilTag);
+        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        telemetry.addLine("april id" + cameraMonitorViewId);
+        telemetry.update();
+        visionPortal = new VisionPortal.Builder()
+                .addProcessor(aprilTag)
+                .enableLiveView(false)
+                .setCamera(hardwareMap.get(WebcamName.class, "Webcam 1"))
+//                .setLiveViewContainerId(cameraMonitorViewId)
+                .setCameraResolution(new Size(1280, 960))
+                .build();
     }
     public List<AprilTagDetection> telemetryAprilTag() {
         List<AprilTagDetection> currentDetections = aprilTag.getDetections();
@@ -51,27 +68,48 @@ public class RedRight extends LinearOpMode {
 
         return currentDetections.size() > 0 ? currentDetections : null;
     }
+    public void initCamera() {
+        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        telemetry.addLine("other id" + cameraMonitorViewId);
+        telemetry.update();
+        OpenCvCamera camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 2"), cameraMonitorViewId);
+        FtcDashboard.getInstance().startCameraStream(camera, 0);
+
+        TeamElementPipeline elementPipeTeam = new TeamElementPipeline();
+        camera.setPipeline(elementPipeTeam);
+        camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
+        {
+            @Override
+            public void onOpened()
+            {
+                camera.startStreaming(width, height, OpenCvCameraRotation.SIDEWAYS_RIGHT);
+                while(!opModeIsActive() && !isStopRequested()) {
+                    telemetry.addLine("streaming");
+                    zone = elementPipeTeam.get_element_zone();
+                    telemetry.addLine("Element Zone" + zone);
+                    telemetry.update();
+                }
+            }
+
+            @Override
+            public void onError(int errorCode)
+            {
+            }
+        });
+    }
 
     private DcMotorEx linearSlide = null;
     private Servo claw, arm;
     private ElapsedTime timer;
-    public static double CLAW_MAX = 1, CLAW_MIN = 0.12;
-    public static double ARM_GROUND = 0.2, ARM_MAX = 0.50, ARM_MIN = 0.0;
-    public static double clawTime = 0.5, armTime = 0.7;
-    double clawPos = CLAW_MIN, armPos = ARM_MIN;
 
-    public static double slideCoeff = 1;
-    public static double linearF = 0.05, linearFThreshold = 500;
-    public static double armPreventionThreshold = 500, slidePositionMax = 3000;
-    public static double linearLow = 0, linearHigh = 2500, linearError = 50;
-    public static double linearKp = 0.011, linearKi = 0, linearKd = 0.00018;
-    double linearCurPos, pid;
+    double clawPos = CLAW_MIN, armPos = ARM_MIN;
+    public static double linearCurPos, pid;
     PIDControllerCustom linearController = new PIDControllerCustom(linearKp, linearKi, linearKd);
+
     DriverState driverState = DriverState.AUTOMATIC;
 
-    public static double aprilTagGap = -4;
-    public static double aprilTagOffset = -5;
-
+    public static double aprilTagGap = -1*atGap;
+    public static double aprilTagOffset = -1*atOff;
 
     public static Pose2d start = new Pose2d(15.875, -65.50, Math.toRadians(90));
 
@@ -97,8 +135,16 @@ public class RedRight extends LinearOpMode {
 
         // Paths
         TrajectorySequence path1 = drive.trajectorySequenceBuilder(start)
-                .lineToConstantHeading(new Vector2d(23.00, -42.50))
-                .lineToLinearHeading(new Pose2d(48.00, -36.00, Math.toRadians(180)))
+                .lineToConstantHeading(new Vector2d(23.00, -42.00))
+                .lineToLinearHeading(new Pose2d(41.50, -36.00, Math.toRadians(180.00)))
+                .build();
+        TrajectorySequence path2 = drive.trajectorySequenceBuilder(start)
+                .lineToConstantHeading(new Vector2d(12.00, -30.50))
+                .lineToLinearHeading(new Pose2d(41.50, -36.00, Math.toRadians(180.00)))
+                .build();
+        TrajectorySequence path3 = drive.trajectorySequenceBuilder(start)
+                .lineToConstantHeading(new Vector2d(23.00, -42.00))
+                .lineToLinearHeading(new Pose2d(41.50, -36.00, Math.toRadians(180.00)))
                 .build();
 
         waitForStart();

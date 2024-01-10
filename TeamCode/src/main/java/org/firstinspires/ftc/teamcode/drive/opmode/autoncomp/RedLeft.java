@@ -28,6 +28,8 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
+import static org.firstinspires.ftc.teamcode.drive.opmode.Constants.*;
+
 
 import java.util.List;
 
@@ -98,27 +100,14 @@ public class RedLeft extends LinearOpMode {
     private Servo claw, arm;
     private ElapsedTime timer;
 
-    public static double CLAW_MAX = 1, CLAW_MIN = 0.9;
-    public static double ARM_GROUND = 0.26, ARM_MAX = 0.6, ARM_MIN = 0.0;
-    public static double clawTime = 0.5, armTime = 0.7;
     double clawPos = CLAW_MIN, armPos = ARM_MIN;
-
-    // airplane constants
-    public static double AIRPLANE_MAX = 1.0, AIRPLANE_MIN = 0.0;
-
-    // linearslide constants: black black, red red for both
-    public static double slideCoeff = 1;
-    public static double linearF = 0.05, linearFThreshold = 1500;
-    public static double armPreventionThreshold = 500, slidePositionMax = 2100;
-    public static double linearLow = 0, linearHigh = 1900, linearError = 50;
-    public static double linearKp = 4.8, linearKi = 0, linearKd = 0.5;
     public static double linearCurPos, pid;
     PIDControllerCustom linearController = new PIDControllerCustom(linearKp, linearKi, linearKd);
 
     DriverState driverState = DriverState.AUTOMATIC;
 
-    public static double aprilTagGap = -4;
-    public static double aprilTagOffset = -5;
+    public static double aprilTagGap = -1*atGap;
+    public static double aprilTagOffset = -1*atOff;
 
     public Pose2d start = new Pose2d(-39.87, -65.50, Math.toRadians(90.00));
 
@@ -144,18 +133,20 @@ public class RedLeft extends LinearOpMode {
         TrajectorySequence path1 = drive.trajectorySequenceBuilder(start)
                 .lineToConstantHeading(new Vector2d(-47.00, -42.00))
                 .lineToLinearHeading(new Pose2d(-48.00, -60.00, Math.toRadians(0.00)))
+                .lineToConstantHeading(new Vector2d(24.00, -60.00))
+                .lineToLinearHeading(new Pose2d(41.50, -36.00, Math.toRadians(180.00)))
                 .build();
         TrajectorySequence path2 = drive.trajectorySequenceBuilder(start)
-                .splineTo(new Vector2d(-36.00, -30.50), Math.toRadians(90.00))
+                .lineToConstantHeading(new Vector2d(-36.00, -30.50))
                 .lineToLinearHeading(new Pose2d(-48.00, -60.00, Math.toRadians(0.00)))
+                .lineToConstantHeading(new Vector2d(24.00, -60.00))
+                .lineToLinearHeading(new Pose2d(41.50, -36.00, Math.toRadians(180.00)))
                 .build();
-        TrajectorySequence path3 = drive.trajectorySequenceBuilder(new Pose2d(-39.88, -65.50, Math.toRadians(90.00)))
+        TrajectorySequence path3 = drive.trajectorySequenceBuilder(new Pose2d(-39.87, -65.50, Math.toRadians(90.00)))
                 .splineTo(new Vector2d(-30.00, -38.00), Math.toRadians(45.00))
                 .lineToLinearHeading(new Pose2d(-48.00, -60.00, Math.toRadians(0.00)))
-                .build();
-        TrajectorySequence scorePixel = drive.trajectorySequenceBuilder(path1.end())
-                .splineToConstantHeading(new Vector2d(24.00, -60.00), Math.toRadians(0.00))
-                .lineToLinearHeading(new Pose2d(48.00, -36.00, Math.toRadians(180.00)))
+                .lineToConstantHeading(new Vector2d(24.00, -60.00))
+                .lineToLinearHeading(new Pose2d(41.50, -36.00, Math.toRadians(180.00)))
                 .build();
 
         initAprilTag();
@@ -176,8 +167,6 @@ public class RedLeft extends LinearOpMode {
                     if(zone == 1) drive.followTrajectorySequence(path1);
                     else if(zone == 2) drive.followTrajectorySequence(path2);
                     else if(zone == 3) drive.followTrajectorySequence(path3);
-
-                    drive.followTrajectorySequence(scorePixel);
 
                     linearSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                     while(Math.abs(linearHigh - linearCurPos) >= linearError) {

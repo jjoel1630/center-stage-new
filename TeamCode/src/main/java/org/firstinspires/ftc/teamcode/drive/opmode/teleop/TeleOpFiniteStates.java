@@ -21,6 +21,7 @@ import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
+import static org.firstinspires.ftc.teamcode.drive.opmode.Constants.*;
 
 import java.util.List;
 
@@ -66,31 +67,14 @@ public class TeleOpFiniteStates extends LinearOpMode {
     private Servo airplane, claw, arm;
     private ElapsedTime timer;
 
-    // drivetrain constants
-    public static double axialCoefficient = 1, yawCoefficient = 1, lateralCoefficient = 1.1;
-    public static double slowModePower = 0.5, regularPower = 1;
 
-    // outtake constants
-    public static double CLAW_MAX = 1, CLAW_MIN = 0.8;
-    public static double ARM_GROUND = 0.26, ARM_MAX = 0.6, ARM_MIN = 0.0;
-    public static double clawTime = 0.5, armTime = 0.7;
     double clawPos = CLAW_MIN, armPos = ARM_MIN;
-
-    // airplane constants
-    public static double AIRPLANE_MAX = 1.0, AIRPLANE_MIN = 0.0;
-
-    // linearslide constants: black black, red red for both
-    public static double slideCoeff = 1;
-    public static double linearF = 0.05, linearFThreshold = 1500;
-    public static double armPreventionThreshold = 500, slidePositionMax = 2100;
-    public static double linearLow = 0, linearHigh = 2000, linearError = 50;
-    public static double linearKp = 4.8, linearKi = 0, linearKd = 0.5;
     PIDControllerCustom linearController = new PIDControllerCustom(linearKp, linearKi, linearKd);
     OuttakeState outState = OuttakeState.LIFT_MANUAL;
 
     DriverState driverState = DriverState.DRIVER;
-    public static double aprilTagGap = 6;
-    public static double aprilTagOffset = 0;
+    public static double aprilTagGap = atGap;
+    public static double aprilTagOffset = atOff;
     public double currentHeading = 180;
 
     @Override
@@ -118,6 +102,8 @@ public class TeleOpFiniteStates extends LinearOpMode {
         arm = hardwareMap.servo.get("arm");
         claw = hardwareMap.servo.get("claw");
         airplane = hardwareMap.servo.get("airplane");
+
+        claw.setPosition(clawPos);
 
         initAprilTag();
 
@@ -259,7 +245,10 @@ public class TeleOpFiniteStates extends LinearOpMode {
                     linearSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
                     // if right bumper pressed first servo releases
-                    if(gamepad2.left_bumper) clawPos = CLAW_MAX;
+                    if(gamepad2.left_bumper) {
+                        clawPos = CLAW_MAX;
+                        telemetry.addLine("pressed");
+                    }
                     if(gamepad2.right_bumper) clawPos = CLAW_MIN;
                     if(gamepad2.left_trigger == 1 && linearSlide.getCurrentPosition() >= armPreventionThreshold) armPos = ARM_MAX;
                     if(gamepad2.right_trigger == 1) armPos = ARM_MIN;
