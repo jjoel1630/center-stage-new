@@ -40,7 +40,11 @@ public class RedLeft extends LinearOpMode {
         AUTOMATIC,
         TAGS,
         PARK,
-        DONE
+        DONE,
+        LIFT_PICKUP,
+        LIFT_RAISE,
+        LIFT_DROP,
+        LIFT_RETRACT,
     }
 
     private AprilTagProcessor aprilTag;
@@ -51,7 +55,7 @@ public class RedLeft extends LinearOpMode {
         aprilTag = AprilTagProcessor.easyCreateWithDefaults();
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         telemetry.addLine("april id" + cameraMonitorViewId);
-        telemetry.update();
+//        telemetry.update();
         visionPortal = new VisionPortal.Builder()
                 .addProcessor(aprilTag)
                 .enableLiveView(false)
@@ -80,7 +84,7 @@ public class RedLeft extends LinearOpMode {
             @Override
             public void onOpened()
             {
-                camera.startStreaming(width, height, OpenCvCameraRotation.SIDEWAYS_RIGHT);
+                camera.startStreaming(width, height, OpenCvCameraRotation.UPRIGHT);
                 while(!opModeIsActive() && !isStopRequested()) {
                     telemetry.addLine("streaming");
                     zone = elementPipeTeam.get_element_zone();
@@ -124,35 +128,45 @@ public class RedLeft extends LinearOpMode {
         arm = hardwareMap.servo.get("arm");
         claw = hardwareMap.servo.get("claw");
 
-//        claw.setPosition(clawPos);
-//        arm.setPosition(armPos);
+        claw.setPosition(clawPos);
 
         timer = new ElapsedTime();
 
         // Paths
         TrajectorySequence path1 = drive.trajectorySequenceBuilder(start)
-                .lineToConstantHeading(new Vector2d(-47.00, -42.00))
+                .lineToConstantHeading(new Vector2d(-42.00, -42.00))
                 .lineToLinearHeading(new Pose2d(-48.00, -60.00, Math.toRadians(0.00)))
+                .build();
+        TrajectorySequence path1p2 = drive.trajectorySequenceBuilder(path1.end())
                 .lineToConstantHeading(new Vector2d(24.00, -60.00))
-                .lineToLinearHeading(new Pose2d(41.50, -36.00, Math.toRadians(180.00)))
+                .lineToLinearHeading(new Pose2d(38, -33, Math.toRadians(180.00)))
                 .build();
         TrajectorySequence path2 = drive.trajectorySequenceBuilder(start)
-                .lineToConstantHeading(new Vector2d(-36.00, -30.50))
+                .lineToConstantHeading(new Vector2d(-36.00, -32.50))
                 .lineToLinearHeading(new Pose2d(-48.00, -60.00, Math.toRadians(0.00)))
+                .build();
+        TrajectorySequence path2p2 = drive.trajectorySequenceBuilder(path2.end())
                 .lineToConstantHeading(new Vector2d(24.00, -60.00))
-                .lineToLinearHeading(new Pose2d(41.50, -36.00, Math.toRadians(180.00)))
+                .lineToLinearHeading(new Pose2d(38, -36.00, Math.toRadians(180.00)))
                 .build();
         TrajectorySequence path3 = drive.trajectorySequenceBuilder(new Pose2d(-39.87, -65.50, Math.toRadians(90.00)))
-                .splineTo(new Vector2d(-30.00, -38.00), Math.toRadians(45.00))
-                .lineToLinearHeading(new Pose2d(-48.00, -60.00, Math.toRadians(0.00)))
-                .lineToConstantHeading(new Vector2d(24.00, -60.00))
-                .lineToLinearHeading(new Pose2d(41.50, -36.00, Math.toRadians(180.00)))
+                .splineTo(new Vector2d(-33.00, -38.00), Math.toRadians(0.00))
+                .lineToConstantHeading(new Vector2d(-48.00, -40.00))
+                .lineToConstantHeading(new Vector2d(-40.00, -60.00))
+                .build();
+        TrajectorySequence path3p2 = drive.trajectorySequenceBuilder(path3.end())
+                .lineToConstantHeading(new Vector2d(30.00, -60.00))
+                .lineToLinearHeading(new Pose2d(36, -44.00, Math.toRadians(180.00)))
                 .build();
 
+
+
         initAprilTag();
-//        initCamera();
+        initCamera();
 
         waitForStart();
+
+        arm.setPosition(armPos);
 
         while (opModeIsActive()) {
             drive.update();
@@ -164,28 +178,39 @@ public class RedLeft extends LinearOpMode {
                     visionPortal.resumeStreaming();
                     sleep(20);
 
-                    if(zone == 1) drive.followTrajectorySequence(path1);
-                    else if(zone == 2) drive.followTrajectorySequence(path2);
-                    else if(zone == 3) drive.followTrajectorySequence(path3);
-
-                    linearSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                    while(Math.abs(linearHigh - linearCurPos) >= linearError) {
-                        linearCurPos = linearSlide.getCurrentPosition();
-                        pid = linearController.update(linearHigh, linearCurPos);
-                        linearSlide.setVelocity(pid);
+                    if(zone == 1) {
+                        drive.followTrajectorySequence(path1);
+                        timer.reset();
+                        while(timer.seconds() <= 8);
+                        drive.followTrajectorySequence(path1p2);
+                    }
+                    else if(zone == 2) {
+                        drive.followTrajectorySequence(path2);
+                        timer.reset();
+                        while(timer.seconds() <= 8);
+                        drive.followTrajectorySequence(path2p2);
+                    }
+                    else if(zone == 3) {
+                        drive.followTrajectorySequence(path3);
+                        timer.reset();
+                        while(timer.seconds() <= 8);
+                        drive.followTrajectorySequence(path3p2);
                     }
 
                     driverState = DriverState.TAGS;
                     break;
                 case TAGS:
-                    linearSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-                    linearSlide.setPower(linearF);
-
                     if(tags != null) {
                         AprilTagDetection tag = tags.get(0);
+                        for(AprilTagDetection t : tags) {
+                            if(zone == 1 && t.id == 4) tag = t;
+                            else if(zone == 2 && t.id == 5) tag = t;
+                            else if(zone == 3 && t.id == 6) tag = t;
+                        }
                         Pose2d current = drive.getPoseEstimate();
-                        telemetry.addData("current heading", current.getHeading());
                         telemetry.addData("yaw", tag.ftcPose.yaw);
+                        telemetry.addData("tag", tag.id);
+                        telemetry.addData("current heading", current.getHeading());
                         telemetry.addData("total", current.getHeading()+tag.ftcPose.yaw);
                         telemetry.update();
                         Trajectory tagPose = drive.trajectoryBuilder(new Pose2d(current.getX(), current.getY(), Math.toRadians(Math.toDegrees(current.getHeading())+tag.ftcPose.yaw)))
@@ -195,10 +220,78 @@ public class RedLeft extends LinearOpMode {
 
                         drive.followTrajectory(tagPose);
 
-                        driverState = DriverState.PARK;
+                        driverState = DriverState.LIFT_PICKUP;
                     }
                     break;
+                case LIFT_PICKUP:
+                    clawPos = CLAW_MIN;
+                    claw.setPosition(clawPos);
+                    if(timer.seconds() >= clawTime && armPos != ARM_MIN) {
+                        armPos = ARM_MIN;
+                        arm.setPosition(armPos);
+                        timer.reset();
+                    }
+
+                    if(timer.seconds() >= armTime) driverState = DriverState.LIFT_RAISE;
+                    break;
+                case LIFT_RAISE:
+                    linearSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                    linearCurPos = linearSlide.getCurrentPosition();
+                    pid = linearController.update(linearHigh, linearCurPos);
+                    linearSlide.setVelocity(pid);
+
+                    if(Math.abs(linearHigh - linearCurPos) <= linearError) {
+                        driverState = DriverState.LIFT_DROP;
+                        linearSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                        timer.reset();
+                    }
+                    break;
+                case LIFT_DROP:
+                    linearSlide.setPower(linearF);
+
+                    armPos = ARM_MAX;
+                    arm.setPosition(armPos);
+                    if(timer.seconds() >= armTime && clawPos != CLAW_MAX) {
+                        clawPos = CLAW_MAX;
+                        claw.setPosition(clawPos);
+                    }
+
+                    if(timer.seconds() >= clawTime + armTime) driverState = DriverState.LIFT_RETRACT;
+                    break;
                 case PARK:
+                    Pose2d current = drive.getPoseEstimate();
+
+                    TrajectorySequence park = drive.trajectorySequenceBuilder(current)
+                            .lineToConstantHeading(new Vector2d(50.00, -13.00))
+                            .lineToConstantHeading(new Vector2d(65.50, -13.00))
+                            .build();
+
+                    drive.followTrajectorySequenceAsync(park);
+
+                    driverState = DriverState.DONE;
+
+                    break;
+                case LIFT_RETRACT:
+                    clawPos = CLAW_MAX;
+                    claw.setPosition(clawPos);
+                    if(timer.seconds() >= clawTime && armPos != ARM_MIN) {
+                        armPos = ARM_MIN;
+                        arm.setPosition(armPos);
+                        timer.reset();
+                    }
+
+                    linearSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                    linearCurPos = linearSlide.getCurrentPosition();
+                    if(timer.seconds() >= armTime) {
+                        pid = linearController.update(linearLow, linearCurPos);
+                        linearSlide.setVelocity(pid);
+                    }
+
+                    if(Math.abs(linearLow - linearCurPos) <= linearError) {
+                        driverState = DriverState.PARK;
+                        linearSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                        timer.reset();
+                    }
                     break;
                 case DONE:
                     break;

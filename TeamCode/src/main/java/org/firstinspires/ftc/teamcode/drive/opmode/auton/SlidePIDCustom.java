@@ -15,7 +15,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.drive.opmode.auton.PIDControllerCustom;
 
-@Disabled
+//@Disabled
+@Config
 @Autonomous
 public class SlidePIDCustom extends LinearOpMode {
     public ElapsedTime timer = new ElapsedTime();

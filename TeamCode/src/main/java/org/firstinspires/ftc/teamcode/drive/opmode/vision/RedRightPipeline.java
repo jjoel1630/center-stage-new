@@ -13,14 +13,14 @@ import java.util.Arrays;
 import java.util.List;
 
 @Config
-public class TeamElementPipeline extends OpenCvPipeline {
+public class RedRightPipeline extends OpenCvPipeline {
 
     int CAMERA_WIDTH = 2304/*800*/;
     int CAMERA_HEIGHT = 1536/*448*/;
 
-    public static int x1 = 550, y1 = 800, w1 = 300, h1 = 300;
-    public static int x2 = 950, y2 = 650, w2 = 500, h2 = 300;
-    public static int x3 = 1650, y3 = 650, w3 = 300, h3 = 300;
+    public static int x1 = 100, y1 = 1000, w1 = 300, h1 = 400;
+    public static int x2 = 600, y2 = 800, w2 = 500, h2 = 400;
+    public static int x3 = 1300, y3 = 900, w3 = 300, h3 = 300;
 
     public static int red = 225;
 

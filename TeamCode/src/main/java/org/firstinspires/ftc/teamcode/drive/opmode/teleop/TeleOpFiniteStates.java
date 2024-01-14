@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
@@ -21,7 +22,6 @@ import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
-import static org.firstinspires.ftc.teamcode.drive.opmode.Constants.*;
 
 import java.util.List;
 
@@ -67,14 +67,33 @@ public class TeleOpFiniteStates extends LinearOpMode {
     private Servo airplane, claw, arm;
     private ElapsedTime timer;
 
+    // drivetrain constants
+    public static double axialCoefficient = 1, yawCoefficient = 1, lateralCoefficient = 1.1;
+    public static double slowModePower = 0.5, regularPower = 1;
 
+    // outtake constants
+    public static double CLAW_MAX = 1, CLAW_MIN = 0.75;
+    public static double ARM_GROUND = 0.29, ARM_MAX = 0.6, ARM_MIN = 0.0;
+    public static double clawTime = 0.7, armTime = 0.9;
     double clawPos = CLAW_MIN, armPos = ARM_MIN;
+
+    // airplane constants
+    public static double AIRPLANE_MAX = 0.3, AIRPLANE_MIN = 0.0;
+    double airplanePos = AIRPLANE_MIN;
+
+    // linearslide constants: black black, red red for both
+    public static double slideCoeff = 1;
+    public static double linearF = 0.09, linearFThreshold = 1500;
+    public static double armPreventionThreshold = 500, slidePositionMax = 2200;
+    public static double linearLow = 0, linearHigh = 2400, linearError = 50;
+    public static double linearKp = 1.5, linearKi = 0, linearKd = 0.1; // 4.8, 0.5
+
     PIDControllerCustom linearController = new PIDControllerCustom(linearKp, linearKi, linearKd);
     OuttakeState outState = OuttakeState.LIFT_MANUAL;
 
     DriverState driverState = DriverState.DRIVER;
-    public static double aprilTagGap = atGap;
-    public static double aprilTagOffset = atOff;
+    public static double aprilTagGap = 4;
+    public static double aprilTagOffset = 5;
     public double currentHeading = 180;
 
     @Override
@@ -99,11 +118,11 @@ public class TeleOpFiniteStates extends LinearOpMode {
         linearSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         linearSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
+        VoltageSensor voltageSensor = hardwareMap.voltageSensor.iterator().next();
+
         arm = hardwareMap.servo.get("arm");
         claw = hardwareMap.servo.get("claw");
         airplane = hardwareMap.servo.get("airplane");
-
-        claw.setPosition(clawPos);
 
         initAprilTag();
 
@@ -179,6 +198,10 @@ public class TeleOpFiniteStates extends LinearOpMode {
                 timer.reset();
                 outState = OuttakeState.LIFT_PICKUP;
             }
+            if(gamepad2.a && linearSlide.getCurrentPosition() >= armPreventionThreshold) {
+                timer.reset();
+                outState = OuttakeState.LIFT_DROP;
+            }
 
             double linearCurPos, pid;
             switch (outState) {
@@ -199,8 +222,10 @@ public class TeleOpFiniteStates extends LinearOpMode {
                     pid = linearController.update(linearHigh, linearCurPos);
                     linearSlide.setVelocity(pid);
 
+                    telemetry.addData("linear pid raise", pid);
+
                     if(Math.abs(linearHigh - linearCurPos) <= linearError) {
-                        outState = OuttakeState.LIFT_DROP;
+                        outState = OuttakeState.LIFT_MANUAL;
                         linearSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                         timer.reset();
                     }
@@ -232,6 +257,7 @@ public class TeleOpFiniteStates extends LinearOpMode {
                     if(timer.seconds() >= armTime) {
                         pid = linearController.update(linearLow, linearCurPos);
                         linearSlide.setVelocity(pid);
+                        telemetry.addData("linear pid drop", pid);
                     }
 
                     if(Math.abs(linearLow - linearCurPos) <= linearError) {
@@ -260,13 +286,15 @@ public class TeleOpFiniteStates extends LinearOpMode {
                     // linear slide
                     double axialLS = -gamepad2.left_stick_y;  // forward, back
 
-                    if(Math.abs(linearSlide.getCurrentPosition()) >= Math.abs(slidePositionMax) && !gamepad2.a) axialLS = 0;
+                    if(Math.abs(linearSlide.getCurrentPosition()) >= Math.abs(slidePositionMax) && !gamepad2.dpad_down) axialLS = 0;
                     else if(linearSlide.getCurrentPosition() >= armPreventionThreshold && armPos == ARM_MAX) axialLS = 0;
                     else axialLS = axialLS;
 
                     if(linearSlide.getCurrentPosition() >= linearFThreshold) axialLS += linearF;
 
                     linearSlide.setPower(axialLS * slideCoeff);
+
+                    telemetry.addData("slide power", axialLS * slideCoeff);
 
                     break;
                 default:
@@ -275,31 +303,35 @@ public class TeleOpFiniteStates extends LinearOpMode {
             }
 
             /*-----------AIRPLANE LAUNCHER-----------*/
-            double airplanePos = AIRPLANE_MAX;
-
-            if(gamepad2.dpad_left) airplanePos = AIRPLANE_MAX;
-            if(gamepad2.dpad_right) airplanePos = AIRPLANE_MIN;
-            airplane.setPosition(airplanePos);
-
-
-            telemetry.addData("left", drive.leftRear.getCurrentPosition());
-            telemetry.addData("right", drive.rightRear.getCurrentPosition());
-            telemetry.addData("front", drive.rightFront.getCurrentPosition());
-            if(tags != null) {
-                for (AprilTagDetection detection : tags) {
-                    if (detection.metadata != null) {
-                        telemetry.addData("ID " + detection.id, String.format("\n==== (ID %d) %s", detection.id, detection.metadata.name));
-                        telemetry.addData("Pose " + detection.id, String.format("XYZ %6.1f %6.1f %6.1f  (inch)", detection.ftcPose.x, detection.ftcPose.y, detection.ftcPose.z));
-                        telemetry.addLine(String.format("PRY %6.1f %6.1f %6.1f  (deg)", detection.ftcPose.pitch, detection.ftcPose.roll, detection.ftcPose.yaw));
-                        telemetry.addLine(String.format("RBE %6.1f %6.1f %6.1f  (inch, deg, deg)", detection.ftcPose.range, detection.ftcPose.bearing, detection.ftcPose.elevation));
-                    } else {
-                        telemetry.addData("ID " + detection.id, String.format("\n==== (ID %d) Unknown", detection.id), "none");
-                        telemetry.addData("Center " + detection.id, String.format("Center %6.0f %6.0f   (pixels)", detection.center.x, detection.center.y), "none");
-                    }
-                }
+            if(gamepad1.y) {
+                airplanePos = AIRPLANE_MAX;
+                airplane.setPosition(airplanePos);
             }
+            if(gamepad1.x) {
+                airplanePos = AIRPLANE_MIN;
+                airplane.setPosition(airplanePos);
+            }
+
+
+            telemetry.addData("voltage current", voltageSensor.getVoltage());
+//            telemetry.addData("left", drive.leftRear.getCurrentPosition());
+//            telemetry.addData("right", drive.rightRear.getCurrentPosition());
+//            telemetry.addData("front", drive.rightFront.getCurrentPosition());
+//            if(tags != null) {
+//                for (AprilTagDetection detection : tags) {
+//                    if (detection.metadata != null) {
+//                        telemetry.addData("ID " + detection.id, String.format("\n==== (ID %d) %s", detection.id, detection.metadata.name));
+//                        telemetry.addData("Pose " + detection.id, String.format("XYZ %6.1f %6.1f %6.1f  (inch)", detection.ftcPose.x, detection.ftcPose.y, detection.ftcPose.z));
+//                        telemetry.addLine(String.format("PRY %6.1f %6.1f %6.1f  (deg)", detection.ftcPose.pitch, detection.ftcPose.roll, detection.ftcPose.yaw));
+//                        telemetry.addLine(String.format("RBE %6.1f %6.1f %6.1f  (inch, deg, deg)", detection.ftcPose.range, detection.ftcPose.bearing, detection.ftcPose.elevation));
+//                    } else {
+//                        telemetry.addData("ID " + detection.id, String.format("\n==== (ID %d) Unknown", detection.id), "none");
+//                        telemetry.addData("Center " + detection.id, String.format("Center %6.0f %6.0f   (pixels)", detection.center.x, detection.center.y), "none");
+//                    }
+//                }
+//            }
             telemetry.addData("slide position", linearSlide.getCurrentPosition());
-            telemetry.addData("lift state", outState);
+//            telemetry.addData("lift state", outState);
             telemetry.addData("timer", timer.seconds());
             telemetry.update();
         }

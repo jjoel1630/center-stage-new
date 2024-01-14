@@ -47,7 +47,11 @@ public class RedLeftAlly extends LinearOpMode {
         AUTOMATIC,
         TAGS,
         PARK,
-        DONE
+        DONE,
+        LIFT_PICKUP,
+        LIFT_RAISE,
+        LIFT_DROP,
+        LIFT_RETRACT,
     }
 
     private AprilTagProcessor aprilTag;
@@ -182,19 +186,9 @@ public class RedLeftAlly extends LinearOpMode {
                     else if(zone == 2) drive.followTrajectorySequence(path2);
                     else if(zone == 3) drive.followTrajectorySequence(path3);
 
-                    linearSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                    while(Math.abs(linearHigh - linearCurPos) >= linearError) {
-                        linearCurPos = linearSlide.getCurrentPosition();
-                        pid = linearController.update(linearHigh, linearCurPos);
-                        linearSlide.setVelocity(pid);
-                    }
-
                     driverState = DriverState.TAGS;
                     break;
                 case TAGS:
-                    linearSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-                    linearSlide.setPower(linearF);
-
                     if(tags != null) {
                         AprilTagDetection tag = tags.get(0);
                         Pose2d current = drive.getPoseEstimate();
@@ -209,10 +203,78 @@ public class RedLeftAlly extends LinearOpMode {
 
                         drive.followTrajectory(tagPose);
 
-                        driverState = DriverState.PARK;
+                        driverState = DriverState.LIFT_PICKUP;
                     }
                     break;
+                case LIFT_PICKUP:
+                    clawPos = CLAW_MIN;
+                    claw.setPosition(clawPos);
+                    if(timer.seconds() >= clawTime && armPos != ARM_MIN) {
+                        armPos = ARM_MIN;
+                        arm.setPosition(armPos);
+                        timer.reset();
+                    }
+
+                    if(timer.seconds() >= armTime) driverState = DriverState.LIFT_RAISE;
+                    break;
+                case LIFT_RAISE:
+                    linearSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                    linearCurPos = linearSlide.getCurrentPosition();
+                    pid = linearController.update(linearHigh, linearCurPos);
+                    linearSlide.setVelocity(pid);
+
+                    if(Math.abs(linearHigh - linearCurPos) <= linearError) {
+                        driverState = DriverState.LIFT_DROP;
+                        linearSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                        timer.reset();
+                    }
+                    break;
+                case LIFT_DROP:
+                    linearSlide.setPower(linearF);
+
+                    armPos = ARM_MAX;
+                    arm.setPosition(armPos);
+                    if(timer.seconds() >= armTime && clawPos != CLAW_MAX) {
+                        clawPos = CLAW_MAX;
+                        claw.setPosition(clawPos);
+                    }
+
+                    if(timer.seconds() >= clawTime + armTime) driverState = DriverState.LIFT_RETRACT;
+                    break;
                 case PARK:
+                    Pose2d current = drive.getPoseEstimate();
+
+                    TrajectorySequence park = drive.trajectorySequenceBuilder(current)
+                            .lineToConstantHeading(new Vector2d(50.00, -13.00))
+                            .lineToConstantHeading(new Vector2d(65.50, -13.00))
+                            .build();
+
+                    drive.followTrajectorySequenceAsync(park);
+
+                    driverState = DriverState.DONE;
+
+                    break;
+                case LIFT_RETRACT:
+                    clawPos = CLAW_MAX;
+                    claw.setPosition(clawPos);
+                    if(timer.seconds() >= clawTime && armPos != ARM_MIN) {
+                        armPos = ARM_MIN;
+                        arm.setPosition(armPos);
+                        timer.reset();
+                    }
+
+                    linearSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                    linearCurPos = linearSlide.getCurrentPosition();
+                    if(timer.seconds() >= armTime) {
+                        pid = linearController.update(linearLow, linearCurPos);
+                        linearSlide.setVelocity(pid);
+                    }
+
+                    if(Math.abs(linearLow - linearCurPos) <= linearError) {
+                        driverState = DriverState.PARK;
+                        linearSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                        timer.reset();
+                    }
                     break;
                 case DONE:
                     break;
