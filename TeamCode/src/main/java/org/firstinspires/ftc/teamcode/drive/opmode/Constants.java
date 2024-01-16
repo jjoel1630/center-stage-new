@@ -10,7 +10,7 @@ public class Constants {
 
     // outtake constants
     public static double CLAW_MAX = 1, CLAW_MIN = 0.75;
-    public static double ARM_GROUND = 0.29, ARM_MAX = 0.6, ARM_MIN = 0.0;
+    public static double ARM_GROUND = 0.29, ARM_MAX = 0.63, ARM_MIN = 0.0;
     public static double clawTime = 0.8, armTime = 0.7;
 
     // airplane constants

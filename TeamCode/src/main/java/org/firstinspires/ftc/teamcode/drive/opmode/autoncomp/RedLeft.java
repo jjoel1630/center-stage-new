@@ -110,7 +110,7 @@ public class RedLeft extends LinearOpMode {
 
     DriverState driverState = DriverState.AUTOMATIC;
 
-    public static double aprilTagGap = -1*atGap;
+    public static double aprilTagGap = -1*atGap+2;
     public static double aprilTagOffset = -1*atOff;
 
     public Pose2d start = new Pose2d(-39.87, -65.50, Math.toRadians(90.00));
@@ -134,7 +134,7 @@ public class RedLeft extends LinearOpMode {
 
         // Paths
         TrajectorySequence path1 = drive.trajectorySequenceBuilder(start)
-                .lineToConstantHeading(new Vector2d(-42.00, -42.00))
+                .lineToConstantHeading(new Vector2d(-46.00, -42.00))
                 .lineToLinearHeading(new Pose2d(-48.00, -60.00, Math.toRadians(0.00)))
                 .build();
         TrajectorySequence path1p2 = drive.trajectorySequenceBuilder(path1.end())

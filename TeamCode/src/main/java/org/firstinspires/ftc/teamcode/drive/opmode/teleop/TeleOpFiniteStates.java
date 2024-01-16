@@ -69,11 +69,11 @@ public class TeleOpFiniteStates extends LinearOpMode {
 
     // drivetrain constants
     public static double axialCoefficient = 1, yawCoefficient = 1, lateralCoefficient = 1.1;
-    public static double slowModePower = 0.5, regularPower = 1;
+    public static double slowModePower = 0.5, regularPower = 0.8;
 
     // outtake constants
     public static double CLAW_MAX = 1, CLAW_MIN = 0.75;
-    public static double ARM_GROUND = 0.29, ARM_MAX = 0.6, ARM_MIN = 0.0;
+    public static double ARM_GROUND = 0.29, ARM_MAX = 0.63, ARM_MIN = 0.0;
     public static double clawTime = 0.7, armTime = 0.9;
     double clawPos = CLAW_MIN, armPos = ARM_MIN;
 

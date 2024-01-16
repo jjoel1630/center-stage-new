@@ -16,6 +16,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.drive.opmode.auton.PIDControllerCustom;
+import org.firstinspires.ftc.teamcode.drive.opmode.vision.BlueLeftPipeline;
+import org.firstinspires.ftc.teamcode.drive.opmode.vision.BluePipeline;
 import org.firstinspires.ftc.teamcode.drive.opmode.vision.RedRightPipeline;
 import org.firstinspires.ftc.teamcode.drive.opmode.vision.TeamElementPipeline;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
@@ -34,7 +36,7 @@ import java.util.List;
 
 @Autonomous(group = "autonomous")
 @Config
-public class RedRight extends LinearOpMode {
+public class BlueLeftAlyPark extends LinearOpMode {
     public enum DriverState {
         AUTOMATIC,
         TAGS,
@@ -76,7 +78,7 @@ public class RedRight extends LinearOpMode {
         OpenCvCamera camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 2"), cameraMonitorViewId);
         FtcDashboard.getInstance().startCameraStream(camera, 0);
 
-        RedRightPipeline elementPipeTeam = new RedRightPipeline();
+        BlueLeftPipeline elementPipeTeam = new BlueLeftPipeline();
         camera.setPipeline(elementPipeTeam);
         camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
         {
@@ -110,9 +112,11 @@ public class RedRight extends LinearOpMode {
     DriverState driverState = DriverState.AUTOMATIC;
 
     public static double aprilTagGap = -1*atGap+2;
-    public static double aprilTagOffset = -1*atOff;
+    public static double aprilTagOffset = -1*atOff-2;
 
-    public static Pose2d start = new Pose2d(15.875, -65.50, Math.toRadians(90));
+    public static double x1 = 22, y2 = 32.5, x3 = 8;
+
+    public static Pose2d start = new Pose2d(15.875, 65.50, Math.toRadians(270));
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -133,17 +137,19 @@ public class RedRight extends LinearOpMode {
 
         // Paths
         TrajectorySequence path1 = drive.trajectorySequenceBuilder(start)
-                .splineTo(new Vector2d(8.00, -34.00), Math.toRadians(135.00))
-                .lineToLinearHeading(new Pose2d(41.50, -33, Math.toRadians(180.00)))
+                .splineTo(new Vector2d(9, 38), Math.toRadians(180.00))
+                .lineToLinearHeading(new Pose2d(38.00, 32.00, Math.toRadians(180.00)))
                 .build();
 
         TrajectorySequence path2 = drive.trajectorySequenceBuilder(start)
-                .lineToConstantHeading(new Vector2d(12.00, -32.50))
-                .lineToLinearHeading(new Pose2d(41.50, -36.00, Math.toRadians(180.00)))
+                .lineToConstantHeading(new Vector2d(12.00, 32.50))
+                .lineToConstantHeading(new Vector2d(12.00, 45.00))
+                .lineToLinearHeading(new Pose2d(41.50, 36.00, Math.toRadians(180.00)))
                 .build();
         TrajectorySequence path3 = drive.trajectorySequenceBuilder(start)
-                .lineToConstantHeading(new Vector2d(27.00, -42.00))
-                .lineToLinearHeading(new Pose2d(41.50, -36.00, Math.toRadians(180.00)))
+                .lineToConstantHeading(new Vector2d(20.00, 42.00))
+                .lineToConstantHeading(new Vector2d(20, 52))
+                .lineToLinearHeading(new Pose2d(41.50, 46.00, Math.toRadians(180.00)))
                 .build();
 
         initAprilTag();
@@ -163,7 +169,7 @@ public class RedRight extends LinearOpMode {
                     visionPortal.resumeStreaming();
                     sleep(20);
 
-                    if(zone == 1) {
+                    if(zone == 3) {
                         drive.followTrajectorySequence(path1);
 //                        armPos = ARM_GROUND;
 //                        arm.setPosition(armPos);
@@ -183,7 +189,7 @@ public class RedRight extends LinearOpMode {
 //                        while(timer.seconds() <= armTime);
                     }
                     else if(zone == 2) drive.followTrajectorySequence(path2);
-                    else if(zone == 3) drive.followTrajectorySequence(path3);
+                    else if(zone == 1) drive.followTrajectorySequence(path3);
 
                     driverState = DriverState.TAGS;
                     break;
@@ -191,9 +197,9 @@ public class RedRight extends LinearOpMode {
                     if(tags != null) {
                         AprilTagDetection tag = tags.get(0);
                         for(AprilTagDetection t : tags) {
-                            if(zone == 1 && t.id == 4) tag = t;
-                            else if(zone == 2 && t.id == 5) tag = t;
-                            else if(zone == 3 && t.id == 6) tag = t;
+                            if(zone == 1 && t.id == 3) tag = t;
+                            else if(zone == 2 && t.id == 2) tag = t;
+                            else if(zone == 3 && t.id == 1) tag = t;
                         }
                         Pose2d current = drive.getPoseEstimate();
                         telemetry.addData("yaw", tag.ftcPose.yaw);
@@ -250,9 +256,10 @@ public class RedRight extends LinearOpMode {
                     Pose2d current = drive.getPoseEstimate();
 
                     TrajectorySequence park = drive.trajectorySequenceBuilder(current)
-                            .lineToConstantHeading(new Vector2d(50.00, -13.00))
-                            .lineToConstantHeading(new Vector2d(65.50, -13.00))
+                            .lineToConstantHeading(new Vector2d(44.00, 60.00))
+                            .lineToConstantHeading(new Vector2d(60.00, 63.00))
                             .build();
+
 
                     drive.followTrajectorySequenceAsync(park);
 

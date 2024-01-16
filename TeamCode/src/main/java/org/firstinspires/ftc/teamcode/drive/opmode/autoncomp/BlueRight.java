@@ -196,9 +196,9 @@ public class BlueRight extends LinearOpMode {
                     if(tags != null) {
                         AprilTagDetection tag = tags.get(0);
                         for(AprilTagDetection t : tags) {
-                            if(zone == 1 && t.id == 4) tag = t;
-                            else if(zone == 2 && t.id == 5) tag = t;
-                            else if(zone == 3 && t.id == 6) tag = t;
+                            if(zone == 1 && t.id == 1) tag = t;
+                            else if(zone == 2 && t.id == 2) tag = t;
+                            else if(zone == 3 && t.id == 3) tag = t;
                         }
                         Pose2d current = drive.getPoseEstimate();
                         telemetry.addData("yaw", tag.ftcPose.yaw);
