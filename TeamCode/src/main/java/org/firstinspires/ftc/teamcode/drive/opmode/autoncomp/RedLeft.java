@@ -152,7 +152,7 @@ public class RedLeft extends LinearOpMode {
         TrajectorySequence path3 = drive.trajectorySequenceBuilder(new Pose2d(-39.87, -65.50, Math.toRadians(90.00)))
                 .splineTo(new Vector2d(-33.00, -38.00), Math.toRadians(0.00))
                 .lineToConstantHeading(new Vector2d(-48.00, -40.00))
-                .lineToConstantHeading(new Vector2d(-40.00, -60.00))
+                .lineToConstantHeading(new Vector2d(-40.00, -63.00))
                 .build();
         TrajectorySequence path3p2 = drive.trajectorySequenceBuilder(path3.end())
                 .lineToConstantHeading(new Vector2d(30.00, -60.00))
@@ -166,7 +166,7 @@ public class RedLeft extends LinearOpMode {
 
         waitForStart();
 
-        arm.setPosition(armPos);
+//        arm.setPosition(armPos);
 
         while (opModeIsActive()) {
             drive.update();
@@ -177,23 +177,25 @@ public class RedLeft extends LinearOpMode {
                 case AUTOMATIC:
                     visionPortal.resumeStreaming();
                     sleep(20);
-
                     if(zone == 1) {
                         drive.followTrajectorySequence(path1);
+                        arm.setPosition(armPos);
                         timer.reset();
-                        while(timer.seconds() <= 8);
+//                        while(timer.seconds() <= 8);
                         drive.followTrajectorySequence(path1p2);
                     }
                     else if(zone == 2) {
                         drive.followTrajectorySequence(path2);
+                        arm.setPosition(armPos);
                         timer.reset();
-                        while(timer.seconds() <= 8);
+//                        while(timer.seconds() <= 8);
                         drive.followTrajectorySequence(path2p2);
                     }
                     else if(zone == 3) {
                         drive.followTrajectorySequence(path3);
+                        arm.setPosition(armPos);
                         timer.reset();
-                        while(timer.seconds() <= 8);
+//                        while(timer.seconds() <= 8);
                         drive.followTrajectorySequence(path3p2);
                     }
 
@@ -288,7 +290,7 @@ public class RedLeft extends LinearOpMode {
                     }
 
                     if(Math.abs(linearLow - linearCurPos) <= linearError) {
-                        driverState = DriverState.PARK;
+//                        driverState = DriverState.PARK;
                         linearSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                         timer.reset();
                     }

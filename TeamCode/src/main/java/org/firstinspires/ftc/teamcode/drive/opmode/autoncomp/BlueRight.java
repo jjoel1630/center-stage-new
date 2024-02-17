@@ -113,7 +113,7 @@ public class BlueRight extends LinearOpMode {
     DriverState driverState = DriverState.AUTOMATIC;
 
     public static double aprilTagGap = -1*atGap;
-    public static double aprilTagOffset = -1*atOff;
+    public static double aprilTagOffset = -6;
 
     public Pose2d start = new Pose2d(-39.87, 65.50, Math.toRadians(270));
 
@@ -136,11 +136,37 @@ public class BlueRight extends LinearOpMode {
 
         // Paths
         TrajectorySequence path = drive.trajectorySequenceBuilder(start)
-                .lineToLinearHeading(new Pose2d(-50.00, 60.00, Math.toRadians(315.00)))
-                .lineToLinearHeading(new Pose2d(-35.00, 60.00, Math.toRadians(0.00)))
-                .lineToConstantHeading(new Vector2d(24.00, 60.00))
+                .lineToLinearHeading(new Pose2d(-50.00, 58, Math.toRadians(315.00)))
+                .lineToLinearHeading(new Pose2d(-35.00, 58, Math.toRadians(0.00)))
+                .lineToConstantHeading(new Vector2d(24.00, 58))
                 .lineToLinearHeading(new Pose2d(38.00, 36.00, Math.toRadians(180.00)))
                 .build();
+        TrajectorySequence path1p1 = drive.trajectorySequenceBuilder(start)
+                .splineTo(new Vector2d(-35.00, 38.00), Math.toRadians(0.00))
+                .lineToConstantHeading(new Vector2d(-42.00, 38.00))
+                .lineToConstantHeading(new Vector2d(-48.00, 60))
+                .build();
+        TrajectorySequence path1p2 = drive.trajectorySequenceBuilder(path1p1.end())
+                .lineToConstantHeading(new Vector2d(24.00, 58))
+                .lineToLinearHeading(new Pose2d(36, 44, Math.toRadians(180.00)))
+                .build();
+        TrajectorySequence path2p1 = drive.trajectorySequenceBuilder(start)
+                .lineToConstantHeading(new Vector2d(-40.00, 36.00))
+                .lineToLinearHeading(new Pose2d(-48.00, 58, Math.toRadians(0.00)))
+                .build();
+        TrajectorySequence path2p2 = drive.trajectorySequenceBuilder(path2p1.end())
+                .lineToConstantHeading(new Vector2d(24.00, 58))
+                .lineToLinearHeading(new Pose2d(38.00, 36.00, Math.toRadians(180.00)))
+                .build();
+        TrajectorySequence path3p1 = drive.trajectorySequenceBuilder(start)
+                .lineToConstantHeading(new Vector2d(-48.00, 42.00))
+                .lineToLinearHeading(new Pose2d(-48.00, 58, Math.toRadians(0.00)))
+                .build();
+        TrajectorySequence path3p2 = drive.trajectorySequenceBuilder(path3p1.end())
+                .lineToConstantHeading(new Vector2d(24.00, 58))
+                .lineToLinearHeading(new Pose2d(38.0, 33.0, Math.toRadians(180.00)))
+                .build();
+
 //                .lineToConstantHeading(new Vector2d(-52, 42.00))
 //                .lineToLinearHeading(new Pose2d(-48.00, 59, Math.toRadians(0.00)))
 //                .build();
@@ -173,7 +199,7 @@ public class BlueRight extends LinearOpMode {
 
         waitForStart();
 
-        arm.setPosition(armPos);
+//        arm.setPosition(armPos);
 
         while (opModeIsActive()) {
             drive.update();
@@ -185,10 +211,27 @@ public class BlueRight extends LinearOpMode {
                     visionPortal.resumeStreaming();
                     sleep(20);
 
-                    timer.reset();
-                    while(timer.seconds() <= 10);
-
-                    drive.followTrajectorySequence(path);
+                    if(zone == 1) {
+                        drive.followTrajectorySequence(path1p1);
+                        arm.setPosition(armPos);
+                        timer.reset();
+//                        while(timer.seconds() <= 8);
+                        drive.followTrajectorySequence(path1p2);
+                    }
+                    else if(zone == 2) {
+                        drive.followTrajectorySequence(path2p1);
+                        arm.setPosition(armPos);
+                        timer.reset();
+//                        while(timer.seconds() <= 8);
+                        drive.followTrajectorySequence(path2p2);
+                    }
+                    else if(zone == 3) {
+                        drive.followTrajectorySequence(path3p1);
+                        arm.setPosition(armPos);
+                        timer.reset();
+//                        while(timer.seconds() <= 8);
+                        drive.followTrajectorySequence(path3p2);
+                    }
 
                     driverState = DriverState.TAGS;
                     break;

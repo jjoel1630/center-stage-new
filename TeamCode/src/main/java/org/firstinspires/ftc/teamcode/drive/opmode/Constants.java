@@ -20,7 +20,7 @@ public class Constants {
     public static double slideCoeff = 1;
     public static double linearF = 0.09, linearFThreshold = 1500;
     public static double armPreventionThreshold = 500, slidePositionMax = 2400;
-    public static double linearLow = 0, linearHigh = 1600, linearError = 50;
+    public static double linearLow = 0, linearHigh = 1475, linearError = 50, linearDrop = 1500;
     public static double linearKp = 1.5, linearKi = 0, linearKd = 0.1;
 
     // april tags

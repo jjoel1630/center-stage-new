@@ -4,17 +4,21 @@ import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
+import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.drive.PoseStorage;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.drive.opmode.auton.PIDControllerCustom;
@@ -38,7 +42,8 @@ public class TeleOpFiniteStates extends LinearOpMode {
 
     public enum DriverState {
         AUTOMATIC,
-        DRIVER
+        DRIVER,
+        FIELD_CENTRIC
     }
 
     public static boolean USE_WEBCAM = true;
@@ -64,12 +69,13 @@ public class TeleOpFiniteStates extends LinearOpMode {
     // Creating motors + servos
     private DcMotorEx frontLeft = null, frontRight = null, rearLeft = null, rearRight = null;
     private DcMotorEx linearSlide = null;
-    private Servo airplane, claw, arm;
+    private Servo airplane, claw, arm, clawLeft, clawRight;
     private ElapsedTime timer;
+    private IMU imu;
 
     // drivetrain constants
     public static double axialCoefficient = 1, yawCoefficient = 1, lateralCoefficient = 1.1;
-    public static double slowModePower = 0.5, regularPower = 0.8;
+    public static double slowModePower = 0.5, regularPower = 0.85;
 
     // outtake constants
     public static double CLAW_MAX = 1, CLAW_MIN = 0.75;
@@ -85,8 +91,10 @@ public class TeleOpFiniteStates extends LinearOpMode {
     public static double slideCoeff = 1;
     public static double linearF = 0.09, linearFThreshold = 1500;
     public static double armPreventionThreshold = 500, slidePositionMax = 2200;
-    public static double linearLow = 0, linearHigh = 2400, linearError = 50;
+    public static double linearLow = 0, linearHigh = 2400, linearError = 100;
     public static double linearKp = 1.5, linearKi = 0, linearKd = 0.1; // 4.8, 0.5
+
+    // totalPower = kP * error + kD * error;
 
     PIDControllerCustom linearController = new PIDControllerCustom(linearKp, linearKi, linearKd);
     OuttakeState outState = OuttakeState.LIFT_MANUAL;
@@ -106,6 +114,16 @@ public class TeleOpFiniteStates extends LinearOpMode {
         rearRight = hardwareMap.get(DcMotorEx.class, "rightRear");
         // reverse dt motor
         frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rearLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rearRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        imu = hardwareMap.get(IMU.class, "imu");
+        IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
+                RevHubOrientationOnRobot.LogoFacingDirection.LEFT,
+                RevHubOrientationOnRobot.UsbFacingDirection.BACKWARD));
+        imu.initialize(parameters);
 
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
         drive.setPoseEstimate(PoseStorage.currentPose);
@@ -122,6 +140,8 @@ public class TeleOpFiniteStates extends LinearOpMode {
 
         arm = hardwareMap.servo.get("arm");
         claw = hardwareMap.servo.get("claw");
+        clawLeft = hardwareMap.servo.get("clawLeft");
+        clawRight = hardwareMap.servo.get("clawRight");
         airplane = hardwareMap.servo.get("airplane");
 
         initAprilTag();
@@ -134,6 +154,11 @@ public class TeleOpFiniteStates extends LinearOpMode {
             /* ------- DRIVETRAIN ------- */
             drive.update();
             currentHeading = Math.toDegrees(drive.getPoseEstimate().getHeading());
+
+            double botHeading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
+            if(gamepad1.back) imu.resetYaw();
+            if(gamepad1.options) driverState = driverState.compareTo(DriverState.DRIVER) == 0 ? DriverState.FIELD_CENTRIC : DriverState.DRIVER;
+
             List<AprilTagDetection> tags = telemetryAprilTag();
             switch(driverState) {
                 case DRIVER:
@@ -176,31 +201,52 @@ public class TeleOpFiniteStates extends LinearOpMode {
                         driverState = DriverState.AUTOMATIC;
                     }
                     break;
+                case FIELD_CENTRIC:
+                    double y = -gamepad1.left_stick_y; // Remember, Y stick value is reversed
+                    double x = gamepad1.left_stick_x;
+                    double rx = gamepad1.right_stick_x;
+
+                    // This button choice was made so that it is hard to hit on accident,
+                    // it can be freely changed based on preference.
+                    // The equivalent button is start on Xbox-style controllers.
+
+                    // Rotate the movement direction counter to the bot's rotation
+                    double rotX = x * Math.cos(-botHeading) - y * Math.sin(-botHeading);
+                    double rotY = x * Math.sin(-botHeading) + y * Math.cos(-botHeading);
+
+                    rotX = rotX * 1.1;  // Counteract imperfect strafing
+
+                    // Denominator is the largest motor power (absolute value) or 1
+                    // This ensures all the powers maintain the same ratio,
+                    // but only if at least one is out of the range [-1, 1]
+                    double denominator = Math.max(Math.abs(rotY) + Math.abs(rotX) + Math.abs(rx), 1);
+                    double frontLeftPower = (rotY + rotX + rx) / denominator;
+                    double backLeftPower = (rotY - rotX + rx) / denominator;
+                    double frontRightPower = (rotY - rotX - rx) / denominator;
+                    double backRightPower = (rotY + rotX - rx) / denominator;
+
+                    frontLeft.setPower(frontLeftPower);
+                    rearLeft.setPower(backLeftPower);
+                    frontRight.setPower(frontRightPower);
+                    rearRight.setPower(backRightPower);
+                    break;
                 case AUTOMATIC:
-                    if (!drive.isBusy()) {
-                        driverState = DriverState.DRIVER;
-//                        outState = OuttakeState.LIFT_PICKUP;
-                    }
-                    if(-gamepad1.left_stick_y != 0 || gamepad1.left_stick_x != 0 || gamepad1.right_stick_x != 0) {
-                        drive.breakFollowing();
-                    }
+                    if (!drive.isBusy()) driverState = DriverState.DRIVER;
+                    if(-gamepad1.left_stick_y != 0 || gamepad1.left_stick_x != 0 || gamepad1.right_stick_x != 0) drive.breakFollowing();
                     break;
             }
 
             /*--------OUTTAKE---------*/
-            // hot buttons
-            // pick up pixel + raise
-            // pick drop pixel + reduce
             linearController.setPID(linearKp, linearKi, linearKd);
 
             if(gamepad2.x) outState = OuttakeState.LIFT_MANUAL;
-            if(gamepad2.y) {
-                timer.reset();
-                outState = OuttakeState.LIFT_PICKUP;
-            }
             if(gamepad2.a && linearSlide.getCurrentPosition() >= armPreventionThreshold) {
                 timer.reset();
                 outState = OuttakeState.LIFT_DROP;
+            }
+            if(gamepad2.dpad_down) {
+                linearSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                linearSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             }
 
             double linearCurPos, pid;
@@ -243,7 +289,6 @@ public class TeleOpFiniteStates extends LinearOpMode {
                     if(timer.seconds() >= clawTime + armTime) outState = OuttakeState.LIFT_RETRACT;
                     break;
                 case LIFT_RETRACT:
-
                     clawPos = CLAW_MAX;
                     claw.setPosition(clawPos);
                     if(timer.seconds() >= clawTime && armPos != ARM_MIN) {
@@ -286,7 +331,7 @@ public class TeleOpFiniteStates extends LinearOpMode {
                     // linear slide
                     double axialLS = -gamepad2.left_stick_y;  // forward, back
 
-                    if(Math.abs(linearSlide.getCurrentPosition()) >= Math.abs(slidePositionMax) && !gamepad2.dpad_down) axialLS = 0;
+                    if(Math.abs(linearSlide.getCurrentPosition()) >= Math.abs(slidePositionMax) && axialLS >= 0) axialLS = 0;
                     else if(linearSlide.getCurrentPosition() >= armPreventionThreshold && armPos == ARM_MAX) axialLS = 0;
                     else axialLS = axialLS;
 
@@ -298,7 +343,6 @@ public class TeleOpFiniteStates extends LinearOpMode {
 
                     break;
                 default:
-                    // should never be reached, as liftState should never be null
                     outState = OuttakeState.LIFT_MANUAL;
             }
 
@@ -331,8 +375,9 @@ public class TeleOpFiniteStates extends LinearOpMode {
 //                }
 //            }
             telemetry.addData("slide position", linearSlide.getCurrentPosition());
-//            telemetry.addData("lift state", outState);
             telemetry.addData("timer", timer.seconds());
+            telemetry.addData("heading", botHeading);
+            telemetry.addData("driverstate", driverState);
             telemetry.update();
         }
     }

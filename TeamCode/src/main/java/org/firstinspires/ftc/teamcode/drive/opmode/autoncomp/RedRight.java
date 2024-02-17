@@ -44,6 +44,7 @@ public class RedRight extends LinearOpMode {
         LIFT_RAISE,
         LIFT_DROP,
         LIFT_RETRACT,
+        REDUCE
     }
 
     private AprilTagProcessor aprilTag;
@@ -134,7 +135,7 @@ public class RedRight extends LinearOpMode {
         // Paths
         TrajectorySequence path1 = drive.trajectorySequenceBuilder(start)
                 .splineTo(new Vector2d(8.00, -34.00), Math.toRadians(135.00))
-                .lineToLinearHeading(new Pose2d(41.50, -33, Math.toRadians(180.00)))
+                .lineToLinearHeading(new Pose2d(39, -32, Math.toRadians(180.00)))
                 .build();
 
         TrajectorySequence path2 = drive.trajectorySequenceBuilder(start)
@@ -246,18 +247,17 @@ public class RedRight extends LinearOpMode {
 
                     if(timer.seconds() >= clawTime + armTime) driverState = DriverState.LIFT_RETRACT;
                     break;
-                case PARK:
-                    Pose2d current = drive.getPoseEstimate();
+                case REDUCE:
+                    linearSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                    linearCurPos = linearSlide.getCurrentPosition();
+                    pid = linearController.update(linearDrop, linearCurPos);
+                    linearSlide.setVelocity(pid);
 
-                    TrajectorySequence park = drive.trajectorySequenceBuilder(current)
-                            .lineToConstantHeading(new Vector2d(50.00, -13.00))
-                            .lineToConstantHeading(new Vector2d(65.50, -13.00))
-                            .build();
-
-                    drive.followTrajectorySequenceAsync(park);
-
-                    driverState = DriverState.DONE;
-
+                    if(Math.abs(linearDrop - linearCurPos) <= linearError) {
+                        driverState = DriverState.LIFT_RETRACT;
+                        linearSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                        timer.reset();
+                    }
                     break;
                 case LIFT_RETRACT:
                     clawPos = CLAW_MAX;
@@ -280,6 +280,19 @@ public class RedRight extends LinearOpMode {
                         linearSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                         timer.reset();
                     }
+                    break;
+                case PARK:
+                    Pose2d current = drive.getPoseEstimate();
+
+                    TrajectorySequence park = drive.trajectorySequenceBuilder(current)
+                            .lineToConstantHeading(new Vector2d(50.00, -13.00))
+                            .lineToConstantHeading(new Vector2d(65.50, -13.00))
+                            .build();
+
+                    drive.followTrajectorySequenceAsync(park);
+
+                    driverState = DriverState.DONE;
+
                     break;
                 case DONE:
                     break;

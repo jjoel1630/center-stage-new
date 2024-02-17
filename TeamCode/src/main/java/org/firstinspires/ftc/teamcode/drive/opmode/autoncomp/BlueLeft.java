@@ -112,7 +112,7 @@ public class BlueLeft extends LinearOpMode {
     DriverState driverState = DriverState.AUTOMATIC;
 
     public static double aprilTagGap = -1*atGap+2;
-    public static double aprilTagOffset = -1*atOff-2;
+    public static double aprilTagOffset = -3.5;
 
     public static double x1 = 22, y2 = 32.5, x3 = 8;
 
@@ -142,14 +142,14 @@ public class BlueLeft extends LinearOpMode {
                 .build();
 
         TrajectorySequence path2 = drive.trajectorySequenceBuilder(start)
-                .lineToConstantHeading(new Vector2d(12.00, 32.50))
+                .lineToConstantHeading(new Vector2d(12.00, 34))
                 .lineToConstantHeading(new Vector2d(12.00, 45.00))
-                .lineToLinearHeading(new Pose2d(41.50, 36.00, Math.toRadians(180.00)))
+                .lineToLinearHeading(new Pose2d(37, 39, Math.toRadians(180.00)))
                 .build();
         TrajectorySequence path3 = drive.trajectorySequenceBuilder(start)
                 .lineToConstantHeading(new Vector2d(20.00, 42.00))
                 .lineToConstantHeading(new Vector2d(20, 52))
-                .lineToLinearHeading(new Pose2d(41.50, 36.00, Math.toRadians(180.00)))
+                .lineToLinearHeading(new Pose2d(38, 48, Math.toRadians(180.00)))
                 .build();
 
         initAprilTag();
@@ -197,9 +197,9 @@ public class BlueLeft extends LinearOpMode {
                     if(tags != null) {
                         AprilTagDetection tag = tags.get(0);
                         for(AprilTagDetection t : tags) {
-                            if(zone == 1 && t.id == 3) tag = t;
+                            if(zone == 1 && t.id == 1) tag = t;
                             else if(zone == 2 && t.id == 2) tag = t;
-                            else if(zone == 3 && t.id == 1) tag = t;
+                            else if(zone == 3 && t.id == 3) tag = t;
                         }
                         Pose2d current = drive.getPoseEstimate();
                         telemetry.addData("yaw", tag.ftcPose.yaw);
