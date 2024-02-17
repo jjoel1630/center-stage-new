@@ -100,8 +100,8 @@ public class TeleOpFiniteStates extends LinearOpMode {
     OuttakeState outState = OuttakeState.LIFT_MANUAL;
 
     DriverState driverState = DriverState.DRIVER;
-    public static double aprilTagGap = 4;
-    public static double aprilTagOffset = 5;
+    public static double aprilTagGap = 5.5;
+    public static double aprilTagOffset = 6;
     public double currentHeading = 180;
 
     @Override
