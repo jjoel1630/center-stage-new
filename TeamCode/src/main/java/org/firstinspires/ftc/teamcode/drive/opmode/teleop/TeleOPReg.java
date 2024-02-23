@@ -65,6 +65,7 @@ public class TeleOPReg extends LinearOpMode {
 
     // Creating motors + servos
     private DcMotorEx frontLeft = null, frontRight = null, rearLeft = null, rearRight = null;
+    private DcMotorEx left, right;
     private DcMotorEx linearSlide = null;
     private Servo airplane, arm, clawLeft, clawRight;
     private ElapsedTime timer;
@@ -76,10 +77,10 @@ public class TeleOPReg extends LinearOpMode {
 
     // outtake constants
     public String clawState = "open";
-    public static double CLAWL_OPEN = 0.5, CLAWL_OPENSMALL = 0.75, CLAWL_CLOSE = 0.9, CLAWR_OPEN = 0.5, CLAWR_OPENSMALL = 0.1, CLAWR_CLOSE = 0;
-    public static double ARM_GROUND = 0.29, ARM_MAX = 0.63, ARM_MIN = 0.0, ARM_BACK = 0.55;
-    public static double clawTime = 0.7, armTime = 0.9;
-    double clawLPos = CLAWL_CLOSE, clawRPos = CLAWR_CLOSE, armPos = ARM_MIN;
+    public static double CLAWL_OPEN = 0, CLAWL_OPENSMALL = 0.8, CLAWL_CLOSE = 0.9, CLAWR_OPEN = 0.7, CLAWR_OPENSMALL = 0.19, CLAWR_CLOSE = 0;
+    public static double ARM_GROUND = 0.6, ARM_MAX = 0.95, ARM_MIN = 0.5, ARM_BACK = 0.55;
+    public static double clawTime = 0.2, armTime = 0.6;
+    double clawLPos = CLAWL_CLOSE, clawRPos = CLAWR_CLOSE, armPos = 0;
 
     // airplane constants
     public static double AIRPLANE_MAX = 0.3, AIRPLANE_MIN = 0.0;
@@ -88,9 +89,14 @@ public class TeleOPReg extends LinearOpMode {
     // linearslide constants: black black, red red for both
     public static double slideCoeff = 1;
     public static double linearF = 0.09, linearFThreshold = 1500;
-    public static double armPreventionThreshold = 500, slidePositionMax = 2200;
+    public static double armPreventionThreshold = 500, slidePositionMax = 2700;
     public static double linearLow = 0, linearHigh = 2400, linearError = 100;
-    public static double linearKp = 1.5, linearKi = 0, linearKd = 0.1; // 4.8, 0.5
+    public static double linearKp = 3, linearKi = 0, linearKd = 0; // 4.8, 0.5
+
+    public static double hangMax = 2000;
+
+    public static double leftPower = 1, rightPower = 1;
+    public static double speed = 1;
 
     // totalPower = kP * error + kD * error;
 
@@ -110,6 +116,15 @@ public class TeleOPReg extends LinearOpMode {
         frontRight = hardwareMap.get(DcMotorEx.class, "rightFront");
         rearLeft = hardwareMap.get(DcMotorEx.class, "leftRear");
         rearRight = hardwareMap.get(DcMotorEx.class, "rightRear");
+
+        left = hardwareMap.get(DcMotorEx.class, "hangLeft");
+        right = hardwareMap.get(DcMotorEx.class, "handRight");
+        left.setDirection(DcMotorSimple.Direction.REVERSE);
+        left.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        left.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        right.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        right.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
         // reverse dt motor
         frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -247,6 +262,8 @@ public class TeleOPReg extends LinearOpMode {
                 case LIFT_RETRACT:
                     clawLPos = CLAWL_CLOSE;
                     clawLeft.setPosition(clawLPos);
+                    clawRPos = CLAWR_CLOSE;
+                    clawRight.setPosition(clawRPos);
                     if(timer.seconds() >= clawTime && armPos != ARM_MIN) {
                         armPos = ARM_MIN;
                         arm.setPosition(armPos);
@@ -282,8 +299,8 @@ public class TeleOPReg extends LinearOpMode {
                         armPos = ARM_BACK;
                     }
                     if(gamepad2.right_stick_button) {
-                        clawLPos = CLAWL_CLOSE;
-                        clawRPos = CLAWR_CLOSE;
+                        clawLPos = CLAWL_OPEN;
+                        clawRPos = CLAWR_OPEN;
                     }
 
                     if(gamepad2.left_trigger == 1 && linearSlide.getCurrentPosition() >= armPreventionThreshold) armPos = ARM_MAX;
@@ -305,7 +322,13 @@ public class TeleOPReg extends LinearOpMode {
 
                     linearSlide.setPower(axialLS * slideCoeff);
 
+                    double power = gamepad2.right_stick_y * speed; // turning
+                    if((Math.abs(left.getCurrentPosition()) >= Math.abs(hangMax) || Math.abs(right.getCurrentPosition()) >= Math.abs(hangMax)) && power >= 0) power = 0;
+                    left.setPower(power * leftPower);
+                    right.setPower(power * rightPower);
+
                     telemetry.addData("slide power", axialLS * slideCoeff);
+
 
                     break;
                 default:
@@ -341,6 +364,8 @@ public class TeleOPReg extends LinearOpMode {
 //                }
 //            }
             telemetry.addData("slide position", linearSlide.getCurrentPosition());
+            telemetry.addData("hangPositionLeft", left.getCurrentPosition());
+            telemetry.addData("hangPositionRight", right.getCurrentPosition());
             telemetry.addData("timer", timer.seconds());
             telemetry.addData("heading", botHeading);
             telemetry.addData("driverstate", driverState);

@@ -144,32 +144,31 @@ public class RedLeftPath extends LinearOpMode {
 
         // Paths
         TrajectorySequence path1preloaded = drive.trajectorySequenceBuilder(start)
-                .lineToLinearHeading(new Pose2d(-42.00, -32, Math.toRadians(180.00)))
+                .splineTo(new Vector2d(-40.00, -32.00), Math.toRadians(90.00))
                 .addDisplacementMarker(() -> {
-                    telemetry.addLine("in marker");
+//                    LinearSlides lt = new LinearSlides(this.telemetry);
+//                    lt.start();
+                    telemetry.addLine("drop purple pixel");
                     telemetry.update();
                 })
-                .waitSeconds(1)
-                .lineToLinearHeading(new Pose2d(-32.00, -10.00, Math.toRadians(180.00)))
-                .lineToLinearHeading(new Pose2d(32.00, -14.00, Math.toRadians(180.00)))
-                .addDisplacementMarker(() -> {
-                    LinearSlides lt = new LinearSlides(this.telemetry);
-                    lt.start();
+                .addSpatialMarker(new Vector2d(-55, -36), () -> {
+                    telemetry.addLine("drop arm to pick white pixel");
+                    telemetry.update();
                 })
-                .lineToLinearHeading(new Pose2d(38.00, -33.00, Math.toRadians(180.00)))
-                .build();
-        TrajectorySequence path1cycle1 = drive.trajectorySequenceBuilder(path1preloaded.end())
-                .lineToConstantHeading(new Vector2d(16.00, -38.00))
-                .lineToConstantHeading(new Vector2d(-60.00, -36.00))
+                .lineToLinearHeading(new Pose2d(-60, -36, Math.toRadians(180.00)))
+                .addDisplacementMarker(() -> {
+                    telemetry.addLine("pick white pixels");
+                    telemetry.update();
+                })
+                .lineToLinearHeading(new Pose2d(-35.00, -14.00, Math.toRadians(180.00)))
+                .lineToLinearHeading(new Pose2d(14.00, -14.00, Math.toRadians(180.00)))
+                .lineToLinearHeading(new Pose2d(50.00, -38.00, Math.toRadians(180.00)))
+                .addDisplacementMarker(() -> {
+                    telemetry.addLine("drop white pixels");
+                    telemetry.update();
+                })
                 .build();
 
-
-        TrajectorySequence testing = drive.trajectorySequenceBuilder(start)
-                .splineTo(new Vector2d(-46.00, -42.00), Math.toRadians(90.00))
-                .splineToLinearHeading(new Pose2d(-48.00, -60.00, Math.toRadians(0.00)), Math.toRadians(0.00))
-                .splineTo(new Vector2d(24.00, -60.00), Math.toRadians(0.00))
-                .splineToLinearHeading(new Pose2d(38.00, -33.00, Math.toRadians(180.00)), Math.toRadians(180.00))
-                .build();
         TrajectorySequence path1 = drive.trajectorySequenceBuilder(start)
                 .splineTo(new Vector2d(-46.00, -42.00), Math.toRadians(90.00))
                 .lineToLinearHeading(new Pose2d(-48.00, -60.00, Math.toRadians(0.00)))

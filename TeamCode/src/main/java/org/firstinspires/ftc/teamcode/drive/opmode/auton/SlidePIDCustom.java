@@ -82,17 +82,17 @@ public class SlidePIDCustom extends LinearOpMode {
             pidController.setPID(p, i, d);
 
             double curPos = slide.getCurrentPosition();
-            double instantTargetPos = motion_profile(accel, vel, target, timer.seconds());
+//            double instantTargetPos = motion_profile(accel, vel, target, timer.seconds());
 
-//            double pid = pidController.update(target / divisor, curPos / divisor) + f;
-            double pid = (instantTargetPos - curPos) * p;
+            double pid = pidController.update(target / divisor, curPos / divisor) + f;
+//            double pid = (instantTargetPos - curPos) * p;
 
             slide.setVelocity(pid);
 
             mx = Math.max(mx, Math.abs(powerMultiplier * pid));
             telemetry.addData("curPos", curPos);
             telemetry.addData("targetPos", target);
-            telemetry.addData("instTargetPos", instantTargetPos);
+//            telemetry.addData("instTargetPos", instantTargetPos);
             telemetry.addData("pid", pid);
             telemetry.addData("max power", mx);
             telemetry.update();

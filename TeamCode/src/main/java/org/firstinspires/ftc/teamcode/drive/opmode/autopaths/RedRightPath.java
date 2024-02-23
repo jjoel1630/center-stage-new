@@ -4,6 +4,7 @@ import android.util.Size;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
@@ -136,21 +137,44 @@ public class RedRightPath extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
+        Telemetry telemetry = new MultipleTelemetry(this.telemetry, FtcDashboard.getInstance().getTelemetry());
+
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
         drive.setPoseEstimate(start);
 
         Servo arm = hardwareMap.servo.get("arm");
-        arm.setPosition(0);
+        arm.setPosition(0.5);
 
         // Paths
         TrajectorySequence path1preloaded = drive.trajectorySequenceBuilder(start)
-                .lineToLinearHeading(new Pose2d(30.00, -32.00, Math.toRadians(180.00)))
+                .splineTo(new Vector2d(16.00, -32.00), Math.toRadians(90.00))
                 .addDisplacementMarker(() -> {
-                    telemetry.addLine("in marker");
+                    telemetry.addLine("drop purple pixel");
                     telemetry.update();
                 })
-                .waitSeconds(1)
-                .lineToConstantHeading(new Vector2d(39.00, -36.00))
+                .lineToLinearHeading(new Pose2d(41.50, -36.00, Math.toRadians(180.00)))
+                .addDisplacementMarker(() -> {
+                    telemetry.addLine("drop yellow pixel");
+                    telemetry.update();
+                })
+                .lineToLinearHeading(new Pose2d(22.00, -14.00, Math.toRadians(180.00)))
+                .lineToLinearHeading(new Pose2d(-35.00, -14.00, Math.toRadians(180.00)))
+                .addSpatialMarker(new Vector2d(-55, -36), () -> {
+                    telemetry.addLine("drop arm to pick white pixel");
+                    telemetry.update();
+                })
+                .lineToLinearHeading(new Pose2d(-60.00, -36.00, Math.toRadians(180.00)))
+                .addDisplacementMarker(() -> {
+                    telemetry.addLine("pick white pixels");
+                    telemetry.update();
+                })
+                .lineToLinearHeading(new Pose2d(-34.00, -14.00, Math.toRadians(180.00)))
+                .lineToLinearHeading(new Pose2d(15.00, -14.00, Math.toRadians(180.00)))
+                .lineToLinearHeading(new Pose2d(50.00, -38.00, Math.toRadians(180.00)))
+                .addDisplacementMarker(() -> {
+                    telemetry.addLine("drop white pixels");
+                    telemetry.update();
+                })
                 .build();
 
         TrajectorySequence path1 = drive.trajectorySequenceBuilder(start)
@@ -179,7 +203,6 @@ public class RedRightPath extends LinearOpMode {
             switch (driverState) {
                 case AUTOMATIC:
                     drive.followTrajectorySequence(path1preloaded);
-//                    drive.followTrajectorySequence(path1cycle1);
 
                     driverState = DriverState.TAGS;
                     break;
