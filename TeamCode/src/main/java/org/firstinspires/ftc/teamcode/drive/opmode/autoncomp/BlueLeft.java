@@ -60,7 +60,7 @@ public class BlueLeft extends LinearOpMode {
         visionPortal = new VisionPortal.Builder()
                 .addProcessor(aprilTag)
                 .enableLiveView(false)
-                .setCamera(hardwareMap.get(WebcamName.class, "Webcam 1"))
+                .setCamera(hardwareMap.get(WebcamName.class, "Webcam 2"))
 //                .setLiveViewContainerId(cameraMonitorViewId)
                 .setCameraResolution(new Size(1280, 960))
                 .build();
@@ -75,7 +75,7 @@ public class BlueLeft extends LinearOpMode {
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         telemetry.addLine("other id" + cameraMonitorViewId);
         telemetry.update();
-        OpenCvCamera camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 2"), cameraMonitorViewId);
+        OpenCvCamera camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
         FtcDashboard.getInstance().startCameraStream(camera, 0);
 
         BlueLeftPipeline elementPipeTeam = new BlueLeftPipeline();
@@ -102,10 +102,11 @@ public class BlueLeft extends LinearOpMode {
     }
 
     private DcMotorEx linearSlide = null;
-    private Servo claw, arm;
+    private Servo clawLeft, clawRight, arm;
     private ElapsedTime timer;
 
-    double clawPos = CLAW_MIN, armPos = ARM_MIN;
+    public static double CLAWL_OPEN = 0, CLAWL_OPENSMALL = 0.8, CLAWL_CLOSE = 0.9, CLAWR_OPEN = 0.7, CLAWR_OPENSMALL = 0.29, CLAWR_CLOSE = 0;
+    double clawLPos = CLAWL_CLOSE, clawRPos = CLAWR_CLOSE, armPos = ARM_MIN;
     public static double linearCurPos, pid;
     PIDControllerCustom linearController = new PIDControllerCustom(linearKp, linearKi, linearKd);
 
@@ -129,16 +130,18 @@ public class BlueLeft extends LinearOpMode {
         linearSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         arm = hardwareMap.servo.get("arm");
-        claw = hardwareMap.servo.get("claw");
+        clawLeft = hardwareMap.servo.get("clawLeft");
+        clawRight = hardwareMap.servo.get("clawRight");
 
-        claw.setPosition(clawPos);
+        clawLeft.setPosition(clawLPos);
+        clawRight.setPosition(clawRPos);
 
         timer = new ElapsedTime();
 
         // Paths
         TrajectorySequence path1 = drive.trajectorySequenceBuilder(start)
                 .splineTo(new Vector2d(9, 38), Math.toRadians(180.00))
-                .lineToLinearHeading(new Pose2d(38.00, 32.00, Math.toRadians(180.00)))
+                .lineToLinearHeading(new Pose2d(38.00, 40, Math.toRadians(180.00)))
                 .build();
 
         TrajectorySequence path2 = drive.trajectorySequenceBuilder(start)
@@ -149,7 +152,7 @@ public class BlueLeft extends LinearOpMode {
         TrajectorySequence path3 = drive.trajectorySequenceBuilder(start)
                 .lineToConstantHeading(new Vector2d(20.00, 42.00))
                 .lineToConstantHeading(new Vector2d(20, 52))
-                .lineToLinearHeading(new Pose2d(38, 48, Math.toRadians(180.00)))
+                .lineToLinearHeading(new Pose2d(38, 36, Math.toRadians(180.00)))
                 .build();
 
         initAprilTag();
@@ -214,79 +217,79 @@ public class BlueLeft extends LinearOpMode {
 
                         drive.followTrajectory(tagPose);
 
-                        driverState = DriverState.LIFT_PICKUP;
+                        driverState = DriverState.DONE;
                     }
                     break;
-                case LIFT_PICKUP:
-                    clawPos = CLAW_MIN;
-                    claw.setPosition(clawPos);
-                    if(timer.seconds() >= clawTime && armPos != ARM_MIN) {
-                        armPos = ARM_MIN;
-                        arm.setPosition(armPos);
-                        timer.reset();
-                    }
-
-                    if(timer.seconds() >= armTime) driverState = DriverState.LIFT_RAISE;
-                    break;
-                case LIFT_RAISE:
-                    linearSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                    linearCurPos = linearSlide.getCurrentPosition();
-                    pid = linearController.update(linearHigh, linearCurPos);
-                    linearSlide.setVelocity(pid);
-
-                    if(Math.abs(linearHigh - linearCurPos) <= linearError) {
-                        driverState = DriverState.LIFT_DROP;
-                        linearSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-                        timer.reset();
-                    }
-                    break;
-                case LIFT_DROP:
-                    linearSlide.setPower(linearF);
-
-                    armPos = ARM_MAX;
-                    arm.setPosition(armPos);
-                    if(timer.seconds() >= armTime && clawPos != CLAW_MAX) {
-                        clawPos = CLAW_MAX;
-                        claw.setPosition(clawPos);
-                    }
-
-                    if(timer.seconds() >= clawTime + armTime) driverState = DriverState.LIFT_RETRACT;
-                    break;
-                case PARK:
-                    Pose2d current = drive.getPoseEstimate();
-
-                    TrajectorySequence park = drive.trajectorySequenceBuilder(current)
-                            .lineToConstantHeading(new Vector2d(50.00, 13.00))
-                            .lineToConstantHeading(new Vector2d(65.50, 13.00))
-                            .build();
-
-                    drive.followTrajectorySequenceAsync(park);
-
-                    driverState = DriverState.DONE;
-
-                    break;
-                case LIFT_RETRACT:
-                    clawPos = CLAW_MAX;
-                    claw.setPosition(clawPos);
-                    if(timer.seconds() >= clawTime && armPos != ARM_MIN) {
-                        armPos = ARM_MIN;
-                        arm.setPosition(armPos);
-                        timer.reset();
-                    }
-
-                    linearSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                    linearCurPos = linearSlide.getCurrentPosition();
-                    if(timer.seconds() >= armTime) {
-                        pid = linearController.update(linearLow, linearCurPos);
-                        linearSlide.setVelocity(pid);
-                    }
-
-                    if(Math.abs(linearLow - linearCurPos) <= linearError) {
-                        driverState = DriverState.PARK;
-                        linearSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-                        timer.reset();
-                    }
-                    break;
+//                case LIFT_PICKUP:
+//                    clawPos = CLAW_MIN;
+//                    claw.setPosition(clawPos);
+//                    if(timer.seconds() >= clawTime && armPos != ARM_MIN) {
+//                        armPos = ARM_MIN;
+//                        arm.setPosition(armPos);
+//                        timer.reset();
+//                    }
+//
+//                    if(timer.seconds() >= armTime) driverState = DriverState.LIFT_RAISE;
+//                    break;
+//                case LIFT_RAISE:
+//                    linearSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//                    linearCurPos = linearSlide.getCurrentPosition();
+//                    pid = linearController.update(linearHigh, linearCurPos);
+//                    linearSlide.setVelocity(pid);
+//
+//                    if(Math.abs(linearHigh - linearCurPos) <= linearError) {
+//                        driverState = DriverState.LIFT_DROP;
+//                        linearSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+//                        timer.reset();
+//                    }
+//                    break;
+//                case LIFT_DROP:
+//                    linearSlide.setPower(linearF);
+//
+//                    armPos = ARM_MAX;
+//                    arm.setPosition(armPos);
+//                    if(timer.seconds() >= armTime && clawPos != CLAW_MAX) {
+//                        clawPos = CLAW_MAX;
+//                        claw.setPosition(clawPos);
+//                    }
+//
+//                    if(timer.seconds() >= clawTime + armTime) driverState = DriverState.LIFT_RETRACT;
+//                    break;
+//                case PARK:
+//                    Pose2d current = drive.getPoseEstimate();
+//
+//                    TrajectorySequence park = drive.trajectorySequenceBuilder(current)
+//                            .lineToConstantHeading(new Vector2d(50.00, 13.00))
+//                            .lineToConstantHeading(new Vector2d(65.50, 13.00))
+//                            .build();
+//
+//                    drive.followTrajectorySequenceAsync(park);
+//
+//                    driverState = DriverState.DONE;
+//
+//                    break;
+//                case LIFT_RETRACT:
+//                    clawPos = CLAW_MAX;
+//                    claw.setPosition(clawPos);
+//                    if(timer.seconds() >= clawTime && armPos != ARM_MIN) {
+//                        armPos = ARM_MIN;
+//                        arm.setPosition(armPos);
+//                        timer.reset();
+//                    }
+//
+//                    linearSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//                    linearCurPos = linearSlide.getCurrentPosition();
+//                    if(timer.seconds() >= armTime) {
+//                        pid = linearController.update(linearLow, linearCurPos);
+//                        linearSlide.setVelocity(pid);
+//                    }
+//
+//                    if(Math.abs(linearLow - linearCurPos) <= linearError) {
+//                        driverState = DriverState.PARK;
+//                        linearSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+//                        timer.reset();
+//                    }
+//                    break;
                 case DONE:
                     break;
             }

@@ -59,7 +59,7 @@ public class RedRight extends LinearOpMode {
         visionPortal = new VisionPortal.Builder()
                 .addProcessor(aprilTag)
                 .enableLiveView(false)
-                .setCamera(hardwareMap.get(WebcamName.class, "Webcam 1"))
+                .setCamera(hardwareMap.get(WebcamName.class, "Webcam 2"))
 //                .setLiveViewContainerId(cameraMonitorViewId)
                 .setCameraResolution(new Size(1280, 960))
                 .build();
@@ -74,7 +74,7 @@ public class RedRight extends LinearOpMode {
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         telemetry.addLine("other id" + cameraMonitorViewId);
         telemetry.update();
-        OpenCvCamera camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 2"), cameraMonitorViewId);
+        OpenCvCamera camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
         FtcDashboard.getInstance().startCameraStream(camera, 0);
 
         RedRightPipeline elementPipeTeam = new RedRightPipeline();

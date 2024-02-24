@@ -18,9 +18,9 @@ public class RedRightPipeline extends OpenCvPipeline {
     int CAMERA_WIDTH = 2304/*800*/;
     int CAMERA_HEIGHT = 1536/*448*/;
 
-    public static int x1 = 100, y1 = 1000, w1 = 300, h1 = 400;
-    public static int x2 = 600, y2 = 800, w2 = 500, h2 = 400;
-    public static int x3 = 1300, y3 = 900, w3 = 300, h3 = 300;
+    public static int x1 = 250, y1 = 1000, w1 = 300, h1 = 400;
+    public static int x2 = 800, y2 = 800, w2 = 500, h2 = 400;
+    public static int x3 = 1500, y3 = 950, w3 = 300, h3 = 300;
 
     public static int red = 225;
 

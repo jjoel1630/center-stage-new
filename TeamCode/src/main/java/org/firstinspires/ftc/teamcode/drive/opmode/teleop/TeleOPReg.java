@@ -44,7 +44,7 @@ public class TeleOPReg extends LinearOpMode {
     }
 
     public static boolean USE_WEBCAM = true;
-    public static String cameraName = "Webcam 1";
+    public static String cameraName = "Webcam 2";
     private AprilTagProcessor aprilTag;
     private VisionPortal visionPortal;
     public void initAprilTag() {
@@ -77,8 +77,8 @@ public class TeleOPReg extends LinearOpMode {
 
     // outtake constants
     public String clawState = "open";
-    public static double CLAWL_OPEN = 0, CLAWL_OPENSMALL = 0.8, CLAWL_CLOSE = 0.9, CLAWR_OPEN = 0.7, CLAWR_OPENSMALL = 0.19, CLAWR_CLOSE = 0;
-    public static double ARM_GROUND = 0.6, ARM_MAX = 0.95, ARM_MIN = 0.5, ARM_BACK = 0.55;
+    public static double CLAWL_OPEN = 0, CLAWL_OPENSMALL = 0.8, CLAWL_CLOSE = 0.9, CLAWR_OPEN = 0.7, CLAWR_OPENSMALL = 0.29, CLAWR_CLOSE = 0;
+    public static double ARM_GROUND = 0.6, ARM_MAX = 0.95, ARM_MIN = 0.5, ARM_STACK = 0.9;
     public static double clawTime = 0.2, armTime = 0.6;
     double clawLPos = CLAWL_CLOSE, clawRPos = CLAWR_CLOSE, armPos = 0;
 
@@ -89,7 +89,7 @@ public class TeleOPReg extends LinearOpMode {
     // linearslide constants: black black, red red for both
     public static double slideCoeff = 1;
     public static double linearF = 0.09, linearFThreshold = 1500;
-    public static double armPreventionThreshold = 500, slidePositionMax = 2700;
+    public static double armPreventionThreshold = 500, slidePositionMax = 2700, armDownwardThreshold = 1600;
     public static double linearLow = 0, linearHigh = 2400, linearError = 100;
     public static double linearKp = 3, linearKi = 0, linearKd = 0; // 4.8, 0.5
 
@@ -152,8 +152,8 @@ public class TeleOPReg extends LinearOpMode {
         VoltageSensor voltageSensor = hardwareMap.voltageSensor.iterator().next();
 
         arm = hardwareMap.servo.get("arm");
-        clawLeft = hardwareMap.servo.get("clawLeft");
-        clawRight = hardwareMap.servo.get("clawRight");
+        clawLeft = hardwareMap.servo.get("singleClaw");
+        clawRight = hardwareMap.servo.get("stackedClaw");
         airplane = hardwareMap.servo.get("airplane");
 
         initAprilTag();
@@ -294,9 +294,9 @@ public class TeleOPReg extends LinearOpMode {
                     if(gamepad2.y) clawLPos = CLAWL_CLOSE;
                     if(gamepad2.b) clawRPos = CLAWR_CLOSE;
 
-                    if(gamepad2.left_stick_button && linearSlide.getCurrentPosition() >= armPreventionThreshold) {
+                    if(gamepad2.left_stick_button) {
                         clawRPos = CLAWR_OPENSMALL;
-                        armPos = ARM_BACK;
+                        armPos = ARM_STACK;
                     }
                     if(gamepad2.right_stick_button) {
                         clawLPos = CLAWL_OPEN;
@@ -315,7 +315,7 @@ public class TeleOPReg extends LinearOpMode {
                     double axialLS = -gamepad2.left_stick_y;  // forward, back
 
                     if(Math.abs(linearSlide.getCurrentPosition()) >= Math.abs(slidePositionMax) && axialLS >= 0) axialLS = 0;
-                    else if(linearSlide.getCurrentPosition() >= armPreventionThreshold && armPos == ARM_MAX) axialLS = 0;
+                    else if(linearSlide.getCurrentPosition() <= armDownwardThreshold && armPos == ARM_MAX && axialLS <= 0) axialLS = 0;
                     else axialLS = axialLS;
 
                     if(linearSlide.getCurrentPosition() >= linearFThreshold) axialLS += linearF;

@@ -19,6 +19,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.drive.opmode.auton.PIDControllerCustom;
+import org.firstinspires.ftc.teamcode.drive.opmode.subsystems.OuttakeSlides;
 import org.firstinspires.ftc.teamcode.drive.opmode.teleop.TeleOpFiniteStates;
 import org.firstinspires.ftc.teamcode.drive.opmode.vision.CustomElementPipeline;
 import org.firstinspires.ftc.teamcode.drive.opmode.vision.TeamElementPipeline;
@@ -42,10 +43,6 @@ public class RedLeftPath extends LinearOpMode {
         TAGS,
         PARK,
         DONE,
-        LIFT_PICKUP,
-        LIFT_RAISE,
-        LIFT_DROP,
-        LIFT_RETRACT,
     }
 
     private AprilTagProcessor aprilTag;
@@ -139,9 +136,6 @@ public class RedLeftPath extends LinearOpMode {
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
         drive.setPoseEstimate(start);
 
-        Servo arm = hardwareMap.servo.get("arm");
-        arm.setPosition(0);
-
         // Paths
         TrajectorySequence path1preloaded = drive.trajectorySequenceBuilder(start)
                 .splineTo(new Vector2d(-40.00, -32.00), Math.toRadians(90.00))
@@ -201,7 +195,6 @@ public class RedLeftPath extends LinearOpMode {
             switch (driverState) {
                 case AUTOMATIC:
                     drive.followTrajectorySequence(path1preloaded);
-//                    drive.followTrajectorySequence(path1cycle1);
 
                     driverState = DriverState.TAGS;
                     break;
@@ -245,8 +238,6 @@ public class RedLeftPath extends LinearOpMode {
                 case DONE:
                     break;
             }
-
-//            if(driverState == DriverState.DONE) break;
         }
     }
 }

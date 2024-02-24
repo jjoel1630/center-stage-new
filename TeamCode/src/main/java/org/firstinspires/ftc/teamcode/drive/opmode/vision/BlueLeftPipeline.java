@@ -18,9 +18,9 @@ public class BlueLeftPipeline extends OpenCvPipeline {
     int CAMERA_WIDTH = 2304/*800*/;
     int CAMERA_HEIGHT = 1536/*448*/;
 
-    public static int x1 = 550, y1 = 800, w1 = 300, h1 = 300;
-    public static int x2 = 950, y2 = 650, w2 = 500, h2 = 300;
-    public static int x3 = 1650, y3 = 650, w3 = 300, h3 = 300;
+    public static int x1 = 600, y1 = 900, w1 = 400, h1 = 400;
+    public static int x2 = 1100, y2 = 850, w2 = 500, h2 = 300;
+    public static int x3 = 1900, y3 = 950, w3 = 300, h3 = 300;
 
     public static int blue = 225;
 

@@ -21,6 +21,7 @@ public class OuttakeSlides {
     public int currentPosition;
     public double power, velo;
     public boolean reversed = false;
+    public String mode;
 
     public double p, i, d, f;
     public PIDControllerCustom pidController;
@@ -31,10 +32,13 @@ public class OuttakeSlides {
 
     ElapsedTime timer = new ElapsedTime();
 
-    public OuttakeSlides(int startPosition, HardwareMap hardwareMap, LinearOpMode op, boolean rev, double p, double i, double d, double f) {
-        slide = hardwareMap.get(DcMotorEx.class, "linearSlide");
-        slide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        slide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    public OuttakeSlides(int startPosition, LinearOpMode op, boolean rev, double p, double i, double d, double f, String name) {
+        this.curOpMode = op;
+        curOpMode.telemetry = new MultipleTelemetry(curOpMode.telemetry, FtcDashboard.getInstance().getTelemetry());
+
+        slide = this.curOpMode.hardwareMap.get(DcMotorEx.class, name);
+        this.setMode("without");
+        this.resetEncoder();
         if(rev) slide.setDirection(DcMotorSimple.Direction.REVERSE);
 
         this.currentPosition = startPosition;
@@ -44,29 +48,47 @@ public class OuttakeSlides {
         this.p = p; this.i = i; this.d = d;
         this.f = f;
         pidController = new PIDControllerCustom(p, i, d);
-
-        this.curOpMode = op;
-        curOpMode.telemetry = new MultipleTelemetry(curOpMode.telemetry, FtcDashboard.getInstance().getTelemetry());
     }
 
     public void moveToPosition(int height, int error) {
-        this.setRunMode("with");
+        this.setMode("with");
         this.setCurrentPosition();
         this.resetTimer();
         this.startTimer();
 
-        while(Math.abs(height - this.currentPosition) <= error) {
+        while(Math.abs(height - this.currentPosition) >= error && !this.curOpMode.isStopRequested()) {
+            this.setCurrentPosition();
             double pid = pidController.update(height, this.currentPosition);
             this.velo = pid;
+
             this.powerSlideVel(pid);
+
+            this.LOG_STATS();
         }
+
+        this.powerSlideVel(0);
 
         this.resetTimer();
     }
 
-    public void setRunMode(String mode) {
+    public void teleopPID(int height, int error) {
+        this.setCurrentPosition();
+        double pid = pidController.update(height, this.currentPosition);
+        this.velo = pid;
+
+        this.powerSlideVel(pid);
+
+        this.LOG_STATS();
+    }
+
+    public void setRunMode() {
         if(mode.equals("without")) this.slide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         else if(mode.equals("with")) this.slide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    }
+
+    public void setMode(String mode) {
+        this.mode = mode;
+        this.setRunMode();
     }
 
     public double getCurrentPower() {
@@ -97,13 +119,28 @@ public class OuttakeSlides {
         return this.timer.seconds();
     }
 
+    public void updatePIDConst(double p, double i, double d) {
+        this.p = p; this.i = i; this.d = d;
+        pidController.setPID(this.p, this.i, this.d);
+    }
+
     public int setCurrentPosition() {
         this.currentPosition = slide.getCurrentPosition();
         return this.currentPosition;
     }
 
+    public int getCurrentPosition() {
+        return this.currentPosition;
+    }
+
+    public void resetEncoder() {
+        slide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        this.setRunMode();
+    }
+
     public void LOG_STATS() {
         String stats = "Current Power: " + this.power + "\nCurrent Velo: " + this.velo + "\nCurrent Position: " + this.currentPosition + "\nCurrent Time: " + this.timer.seconds();
         curOpMode.telemetry.addData("OuttakeSlides", stats);
+        curOpMode.telemetry.update();
     }
 }
