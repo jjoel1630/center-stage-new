@@ -34,7 +34,7 @@ import java.util.List;
 
 @Config
 @Autonomous(group="fast")
-public class FastRedRight extends LinearOpMode {
+public class FastRedRightParkLeft extends LinearOpMode {
     public enum DriverState {
         AUTOMATIC,
         TAGS,
@@ -241,7 +241,8 @@ public class FastRedRight extends LinearOpMode {
                             .lineToConstantHeading(new Vector2d(48, -62))
                             .build();
 
-                    drive.followTrajectorySequenceAsync(parkRight);
+                    drive.followTrajectorySequenceAsync(parkLeft);
+
 
                     driverState = DriverState.DONE;
 

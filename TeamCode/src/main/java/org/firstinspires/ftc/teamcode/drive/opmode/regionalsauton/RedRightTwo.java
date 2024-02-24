@@ -273,7 +273,6 @@ public class RedRightTwo extends LinearOpMode {
                             .addDisplacementMarker(() -> {
                                 claw.closeBoth();
                             })
-                            .waitSeconds(0.8)
 //                            .lineToLinearHeading(new Pose2d(-26.00, -10, Math.toRadians(180.00)))
                             .lineToLinearHeading(new Pose2d(33.00, -10, Math.toRadians(180.00)))
                             .lineToLinearHeading(new Pose2d(52.00, -40.00, Math.toRadians(180.00)))

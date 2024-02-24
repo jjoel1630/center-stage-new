@@ -115,6 +115,7 @@ public class FastBlueLeft extends LinearOpMode {
     public static double clawTime = 0.5, armTime = 0.5;
 
     public static Pose2d start = new Pose2d(15.875, 65.50, Math.toRadians(270));
+    public String parkLocation = "right";
     public static double aprilTagGap = -7;
     public static double aprilTagOffset = -6;
 
@@ -236,12 +237,14 @@ public class FastBlueLeft extends LinearOpMode {
                 case PARK:
                     Pose2d current = drive.getPoseEstimate();
 
-                    TrajectorySequence park = drive.trajectorySequenceBuilder(current)
-                            .lineToConstantHeading(new Vector2d(50.00, -13.00))
-                            .lineToConstantHeading(new Vector2d(65.50, -13.00))
+                    TrajectorySequence parkRight = drive.trajectorySequenceBuilder(current)
+                            .lineToConstantHeading(new Vector2d(55, 12))
+                            .build();
+                    TrajectorySequence parkLeft = drive.trajectorySequenceBuilder(current)
+                            .lineToConstantHeading(new Vector2d(48, 62))
                             .build();
 
-                    drive.followTrajectorySequenceAsync(park);
+                    drive.followTrajectorySequenceAsync(parkRight);
 
                     driverState = DriverState.DONE;
                     break;
