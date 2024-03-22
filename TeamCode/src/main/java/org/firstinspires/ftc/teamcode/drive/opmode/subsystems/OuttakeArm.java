@@ -1,30 +1,33 @@
 package org.firstinspires.ftc.teamcode.drive.opmode.subsystems;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-public class OuttakeArm {
-    public double currentPosition;
-    public double HIGH, RAISED, GROUND, DROP;
+import org.firstinspires.ftc.teamcode.drive.opmode.subsystems.util.ArmConstraints;
 
-    public Servo arm;
+public class OuttakeArm {
+    private double currentPosition;
+    private double HIGH, RAISED, GROUND, DROP;
+
+    private Servo arm;
 
     LinearOpMode curOpMode;
 
     ElapsedTime timer = new ElapsedTime();
 
-    public OuttakeArm(double currentPosition, double high, double raised, double ground, double drop, LinearOpMode op, String name) {
+    public OuttakeArm(LinearOpMode op, String name, ArmConstraints constraints) {
         this.curOpMode = op;
-        arm = op.hardwareMap.servo.get(name);
+        this.arm = op.hardwareMap.servo.get(name);
 
-        this.currentPosition = currentPosition;
-        this.HIGH = high;
-        this.RAISED = raised;
-        this.GROUND = ground;
-        this.DROP = drop;
+        this.currentPosition = constraints.getCurrentPosition();
+        this.HIGH = constraints.getHigh();
+        this.RAISED = constraints.getRaised();
+        this.GROUND = constraints.getGround();
+        this.DROP = constraints.getDrop();
+    }
 
+    public void initialize() {
         this.moveArm(this.currentPosition);
     }
 
@@ -41,7 +44,7 @@ public class OuttakeArm {
         arm.setPosition(pos);
     }
 
-    public void initialize() {
+    public void high() {
         this.setCurrentPosition(this.HIGH);
         this.moveArm(this.HIGH);
     }
@@ -60,8 +63,6 @@ public class OuttakeArm {
         this.setCurrentPosition(this.DROP);
         this.moveArm(this.DROP);
     }
-
-
 
     public void LOG_STATS() {
         String stats = "Current Position: " + this.currentPosition;

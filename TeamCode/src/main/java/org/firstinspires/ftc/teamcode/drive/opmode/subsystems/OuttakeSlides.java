@@ -6,48 +6,49 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.drive.opmode.auton.PIDControllerCustom;
-import org.firstinspires.ftc.teamcode.drive.opmode.teleop.TeleOPReg;
+import org.firstinspires.ftc.teamcode.drive.opmode.subsystems.util.SlideConstraints;
 
 public class OuttakeSlides {
-    // raise
-    // lower
-    // reset
-    // hold position
+    private int currentPosition;
+    private double power, velo;
+    private boolean reversed = false;
+    private String mode;
 
-    public int currentPosition;
-    public double power, velo;
-    public boolean reversed = false;
-    public String mode;
+    private double p, i, d, f;
+    private PIDControllerCustom pidController;
 
-    public double p, i, d, f;
-    public PIDControllerCustom pidController;
-
-    public DcMotorEx slide;
+    private DcMotorEx slide;
 
     LinearOpMode curOpMode;
 
     ElapsedTime timer = new ElapsedTime();
 
-    public OuttakeSlides(int startPosition, LinearOpMode op, boolean rev, double p, double i, double d, double f, String name) {
+    public OuttakeSlides(LinearOpMode op, String name, SlideConstraints constraints) {
         this.curOpMode = op;
         curOpMode.telemetry = new MultipleTelemetry(curOpMode.telemetry, FtcDashboard.getInstance().getTelemetry());
 
-        slide = this.curOpMode.hardwareMap.get(DcMotorEx.class, name);
+        this.slide = this.curOpMode.hardwareMap.get(DcMotorEx.class, name);
         this.setMode("without");
         this.resetEncoder();
-        if(rev) slide.setDirection(DcMotorSimple.Direction.REVERSE);
+        if(constraints.isRev()) slide.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        this.currentPosition = startPosition;
+        this.currentPosition = constraints.getStartPosition();
         this.power = 0;
         this.velo = 0;
 
-        this.p = p; this.i = i; this.d = d;
-        this.f = f;
-        pidController = new PIDControllerCustom(p, i, d);
+        this.p = constraints.getP(); this.i = constraints.getI(); this.d = constraints.getD();
+        this.f = constraints.getF();
+        this.pidController = new PIDControllerCustom(this.p, this.i, this.d);
+    }
+
+    public void initialize() {
+        this.setMode("without");
+        this.resetEncoder();
+        this.currentPosition = 0;
+        this.pidController.setPID(this.p, this.i, this.d);
     }
 
     public void moveToPosition(int height, int error) {

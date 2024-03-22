@@ -100,12 +100,12 @@ public class FastBlueRight extends LinearOpMode {
     public OuttakeSlides slides;
     public static double p = 3, i = 0, d = 0, f = 0.03;
     public static String slideName = "linearSlide";
-    public static int armPreventionThreshold = 500, slidePositionMax = 2000, linearFThreshold = 1000, slidePositionScore = 1525;
+    public static int armPreventionThreshold = 500, slidePositionMax = 2000, linearFThreshold = 1000, slidePositionScore = 1550;
     public static int linearLow = 0, linearError = 50;
 
     // Arm Subsystem
     public OuttakeArm arm;
-    public static double high = 0, raised = 0.5, ground = 0.6, drop = 0.95;
+    public static double high = 0, raised = 0.6, ground = 0.65, drop = 0.95;
     public static String armName = "arm";
 
     // Claw Subsystem
@@ -114,7 +114,7 @@ public class FastBlueRight extends LinearOpMode {
     public static String clawNameSingle = "singleClaw", clawNameStacked = "stackedClaw";
     public static double clawTime = 0.5, armTime = 0.5;
 
-    public Pose2d start = new Pose2d(-39.87, 65.50, Math.toRadians(270));
+    public Pose2d start = new Pose2d(-39.87, 63.50, Math.toRadians(270));
     public static double aprilTagGap = -7;
     public static double aprilTagOffset = -6;
 
@@ -193,22 +193,22 @@ public class FastBlueRight extends LinearOpMode {
                     visionPortal.resumeStreaming();
                     sleep(20);
 
-                    arm.moveArm(0.55);
+                    arm.raise();
 
                     if(zone == 1) {
                         drive.followTrajectorySequence(path1p1);
-                        drive.followTrajectorySequence(path1p2);
+//                        drive.followTrajectorySequence(path1p2);
                     }
                     else if(zone == 2) {
                         drive.followTrajectorySequence(path2p1);
-                        drive.followTrajectorySequence(path2p2);
+//                        drive.followTrajectorySequence(path2p2);
                     }
                     else if(zone == 3) {
                         drive.followTrajectorySequence(path3p1);
-                        drive.followTrajectorySequence(path3p2);
+//                        drive.followTrajectorySequence(path3p2);
                     }
 
-                    driverState = DriverState.TAGS;
+                    driverState = DriverState.DONE;
                     break;
                 case TAGS:
                     if (tags != null) {
@@ -250,8 +250,22 @@ public class FastBlueRight extends LinearOpMode {
                     waitSeconds(0.8);
                     slides.moveToPosition(0, linearError);
 
-                    driverState = DriverState.DONE;
+                    driverState = DriverState.PARK;
 
+                    break;
+                case PARK:
+                    Pose2d current = drive.getPoseEstimate();
+
+                    TrajectorySequence parkRight = drive.trajectorySequenceBuilder(current)
+                            .lineToConstantHeading(new Vector2d(55, 12))
+                            .build();
+                    TrajectorySequence parkLeft = drive.trajectorySequenceBuilder(current)
+                            .lineToConstantHeading(new Vector2d(48, 62))
+                            .build();
+
+                    drive.followTrajectorySequenceAsync(parkLeft);
+
+                    driverState = DriverState.DONE;
                     break;
                 case DONE:
                     break;

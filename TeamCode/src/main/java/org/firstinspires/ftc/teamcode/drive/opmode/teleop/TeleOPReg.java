@@ -77,8 +77,8 @@ public class TeleOPReg extends LinearOpMode {
 
     // outtake constants
     public String clawState = "open";
-    public static double CLAWL_OPEN = 0, CLAWL_OPENSMALL = 0.8, CLAWL_CLOSE = 0.9, CLAWR_OPEN = 0.7, CLAWR_OPENSMALL = 0.29, CLAWR_CLOSE = 0;
-    public static double ARM_GROUND = 0.6, ARM_MAX = 0.95, ARM_MIN = 0.5, ARM_STACK = 0.9;
+    public static double CLAWL_OPEN = 0.3, CLAWL_OPENSMALL = 0.8, CLAWL_CLOSE = 0.9, CLAWR_OPEN = 0.7, CLAWR_OPENSMALL = 0.29, CLAWR_CLOSE = 0;
+    public static double ARM_GROUND = 0.69, ARM_MAX = 0.95, ARM_MIN = 0.55, ARM_STACK = 0.9;
     public static double clawTime = 0.2, armTime = 0.6;
     double clawLPos = CLAWL_CLOSE, clawRPos = CLAWR_CLOSE, armPos = 0;
 
@@ -94,7 +94,7 @@ public class TeleOPReg extends LinearOpMode {
     public static double linearKp = 3, linearKi = 0, linearKd = 0; // 4.8, 0.5
 
     public static double hangMax = 2000;
-
+    public static double hangPower = -0.5;
     public static double leftPower = 1, rightPower = 1;
     public static double speed = 1;
 
@@ -183,7 +183,7 @@ public class TeleOPReg extends LinearOpMode {
 
                     // slowmode
                     boolean slowModeOn = false;
-                    if (gamepad1.left_bumper) slowModeOn = true;
+                    if (gamepad1.left_trigger == 1.0) slowModeOn = true;
 
                     double powerModifier = slowModeOn ? slowModePower : regularPower;
 
@@ -322,14 +322,13 @@ public class TeleOPReg extends LinearOpMode {
 
                     linearSlide.setPower(axialLS * slideCoeff);
 
-                    double power = gamepad2.right_stick_y * speed; // turning
-                    if((Math.abs(left.getCurrentPosition()) >= Math.abs(hangMax) || Math.abs(right.getCurrentPosition()) >= Math.abs(hangMax)) && power >= 0) power = 0;
+                    double power = gamepad2.right_stick_y; // turning
+                    if(power < 0) power = hangPower;
                     left.setPower(power * leftPower);
                     right.setPower(power * rightPower);
 
                     telemetry.addData("slide power", axialLS * slideCoeff);
-
-
+                    telemetry.addData("hang power", power);
                     break;
                 default:
                     outState = OuttakeState.LIFT_MANUAL;

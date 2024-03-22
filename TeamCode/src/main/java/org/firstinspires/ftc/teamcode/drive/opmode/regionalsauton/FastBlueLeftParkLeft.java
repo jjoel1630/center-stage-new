@@ -98,14 +98,14 @@ public class FastBlueLeftParkLeft extends LinearOpMode {
 
     // Slide Subsystem
     public OuttakeSlides slides;
-    public static double p = 3, i = 0, d = 0, f = 0.01;
+    public static double p = 3, i = 0, d = 0, f = 0.03;
     public static String slideName = "linearSlide";
-    public static int armPreventionThreshold = 500, slidePositionMax = 2000, linearFThreshold = 1000, slidePositionScore = 1500;
+    public static int armPreventionThreshold = 500, slidePositionMax = 2000, linearFThreshold = 1000, slidePositionScore = 1550;
     public static int linearLow = 0, linearError = 50;
 
     // Arm Subsystem
     public OuttakeArm arm;
-    public static double high = 0, raised = 0.5, ground = 0.6, drop = 0.95;
+    public static double high = 0, raised = 0.6, ground = 0.65, drop = 0.95;
     public static String armName = "arm";
 
     // Claw Subsystem
@@ -114,7 +114,7 @@ public class FastBlueLeftParkLeft extends LinearOpMode {
     public static String clawNameSingle = "singleClaw", clawNameStacked = "stackedClaw";
     public static double clawTime = 0.5, armTime = 0.5;
 
-    public static Pose2d start = new Pose2d(15.875, 65.50, Math.toRadians(270));
+    public static Pose2d start = new Pose2d(15.875, 63.50, Math.toRadians(270));
     public String parkLocation = "right";
     public static double aprilTagGap = -7;
     public static double aprilTagOffset = -6;
@@ -183,7 +183,7 @@ public class FastBlueLeftParkLeft extends LinearOpMode {
                     visionPortal.resumeStreaming();
                     sleep(20);
 
-                    arm.moveArm(0.55);
+                    arm.raise();
 
                     if (zone == 1) drive.followTrajectorySequence(path3);
                     else if (zone == 2) drive.followTrajectorySequence(path2);
@@ -231,7 +231,7 @@ public class FastBlueLeftParkLeft extends LinearOpMode {
                     waitSeconds(0.8);
                     slides.moveToPosition(0, linearError);
 
-                    driverState = DriverState.DONE;
+                    driverState = DriverState.PARK;
 
                     break;
                 case PARK:

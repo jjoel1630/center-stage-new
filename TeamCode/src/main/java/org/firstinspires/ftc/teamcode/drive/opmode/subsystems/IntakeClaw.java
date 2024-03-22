@@ -4,33 +4,37 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-public class IntakeClaw {
-    public double currentPositionStacked, currentPositionSingle;
-    public double OPEN_STACKED, OPEN_ONE_STACKED, CLOSE_STACKED;
-    public double OPEN_SINGLE, CLOSE_SINGLE;
+import org.firstinspires.ftc.teamcode.drive.opmode.subsystems.util.ClawConstraints;
 
-    public Servo stacked, single;
+public class IntakeClaw {
+    private double currentPositionStacked, currentPositionSingle;
+    private double OPEN_STACKED, OPEN_ONE_STACKED, CLOSE_STACKED;
+    private double OPEN_SINGLE, CLOSE_SINGLE;
+
+    private Servo stacked, single;
 
     LinearOpMode curOpMode;
 
     ElapsedTime timer = new ElapsedTime();
 
-    public IntakeClaw(double currentPositionStacked, double currentPositionSingle, double openSingle, double closeSingle, double openStacked, double openOneStacked, double closeStacked, LinearOpMode op, String stackedName, String singleName) {
+    public IntakeClaw(LinearOpMode op, String stackedName, String singleName, ClawConstraints constraints) {
         this.curOpMode = op;
-        stacked = op.hardwareMap.servo.get(stackedName);
-        single = op.hardwareMap.servo.get(singleName);
+        this.stacked = op.hardwareMap.servo.get(stackedName);
+        this.single = op.hardwareMap.servo.get(singleName);
 
-        this.currentPositionSingle = currentPositionSingle;
-        this.currentPositionStacked = currentPositionStacked;
+        this.currentPositionSingle = constraints.getCurrentPositionSingle();
+        this.currentPositionStacked = constraints.getCurrentPositionStacked();
 
-        this.OPEN_STACKED = openStacked;
-        this.OPEN_ONE_STACKED = openOneStacked;
-        this.CLOSE_STACKED = closeStacked;
-        this.OPEN_SINGLE = openSingle;
-        this.CLOSE_SINGLE = closeSingle;
+        this.OPEN_STACKED = constraints.getOpenStacked();
+        this.OPEN_ONE_STACKED = constraints.getOpenOneStacked();
+        this.CLOSE_STACKED = constraints.getCloseStacked();
+        this.OPEN_SINGLE = constraints.getOpenSingle();
+        this.CLOSE_SINGLE = constraints.getCloseSingle();
+    }
 
-        stacked.setPosition(this.currentPositionStacked);
-        single.setPosition(this.currentPositionSingle);
+    public void initialize() {
+        this.stacked.setPosition(this.currentPositionStacked);
+        this.single.setPosition(this.currentPositionSingle);
     }
 
     public void setCurrentPositionStacked(double pos) {

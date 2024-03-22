@@ -98,14 +98,14 @@ public class FastRedLeft extends LinearOpMode {
 
     // Slide Subsystem
     public OuttakeSlides slides;
-    public static double p = 3, i = 0, d = 0, f = 0.01;
+    public static double p = 3, i = 0, d = 0, f = 0.03;
     public static String slideName = "linearSlide";
-    public static int armPreventionThreshold = 500, slidePositionMax = 2000, linearFThreshold = 1000, slidePositionScore = 1525;
+    public static int armPreventionThreshold = 500, slidePositionMax = 2000, linearFThreshold = 1000, slidePositionScore = 1550;
     public static int linearLow = 0, linearError = 50;
 
     // Arm Subsystem
     public OuttakeArm arm;
-    public static double high = 0, raised = 0.5, ground = 0.6, drop = 0.95;
+    public static double high = 0, raised = 0.6, ground = 0.65, drop = 0.95;
     public static String armName = "arm";
 
     // Claw Subsystem
@@ -114,7 +114,7 @@ public class FastRedLeft extends LinearOpMode {
     public static String clawNameSingle = "singleClaw", clawNameStacked = "stackedClaw";
     public static double clawTime = 0.5, armTime = 0.5;
 
-    public Pose2d start = new Pose2d(-39.87, -65.50, Math.toRadians(90.00));
+    public Pose2d start = new Pose2d(-39.87, -63.50, Math.toRadians(90.00));
     public static double aprilTagGap = -7;
     public static double aprilTagOffset = -7;
 
@@ -201,7 +201,7 @@ public class FastRedLeft extends LinearOpMode {
                     visionPortal.resumeStreaming();
                     sleep(20);
 
-                    arm.moveArm(0.55);
+                    arm.raise();
 
                     if(zone == 1) {
                         drive.followTrajectorySequence(path1);
@@ -222,9 +222,9 @@ public class FastRedLeft extends LinearOpMode {
                     if (tags != null) {
                         AprilTagDetection tag = tags.get(0);
                         for (AprilTagDetection t : tags) {
-                            if (zone == 1 && t.id == 3) tag = t;
-                            else if (zone == 2 && t.id == 2) tag = t;
-                            else if (zone == 3 && t.id == 1) tag = t;
+                            if (zone == 1 && t.id == 6) tag = t;
+                            else if (zone == 2 && t.id == 5) tag = t;
+                            else if (zone == 3 && t.id == 4) tag = t;
                         }
                         Pose2d current = drive.getPoseEstimate();
                         telemetry.addData("yaw", tag.ftcPose.yaw);
