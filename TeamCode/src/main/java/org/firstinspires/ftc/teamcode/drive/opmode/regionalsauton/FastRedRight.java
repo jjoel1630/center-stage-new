@@ -18,6 +18,7 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.drive.opmode.autoncomp.RedRight;
 import org.firstinspires.ftc.teamcode.drive.opmode.subsystems.IntakeClaw;
+import org.firstinspires.ftc.teamcode.drive.opmode.subsystems.IntakeSingleClaw;
 import org.firstinspires.ftc.teamcode.drive.opmode.subsystems.OuttakeArm;
 import org.firstinspires.ftc.teamcode.drive.opmode.subsystems.OuttakeSlides;
 import org.firstinspires.ftc.teamcode.drive.opmode.vision.RedPipeline;
@@ -109,9 +110,9 @@ public class FastRedRight extends LinearOpMode {
     public static String armName = "arm";
 
     // Claw Subsystem
-    public IntakeClaw claw;
-    public static double openSingle = 0, closeSingle = 0.9, openStacked = 0.7, openOneStacked = 0.29, closeStacked = 0;
-    public static String clawNameSingle = "singleClaw", clawNameStacked = "stackedClaw";
+    public IntakeSingleClaw claw;
+    public static double closeClaw = 0.9, openClaw = 0.7;
+    public static String clawName = "claw";
     public static double clawTime = 0.5, armTime = 0.5;
 
     public static Pose2d start = new Pose2d(15.875, -65.50, Math.toRadians(90));
@@ -127,48 +128,30 @@ public class FastRedRight extends LinearOpMode {
 
         slides = new OuttakeSlides(0, this, true, p, i, d, f, slideName);
         arm = new OuttakeArm(ground, high, raised, ground, drop, this, armName);
-        claw = new IntakeClaw(0, 0, openSingle, closeSingle, openStacked, openOneStacked, closeStacked, this, clawNameStacked, clawNameSingle);
+        claw = new IntakeSingleClaw(0, openClaw, closeClaw, this, clawName);
 
         TrajectorySequence path1 = drive.trajectorySequenceBuilder(start)
                 .splineTo(new Vector2d(12.00, -36.00), Math.toRadians(180))
-                .addDisplacementMarker(() -> {
-                    claw.singleOpen();
-                })
                 .waitSeconds(0.8)
-                .addDisplacementMarker(() -> {
-                    arm.raise();
-                })
                 .lineToLinearHeading(new Pose2d(39, -32, Math.toRadians(180.00)))
                 .build();
         TrajectorySequence path2 = drive.trajectorySequenceBuilder(start)
                 .lineToConstantHeading(new Vector2d(12.00, -36.50))
-                .addDisplacementMarker(() -> {
-                    claw.singleOpen();
-                })
                 .waitSeconds(0.8)
-                .addDisplacementMarker(() -> {
-                    arm.raise();
-                })
                 .lineToLinearHeading(new Pose2d(41.50, -36.00, Math.toRadians(180.00)))
                 .build();
         TrajectorySequence path3 = drive.trajectorySequenceBuilder(start)
                 .lineToConstantHeading(new Vector2d(23.00, -42.00))
-                .addDisplacementMarker(() -> {
-                    claw.singleOpen();
-                })
                 .waitSeconds(0.8)
-                .addDisplacementMarker(() -> {
-                    arm.raise();
-                })
                 .lineToLinearHeading(new Pose2d(41.50, -36.00, Math.toRadians(180.00)))
                 .build();
 
         initAprilTag();
         initCamera();
 
-        claw.closeBoth();
+        claw.clawClose();
         waitSeconds(0.8);
-        arm.moveArm(0);
+        arm.raise();
 
         waitForStart();
 
@@ -213,16 +196,14 @@ public class FastRedRight extends LinearOpMode {
                     }
                     break;
                 case LIFT_SCORE:
-                    arm.raise();
-                    claw.closeBoth();
                     slides.moveToPosition(slidePositionScore, linearError);
                     slides.powerSlideRaw(f);
                     waitSeconds(0.8);
                     arm.drop();
                     waitSeconds(0.8);
-                    claw.openBoth();
+                    claw.clawOpen();
                     waitSeconds(0.5);
-                    claw.closeBoth();
+                    claw.clawClose();
                     waitSeconds(0.5);
                     arm.raise();
                     waitSeconds(0.8);
