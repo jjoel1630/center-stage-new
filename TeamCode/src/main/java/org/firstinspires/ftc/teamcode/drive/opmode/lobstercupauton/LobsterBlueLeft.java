@@ -130,21 +130,20 @@ public class LobsterBlueLeft extends LinearOpMode {
         arm = new OuttakeArm(ground, high, raised, ground, drop, this, armName);
         claw = new IntakeSingleClaw(0, openClaw, closeClaw, this, clawName);
 
-        TrajectorySequence path1 = drive.trajectorySequenceBuilder(start)
+        TrajectorySequence pathRightSpike = drive.trajectorySequenceBuilder(start)
                 .splineTo(new Vector2d(12, 36), Math.toRadians(180.00))
                 .waitSeconds(0.8)
                 .lineToLinearHeading(new Pose2d(38.00, 40, Math.toRadians(180.00)))
                 .build();
-        TrajectorySequence path2 = drive.trajectorySequenceBuilder(start)
+        TrajectorySequence pathMiddleSpike = drive.trajectorySequenceBuilder(start)
                 .lineToConstantHeading(new Vector2d(12.00, 36))
                 .waitSeconds(0.8)
                 .lineToConstantHeading(new Vector2d(12.00, 45.00))
                 .lineToLinearHeading(new Pose2d(37, 39, Math.toRadians(180.00)))
                 .build();
-        TrajectorySequence path3 = drive.trajectorySequenceBuilder(start)
+        TrajectorySequence pathLeftSpike = drive.trajectorySequenceBuilder(start)
                 .lineToConstantHeading(new Vector2d(25.00, 42.00))
                 .waitSeconds(0.8)
-                .lineToConstantHeading(new Vector2d(20, 52))
                 .lineToLinearHeading(new Pose2d(38, 36, Math.toRadians(180.00)))
                 .build();
 
@@ -167,9 +166,9 @@ public class LobsterBlueLeft extends LinearOpMode {
 
                     arm.raise();
 
-                    if (zone == 1) drive.followTrajectorySequence(path3);
-                    else if (zone == 2) drive.followTrajectorySequence(path2);
-                    else if (zone == 3) drive.followTrajectorySequence(path1);
+                    if (zone == 1) drive.followTrajectorySequence(pathLeftSpike);
+                    else if (zone == 2) drive.followTrajectorySequence(pathMiddleSpike);
+                    else if (zone == 3) drive.followTrajectorySequence(pathRightSpike);
 
                     driverState = DriverState.TAGS;
                     break;

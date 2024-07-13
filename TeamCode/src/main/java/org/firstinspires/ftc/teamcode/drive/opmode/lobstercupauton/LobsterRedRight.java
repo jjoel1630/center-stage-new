@@ -130,17 +130,17 @@ public class LobsterRedRight extends LinearOpMode {
         arm = new OuttakeArm(ground, high, raised, ground, drop, this, armName);
         claw = new IntakeSingleClaw(0, openClaw, closeClaw, this, clawName);
 
-        TrajectorySequence path1 = drive.trajectorySequenceBuilder(start)
+        TrajectorySequence pathLeftSpike = drive.trajectorySequenceBuilder(start)
                 .splineTo(new Vector2d(12.00, -36.00), Math.toRadians(180))
                 .waitSeconds(0.8)
                 .lineToLinearHeading(new Pose2d(39, -32, Math.toRadians(180.00)))
                 .build();
-        TrajectorySequence path2 = drive.trajectorySequenceBuilder(start)
+        TrajectorySequence pathMiddleSpike = drive.trajectorySequenceBuilder(start)
                 .lineToConstantHeading(new Vector2d(12.00, -36.50))
                 .waitSeconds(0.8)
                 .lineToLinearHeading(new Pose2d(41.50, -36.00, Math.toRadians(180.00)))
                 .build();
-        TrajectorySequence path3 = drive.trajectorySequenceBuilder(start)
+        TrajectorySequence pathRightSpike = drive.trajectorySequenceBuilder(start)
                 .lineToConstantHeading(new Vector2d(23.00, -42.00))
                 .waitSeconds(0.8)
                 .lineToLinearHeading(new Pose2d(41.50, -36.00, Math.toRadians(180.00)))
@@ -165,9 +165,9 @@ public class LobsterRedRight extends LinearOpMode {
 
                     arm.moveArm(0.55);
 
-                    if (zone == 1) drive.followTrajectorySequence(path1);
-                    else if (zone == 2) drive.followTrajectorySequence(path2);
-                    else if (zone == 3) drive.followTrajectorySequence(path3);
+                    if (zone == 1) drive.followTrajectorySequence(pathLeftSpike);
+                    else if (zone == 2) drive.followTrajectorySequence(pathMiddleSpike);
+                    else if (zone == 3) drive.followTrajectorySequence(pathRightSpike);
 
                     driverState = DriverState.TAGS;
                     break;

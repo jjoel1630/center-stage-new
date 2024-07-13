@@ -129,49 +129,31 @@ public class LobsterBlueRight extends LinearOpMode {
         arm = new OuttakeArm(ground, high, raised, ground, drop, this, armName);
         claw = new IntakeClaw(0, 0, openSingle, closeSingle, openStacked, openOneStacked, closeStacked, this, clawNameStacked, clawNameSingle);
 
-        TrajectorySequence path1p1 = drive.trajectorySequenceBuilder(start)
+        TrajectorySequence pathLeftSpike1 = drive.trajectorySequenceBuilder(start)
                 .splineTo(new Vector2d(-35.00, 38.00), Math.toRadians(0.00))
-                .addDisplacementMarker(() -> {
-                    claw.singleOpen();
-                })
                 .waitSeconds(0.8)
-                .addDisplacementMarker(() -> {
-                    arm.raise();
-                })
                 .lineToConstantHeading(new Vector2d(-42.00, 38.00))
                 .lineToConstantHeading(new Vector2d(-48.00, 62))
                 .build();
-        TrajectorySequence path1p2 = drive.trajectorySequenceBuilder(path1p1.end())
+        TrajectorySequence pathLeftSpike2 = drive.trajectorySequenceBuilder(pathLeftSpike1.end())
                 .lineToConstantHeading(new Vector2d(24.00, 63))
                 .lineToLinearHeading(new Pose2d(36, 44, Math.toRadians(180.00)))
                 .build();
-        TrajectorySequence path2p1 = drive.trajectorySequenceBuilder(start)
+        TrajectorySequence pathMiddleSpike1 = drive.trajectorySequenceBuilder(start)
                 .lineToConstantHeading(new Vector2d(-37.00, 36.00))
-                .addDisplacementMarker(() -> {
-                    claw.singleOpen();
-                })
                 .waitSeconds(0.8)
-                .addDisplacementMarker(() -> {
-                    arm.raise();
-                })
                 .lineToLinearHeading(new Pose2d(-48.00, 62, Math.toRadians(0.00)))
                 .build();
-        TrajectorySequence path2p2 = drive.trajectorySequenceBuilder(path2p1.end())
+        TrajectorySequence pathMiddleSpike2 = drive.trajectorySequenceBuilder(pathMiddleSpike1.end())
                 .lineToConstantHeading(new Vector2d(24.00, 62))
                 .lineToLinearHeading(new Pose2d(38.00, 36.00, Math.toRadians(180.00)))
                 .build();
-        TrajectorySequence path3p1 = drive.trajectorySequenceBuilder(start)
+        TrajectorySequence pathRightSpike1 = drive.trajectorySequenceBuilder(start)
                 .lineToConstantHeading(new Vector2d(-48.00, 42.00))
-                .addDisplacementMarker(() -> {
-                    claw.singleOpen();
-                })
                 .waitSeconds(0.8)
-                .addDisplacementMarker(() -> {
-                    arm.raise();
-                })
                 .lineToLinearHeading(new Pose2d(-48.00, 60, Math.toRadians(0.00)))
                 .build();
-        TrajectorySequence path3p2 = drive.trajectorySequenceBuilder(path3p1.end())
+        TrajectorySequence pathRightSpike2 = drive.trajectorySequenceBuilder(pathRightSpike1.end())
                 .lineToConstantHeading(new Vector2d(24.00, 60))
                 .lineToLinearHeading(new Pose2d(38.0, 33.0, Math.toRadians(180.00)))
                 .build();
@@ -196,16 +178,16 @@ public class LobsterBlueRight extends LinearOpMode {
                     arm.moveArm(0.55);
 
                     if(zone == 1) {
-                        drive.followTrajectorySequence(path1p1);
-                        drive.followTrajectorySequence(path1p2);
+                        drive.followTrajectorySequence(pathLeftSpike1);
+                        drive.followTrajectorySequence(pathLeftSpike2);
                     }
                     else if(zone == 2) {
-                        drive.followTrajectorySequence(path2p1);
-                        drive.followTrajectorySequence(path2p2);
+                        drive.followTrajectorySequence(pathMiddleSpike1);
+                        drive.followTrajectorySequence(pathMiddleSpike2);
                     }
                     else if(zone == 3) {
-                        drive.followTrajectorySequence(path3p1);
-                        drive.followTrajectorySequence(path3p2);
+                        drive.followTrajectorySequence(pathRightSpike1);
+                        drive.followTrajectorySequence(pathRightSpike2);
                     }
 
                     driverState = DriverState.TAGS;

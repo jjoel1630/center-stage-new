@@ -6,12 +6,12 @@ import com.noahbres.meepmeep.MeepMeep;
 import com.noahbres.meepmeep.roadrunner.DefaultBotBuilder;
 import com.noahbres.meepmeep.roadrunner.entity.RoadRunnerBotEntity;
 
-public class RedRightLobster {
+public class BlueRightLobster {
     public static void main(String[] args) {
         // Declare a MeepMeep instance
         // With a field size of 800 pixels
         MeepMeep meepMeep = new MeepMeep(600);
-        Pose2d start = new Pose2d(15.875, -65.50, Math.toRadians(90));
+        Pose2d start = new Pose2d(-39.87, 65.50, Math.toRadians(270));
 
         RoadRunnerBotEntity myBot = new DefaultBotBuilder(meepMeep)
                 // Required: Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
@@ -19,19 +19,26 @@ public class RedRightLobster {
                 // Option: Set theme. Default = ColorSchemeRedDark()
                 .followTrajectorySequence(drive ->
 //                        drive.trajectorySequenceBuilder(start)
-//                                .splineTo(new Vector2d(12.00, -36.00), Math.toRadians(180))
+//                                .splineTo(new Vector2d(-35.00, 38.00), Math.toRadians(0.00))
 //                                .waitSeconds(0.8)
-//                                .lineToLinearHeading(new Pose2d(39, -32, Math.toRadians(180.00)))
+//                                .lineToConstantHeading(new Vector2d(-42.00, 38.00))
+//                                .lineToConstantHeading(new Vector2d(-48.00, 62))
+//                                .lineToConstantHeading(new Vector2d(24.00, 63))
+//                                .lineToLinearHeading(new Pose2d(36, 44, Math.toRadians(180.00)))
 //                                .build()
 //                        drive.trajectorySequenceBuilder(start)
-//                                .lineToConstantHeading(new Vector2d(12.00, -36.50))
+//                                .lineToConstantHeading(new Vector2d(-37.00, 36.00))
 //                                .waitSeconds(0.8)
-//                                .lineToLinearHeading(new Pose2d(41.50, -36.00, Math.toRadians(180.00)))
+//                                .lineToLinearHeading(new Pose2d(-48.00, 62, Math.toRadians(0.00)))
+//                                .lineToConstantHeading(new Vector2d(24.00, 62))
+//                                .lineToLinearHeading(new Pose2d(38.00, 36.00, Math.toRadians(180.00)))
 //                                .build()
                         drive.trajectorySequenceBuilder(start)
-                                .lineToConstantHeading(new Vector2d(23.00, -42.00))
+                                .lineToConstantHeading(new Vector2d(-48.00, 42.00))
                                 .waitSeconds(0.8)
-                                .lineToLinearHeading(new Pose2d(41.50, -36.00, Math.toRadians(180.00)))
+                                .lineToLinearHeading(new Pose2d(-48.00, 60, Math.toRadians(0.00)))
+                                .lineToConstantHeading(new Vector2d(24.00, 60))
+                                .lineToLinearHeading(new Pose2d(38.0, 33.0, Math.toRadians(180.00)))
                                 .build()
                 );
 
