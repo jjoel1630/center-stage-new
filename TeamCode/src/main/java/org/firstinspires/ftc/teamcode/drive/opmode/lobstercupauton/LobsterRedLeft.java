@@ -18,6 +18,7 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.drive.opmode.autoncomp.RedRight;
 import org.firstinspires.ftc.teamcode.drive.opmode.subsystems.IntakeClaw;
+import org.firstinspires.ftc.teamcode.drive.opmode.subsystems.IntakeSingleClaw;
 import org.firstinspires.ftc.teamcode.drive.opmode.subsystems.OuttakeArm;
 import org.firstinspires.ftc.teamcode.drive.opmode.subsystems.OuttakeSlides;
 import org.firstinspires.ftc.teamcode.drive.opmode.vision.RedPipeline;
@@ -73,7 +74,7 @@ public class LobsterRedLeft extends LinearOpMode {
         OpenCvCamera camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 2"), cameraMonitorViewId);
         FtcDashboard.getInstance().startCameraStream(camera, 0);
 
-        RedPipeline elementPipeTeam = new RedPipeline();
+        RedPipeline elementPipeTeam = new RedPipeline(); //redLEFTpipeline?
         camera.setPipeline(elementPipeTeam);
         camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
         {
@@ -100,78 +101,71 @@ public class LobsterRedLeft extends LinearOpMode {
     public OuttakeSlides slides;
     public static double p = 3, i = 0, d = 0, f = 0.01;
     public static String slideName = "linearSlide";
-    public static int armPreventionThreshold = 500, slidePositionMax = 2000, linearFThreshold = 1000, slidePositionScore = 1525;
+    public static int armPreventionThreshold = 500, slidePositionMax = 2200, linearFThreshold = 1000, slidePositionScore = 1525;
     public static int linearLow = 0, linearError = 50;
 
     // Arm Subsystem
     public OuttakeArm arm;
-    public static double high = 0, raised = 0.5, ground = 0.6, drop = 0.95;
+    public static double high = 0, raised = 0.5, ground = 0.7, drop = 1;
     public static String armName = "arm";
 
     // Claw Subsystem
-    public IntakeClaw claw;
-    public static double openSingle = 0, closeSingle = 0.9, openStacked = 0.7, openOneStacked = 0.29, closeStacked = 0;
-    public static String clawNameSingle = "singleClaw", clawNameStacked = "stackedClaw";
+    public IntakeSingleClaw claw;
+    public static double closeClaw = 0.6, openClaw = 0.95;
+    public static String clawName = "claw";
     public static double clawTime = 0.5, armTime = 0.5;
 
-    public Pose2d start = new Pose2d(-39.87, -65.50, Math.toRadians(90.00));
+    public static Pose2d start = new Pose2d(-39.87, -65.50, Math.toRadians(90.00));
     public static double aprilTagGap = -7;
-    public static double aprilTagOffset = -7;
+    public static double aprilTagOffset = -8;
 
     DriverState driverState = DriverState.AUTOMATIC;
+
 
     @Override
     public void runOpMode() throws InterruptedException {
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
         drive.setPoseEstimate(start);
 
-        //drive.trajectorySequenceBuilder(new Pose2d(-39.87, -65.50, Math.toRadians(90.00)))
-        //.splineTo(new Vector2d(-40.00, -32.00), Math.toRadians(90.00))
-        //.lineToLinearHeading(new Pose2d(-59.83, -36.37, Math.toRadians(180.00)))
-        //.lineToLinearHeading(new Pose2d(-35.00, -14.00, Math.toRadians(180.00)))
-        //.lineToLinearHeading(new Pose2d(14.00, -14.00, Math.toRadians(180.00)))
-        //.lineToLinearHeading(new Pose2d(38.00, -36.00, Math.toRadians(180.00)))
-        //.build();
-
         slides = new OuttakeSlides(0, this, true, p, i, d, f, slideName);
         arm = new OuttakeArm(ground, high, raised, ground, drop, this, armName);
-        claw = new IntakeClaw(0, 0, openSingle, closeSingle, openStacked, openOneStacked, closeStacked, this, clawNameStacked, clawNameSingle);
+        claw = new IntakeSingleClaw(closeClaw, openClaw, closeClaw, this, clawName);
 
-        TrajectorySequence pathRightSpike1 = drive.trajectorySequenceBuilder(start)
-                .lineToConstantHeading(new Vector2d(-48.00, -42.00))
+        TrajectorySequence pathLeftSpike1 = drive.trajectorySequenceBuilder(start)
+                .lineToConstantHeading(new Vector2d(-45.00, -42.00))
                 .waitSeconds(0.8)
-                .lineToLinearHeading(new Pose2d(-48.00, -60.00, Math.toRadians(0.00)))
+                .lineToLinearHeading(new Pose2d(-48.00, -62, Math.toRadians(0.00)))
                 .build();
-        TrajectorySequence pathRightSpike2 = drive.trajectorySequenceBuilder(pathRightSpike1.end())
-                .lineToConstantHeading(new Vector2d(24.00, -60.00))
-                .lineToLinearHeading(new Pose2d(38, -33, Math.toRadians(180.00)))
+        TrajectorySequence pathLeftSpike2 = drive.trajectorySequenceBuilder(pathLeftSpike1.end())
+                .lineToConstantHeading(new Vector2d(24.00, -62))
+                .lineToLinearHeading(new Pose2d(38, -32, Math.toRadians(180.00)))
                 .build();
         TrajectorySequence pathMiddleSpike1 = drive.trajectorySequenceBuilder(start)
                 .lineToConstantHeading(new Vector2d(-39.00, -34.50))
                 .waitSeconds(0.8)
-                .lineToLinearHeading(new Pose2d(-48.00, -60.00, Math.toRadians(0.00)))
+                .lineToLinearHeading(new Pose2d(-48.00, -62, Math.toRadians(0.00)))
                 .build();
         TrajectorySequence pathMiddleSpike2 = drive.trajectorySequenceBuilder(pathMiddleSpike1.end())
-                .lineToConstantHeading(new Vector2d(24.00, -60.00))
+                .lineToConstantHeading(new Vector2d(24.00, -63.00))
                 .lineToLinearHeading(new Pose2d(38, -36.00, Math.toRadians(180.00)))
                 .build();
-        TrajectorySequence pathLeftSpike1 = drive.trajectorySequenceBuilder(new Pose2d(-39.87, -65.50, Math.toRadians(90.00)))
+        TrajectorySequence pathRightSpike1 = drive.trajectorySequenceBuilder(new Pose2d(-39.87, -65.50, Math.toRadians(90.00)))
                 .splineTo(new Vector2d(-35.00, -34.00), Math.toRadians(0.00))
                 .waitSeconds(0.8)
                 .lineToConstantHeading(new Vector2d(-48.00, -40.00))
-                .lineToConstantHeading(new Vector2d(-40.00, -60))
+                .lineToConstantHeading(new Vector2d(-40.00, -62))
                 .build();
-        TrajectorySequence pathLeftSpike2 = drive.trajectorySequenceBuilder(pathLeftSpike1.end())
-                .lineToConstantHeading(new Vector2d(30.00, -60.00))
+        TrajectorySequence pathRightSpike2 = drive.trajectorySequenceBuilder(pathRightSpike1.end())
+                .lineToConstantHeading(new Vector2d(30.00, -63.00))
                 .lineToLinearHeading(new Pose2d(36, -44.00, Math.toRadians(180.00)))
                 .build();
 
         initAprilTag();
         initCamera();
 
-        claw.closeBoth();
-        waitSeconds(0.8);
-        arm.moveArm(0);
+        claw.clawClose();
+        waitSeconds(1.6);
+        arm.raise();
 
         waitForStart();
 
@@ -183,7 +177,7 @@ public class LobsterRedLeft extends LinearOpMode {
                     visionPortal.resumeStreaming();
                     sleep(20);
 
-                    if(zone == 1) {
+                    if(zone == 3) {
                         drive.followTrajectorySequence(pathRightSpike1);
                         drive.followTrajectorySequence(pathRightSpike2);
                     }
@@ -191,7 +185,7 @@ public class LobsterRedLeft extends LinearOpMode {
                         drive.followTrajectorySequence(pathMiddleSpike1);
                         drive.followTrajectorySequence(pathMiddleSpike2);
                     }
-                    else if(zone == 3) {
+                    else if(zone == 1) {
                         drive.followTrajectorySequence(pathLeftSpike1);
                         drive.followTrajectorySequence(pathLeftSpike2);
                     }
@@ -202,9 +196,9 @@ public class LobsterRedLeft extends LinearOpMode {
                     if (tags != null) {
                         AprilTagDetection tag = tags.get(0);
                         for (AprilTagDetection t : tags) {
-                            if (zone == 1 && t.id == 3) tag = t;
-                            else if (zone == 2 && t.id == 2) tag = t;
-                            else if (zone == 3 && t.id == 1) tag = t;
+                            if (zone == 1 && t.id == 4) tag = t;
+                            else if (zone == 2 && t.id == 5) tag = t;
+                            else if (zone == 3 && t.id == 6) tag = t;
                         }
                         Pose2d current = drive.getPoseEstimate();
                         telemetry.addData("yaw", tag.ftcPose.yaw);
@@ -223,15 +217,13 @@ public class LobsterRedLeft extends LinearOpMode {
                     }
                     break;
                 case LIFT_SCORE:
-                    arm.raise();
-                    claw.closeBoth();
                     slides.moveToPosition(slidePositionScore, linearError);
                     slides.powerSlideRaw(f);
+                    waitSeconds(0.8);
                     arm.drop();
                     waitSeconds(0.8);
-                    claw.openBoth();
+                    claw.clawOpen();
                     waitSeconds(0.5);
-                    claw.closeBoth();
                     waitSeconds(0.5);
                     arm.raise();
                     waitSeconds(0.8);

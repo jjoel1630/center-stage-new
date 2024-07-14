@@ -18,6 +18,7 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.drive.opmode.autoncomp.RedRight;
 import org.firstinspires.ftc.teamcode.drive.opmode.subsystems.IntakeClaw;
+import org.firstinspires.ftc.teamcode.drive.opmode.subsystems.IntakeSingleClaw;
 import org.firstinspires.ftc.teamcode.drive.opmode.subsystems.OuttakeArm;
 import org.firstinspires.ftc.teamcode.drive.opmode.subsystems.OuttakeSlides;
 import org.firstinspires.ftc.teamcode.drive.opmode.vision.BluePipeline;
@@ -98,20 +99,20 @@ public class LobsterBlueRight extends LinearOpMode {
 
     // Slide Subsystem
     public OuttakeSlides slides;
-    public static double p = 3, i = 0, d = 0, f = 0.03;
+    public static double p = 3, i = 0, d = 0, f = 0.01;
     public static String slideName = "linearSlide";
     public static int armPreventionThreshold = 500, slidePositionMax = 2000, linearFThreshold = 1000, slidePositionScore = 1525;
     public static int linearLow = 0, linearError = 50;
 
     // Arm Subsystem
     public OuttakeArm arm;
-    public static double high = 0, raised = 0.5, ground = 0.6, drop = 0.95;
+    public static double high = 0, raised = 0.58, ground = 0.7, drop = 1;
     public static String armName = "arm";
 
     // Claw Subsystem
-    public IntakeClaw claw;
-    public static double openSingle = 0, closeSingle = 0.9, openStacked = 0.7, openOneStacked = 0.29, closeStacked = 0;
-    public static String clawNameSingle = "singleClaw", clawNameStacked = "stackedClaw";
+    public IntakeSingleClaw claw;
+    public static double closeClaw = 0.6, openClaw = 0.95;
+    public static String clawName = "claw";
     public static double clawTime = 0.5, armTime = 0.5;
 
     public Pose2d start = new Pose2d(-39.87, 65.50, Math.toRadians(270));
@@ -127,16 +128,16 @@ public class LobsterBlueRight extends LinearOpMode {
 
         slides = new OuttakeSlides(0, this, true, p, i, d, f, slideName);
         arm = new OuttakeArm(ground, high, raised, ground, drop, this, armName);
-        claw = new IntakeClaw(0, 0, openSingle, closeSingle, openStacked, openOneStacked, closeStacked, this, clawNameStacked, clawNameSingle);
+        claw = new IntakeSingleClaw(closeClaw, openClaw, closeClaw, this, clawName);
 
         TrajectorySequence pathLeftSpike1 = drive.trajectorySequenceBuilder(start)
-                .splineTo(new Vector2d(-35.00, 38.00), Math.toRadians(0.00))
+                .splineTo(new Vector2d(-33.00, 38.00), Math.toRadians(0.00))
                 .waitSeconds(0.8)
                 .lineToConstantHeading(new Vector2d(-42.00, 38.00))
                 .lineToConstantHeading(new Vector2d(-48.00, 62))
                 .build();
         TrajectorySequence pathLeftSpike2 = drive.trajectorySequenceBuilder(pathLeftSpike1.end())
-                .lineToConstantHeading(new Vector2d(24.00, 63))
+                .lineToConstantHeading(new Vector2d(24.00, 62))
                 .lineToLinearHeading(new Pose2d(36, 44, Math.toRadians(180.00)))
                 .build();
         TrajectorySequence pathMiddleSpike1 = drive.trajectorySequenceBuilder(start)
@@ -149,7 +150,7 @@ public class LobsterBlueRight extends LinearOpMode {
                 .lineToLinearHeading(new Pose2d(38.00, 36.00, Math.toRadians(180.00)))
                 .build();
         TrajectorySequence pathRightSpike1 = drive.trajectorySequenceBuilder(start)
-                .lineToConstantHeading(new Vector2d(-48.00, 42.00))
+                .lineToConstantHeading(new Vector2d(-52.50, 42.00))
                 .waitSeconds(0.8)
                 .lineToLinearHeading(new Pose2d(-48.00, 60, Math.toRadians(0.00)))
                 .build();
@@ -161,9 +162,9 @@ public class LobsterBlueRight extends LinearOpMode {
         initAprilTag();
         initCamera();
 
-        claw.closeBoth();
-        waitSeconds(0.8);
-        arm.moveArm(0);
+        claw.clawClose();
+        waitSeconds(1.2);
+        arm.raise();
 
         waitForStart();
 
@@ -215,16 +216,13 @@ public class LobsterBlueRight extends LinearOpMode {
                     }
                     break;
                 case LIFT_SCORE:
-                    arm.raise();
-                    claw.closeBoth();
                     slides.moveToPosition(slidePositionScore, linearError);
                     slides.powerSlideRaw(f);
                     waitSeconds(0.8);
                     arm.drop();
                     waitSeconds(0.8);
-                    claw.openBoth();
-                    waitSeconds(0.8);
-                    claw.closeBoth();
+                    claw.clawOpen();
+                    waitSeconds(0.5);
                     waitSeconds(0.5);
                     arm.raise();
                     waitSeconds(0.8);

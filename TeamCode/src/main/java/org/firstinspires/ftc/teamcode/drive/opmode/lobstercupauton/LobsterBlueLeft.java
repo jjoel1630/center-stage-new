@@ -101,17 +101,17 @@ public class LobsterBlueLeft extends LinearOpMode {
     public OuttakeSlides slides;
     public static double p = 3, i = 0, d = 0, f = 0.01;
     public static String slideName = "linearSlide";
-    public static int armPreventionThreshold = 500, slidePositionMax = 2000, linearFThreshold = 1000, slidePositionScore = 1500;
+    public static int armPreventionThreshold = 500, slidePositionMax = 2000, linearFThreshold = 1000, slidePositionScore = 1525;
     public static int linearLow = 0, linearError = 50;
 
     // Arm Subsystem
     public OuttakeArm arm;
-    public static double high = 0, raised = 0.5, ground = 0.6, drop = 0.95;
+    public static double high = 0, raised = 0.58, ground = 0.7, drop = 1;
     public static String armName = "arm";
 
     // Claw Subsystem
     public IntakeSingleClaw claw;
-    public static double openClaw = 0, closeClaw = 0.9;
+    public static double closeClaw = 0.6, openClaw = 0.95;
     public static String clawName = "claw";
     public static double clawTime = 0.5, armTime = 0.5;
 
@@ -128,30 +128,30 @@ public class LobsterBlueLeft extends LinearOpMode {
 
         slides = new OuttakeSlides(0, this, true, p, i, d, f, slideName);
         arm = new OuttakeArm(ground, high, raised, ground, drop, this, armName);
-        claw = new IntakeSingleClaw(0, openClaw, closeClaw, this, clawName);
+        claw = new IntakeSingleClaw(closeClaw, openClaw, closeClaw, this, clawName);
 
         TrajectorySequence pathRightSpike = drive.trajectorySequenceBuilder(start)
-                .splineTo(new Vector2d(12, 36), Math.toRadians(180.00))
+                .splineTo(new Vector2d(6, 36), Math.toRadians(180.00))
                 .waitSeconds(0.8)
-                .lineToLinearHeading(new Pose2d(38.00, 40, Math.toRadians(180.00)))
+                .lineToLinearHeading(new Pose2d(38.00, 34, Math.toRadians(180.00)))
                 .build();
         TrajectorySequence pathMiddleSpike = drive.trajectorySequenceBuilder(start)
-                .lineToConstantHeading(new Vector2d(12.00, 36))
+                .lineToConstantHeading(new Vector2d(12.00, 34))
                 .waitSeconds(0.8)
                 .lineToConstantHeading(new Vector2d(12.00, 45.00))
                 .lineToLinearHeading(new Pose2d(37, 39, Math.toRadians(180.00)))
                 .build();
         TrajectorySequence pathLeftSpike = drive.trajectorySequenceBuilder(start)
-                .lineToConstantHeading(new Vector2d(25.00, 42.00))
+                .lineToConstantHeading(new Vector2d(12.50, 42.00))
                 .waitSeconds(0.8)
-                .lineToLinearHeading(new Pose2d(38, 36, Math.toRadians(180.00)))
+                .lineToLinearHeading(new Pose2d(38, 38, Math.toRadians(180.00)))
                 .build();
 
         initAprilTag();
         initCamera();
 
         claw.clawClose();
-        waitSeconds(0.8);
+        waitSeconds(1.6);
         arm.raise();
 
         waitForStart();
@@ -174,9 +174,9 @@ public class LobsterBlueLeft extends LinearOpMode {
                     if (tags != null) {
                         AprilTagDetection tag = tags.get(0);
                         for (AprilTagDetection t : tags) {
-                            if (zone == 1 && t.id == 3) tag = t;
+                            if (zone == 1 && t.id == 1) tag = t;
                             else if (zone == 2 && t.id == 2) tag = t;
-                            else if (zone == 3 && t.id == 1) tag = t;
+                            else if (zone == 3 && t.id == 3) tag = t;
                         }
                         Pose2d current = drive.getPoseEstimate();
                         telemetry.addData("yaw", tag.ftcPose.yaw);
@@ -195,8 +195,6 @@ public class LobsterBlueLeft extends LinearOpMode {
                     }
                     break;
                 case LIFT_SCORE:
-                    arm.raise();
-                    claw.clawClose();
                     slides.moveToPosition(slidePositionScore, linearError);
                     slides.powerSlideRaw(f);
                     waitSeconds(0.8);
@@ -204,21 +202,20 @@ public class LobsterBlueLeft extends LinearOpMode {
                     waitSeconds(0.8);
                     claw.clawOpen();
                     waitSeconds(0.5);
-                    claw.clawClose();
                     waitSeconds(0.5);
                     arm.raise();
                     waitSeconds(0.8);
                     slides.moveToPosition(0, linearError);
 
-                    driverState = DriverState.DONE;
+                    driverState = DriverState.PARK;
 
                     break;
                 case PARK:
                     Pose2d current = drive.getPoseEstimate();
 
                     TrajectorySequence park = drive.trajectorySequenceBuilder(current)
-                            .lineToConstantHeading(new Vector2d(50.00, -13.00))
-                            .lineToConstantHeading(new Vector2d(65.50, -13.00))
+                            .lineToConstantHeading(new Vector2d(50.00, 13.00))
+                            .lineToConstantHeading(new Vector2d(65.50, 13.00))
                             .build();
 
                     drive.followTrajectorySequenceAsync(park);

@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -35,12 +36,12 @@ public class TeleOpSubsystemsLobster extends LinearOpMode {
     public OuttakeSlides slides;
     public static double p = 3, i = 0, d = 0, f = 0.09;
     public static String slideName = "linearSlide";
-    public static int armPreventionThreshold = 500, slidePositionMax = 2000, linearFThreshold = 1000;
+    public static int armPreventionThreshold = 500, slidePositionMax = 2800, linearFThreshold = 1000;
     public static int linearLow = 0, linearError = 50;
 
     // Arm Subsystem
     public OuttakeArm arm;
-    public static double high = 0, raised = 0.5, ground = 0.6, drop = 0.95;
+    public static double high = 0, raised = 0.5, ground = 0.7, drop = 0.95;
     public static String armName = "arm";
 
     // Claw Subsystem
@@ -48,6 +49,10 @@ public class TeleOpSubsystemsLobster extends LinearOpMode {
     public static double openClaw = 0, closeClaw = 0.9;
     public static String clawName = "claw";
     public static double clawTime = 0.5, armTime = 0.5;
+
+    //airplane
+    public Servo airplane;
+    public static double AIRPLANE_MAX = 0.3, AIRPLANE_MIN = 0.0;
 
     // States
     OuttakeState outState = OuttakeState.LIFT_MANUAL;
@@ -64,6 +69,7 @@ public class TeleOpSubsystemsLobster extends LinearOpMode {
         rearRight = hardwareMap.get(DcMotorEx.class, "rightRear");
 
         frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
         frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rearLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -73,6 +79,7 @@ public class TeleOpSubsystemsLobster extends LinearOpMode {
         slides = new OuttakeSlides(0, this, true, p, i, d, f, slideName);
         arm = new OuttakeArm(0, high, raised, ground, drop, this, armName);
         claw = new IntakeSingleClaw(0, openClaw, closeClaw, this, clawName);
+        airplane = hardwareMap.servo.get("airplane");
 
         // Voltage System
         VoltageSensor voltageSensor = hardwareMap.voltageSensor.iterator().next();
@@ -137,19 +144,24 @@ public class TeleOpSubsystemsLobster extends LinearOpMode {
                     slides.setCurrentPosition();
 
                     // if right bumper pressed first servo releases
-                    if(gamepad2.left_bumper) claw.clawOpen();
-                    if(gamepad2.right_bumper) claw.clawClose();
+                    if(gamepad2.right_bumper) claw.clawOpen();
+                    if(gamepad2.left_bumper) claw.clawClose();
 
-                    if(gamepad2.left_trigger == 1 && slides.getCurrentPosition() >= armPreventionThreshold) arm.raise();
-                    if(gamepad2.right_trigger == 1) arm.drop();
+                    if(gamepad2.right_trigger == 1 ) arm.raise();
+                    if(gamepad2.left_trigger == 1 && slides.getCurrentPosition() >= armPreventionThreshold) arm.drop();
                     if(gamepad2.dpad_up) arm.ground();
+
+                    //airplane
+                    if(gamepad1.b) airplane.setPosition(AIRPLANE_MAX);
+                    if(gamepad1.y) airplane.setPosition(AIRPLANE_MAX);
 
 
                     // linear slide
                     double axialLS = -gamepad2.left_stick_y;  // forward, back
 
-                    if(Math.abs(slides.getCurrentPosition()) >= Math.abs(slidePositionMax) && slides.getCurrentPower() >= 0) axialLS = 0;
+                    if(Math.abs(slides.getCurrentPosition()) >= Math.abs(slidePositionMax) && slides.getCurrentPower() >= 0 && !gamepad2.a) axialLS = 0;
                     else if(Math.abs(slides.getCurrentPosition()) >= armPreventionThreshold && arm.getCurrentPosition() == arm.DROP) axialLS = 0;
+                    else if(Math.abs(slides.getCurrentPosition()) <= 50 && arm.getCurrentPosition() == arm.GROUND) axialLS = 0;
                     else axialLS = axialLS;
 
                     if(slides.getCurrentPosition() >= linearFThreshold) axialLS += f;
