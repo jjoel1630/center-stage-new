@@ -164,8 +164,6 @@ public class LobsterBlueLeft extends LinearOpMode {
                     visionPortal.resumeStreaming();
                     sleep(20);
 
-                    arm.raise();
-
                     if (zone == 1) drive.followTrajectorySequence(pathLeftSpike);
                     else if (zone == 2) drive.followTrajectorySequence(pathMiddleSpike);
                     else if (zone == 3) drive.followTrajectorySequence(pathRightSpike);

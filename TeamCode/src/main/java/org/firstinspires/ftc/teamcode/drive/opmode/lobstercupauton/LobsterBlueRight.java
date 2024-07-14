@@ -55,7 +55,7 @@ public class LobsterBlueRight extends LinearOpMode {
         visionPortal = new VisionPortal.Builder()
                 .addProcessor(aprilTag)
                 .enableLiveView(false)
-                .setCamera(hardwareMap.get(WebcamName.class, "Webcam 2"))
+                .setCamera(hardwareMap.get(WebcamName.class, "Webcam 1"))
 //                .setLiveViewContainerId(cameraMonitorViewId)
                 .setCameraResolution(new Size(1280, 960))
                 .build();
@@ -70,7 +70,7 @@ public class LobsterBlueRight extends LinearOpMode {
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         telemetry.addLine("other id" + cameraMonitorViewId);
         telemetry.update();
-        OpenCvCamera camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
+        OpenCvCamera camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 2"), cameraMonitorViewId);
         FtcDashboard.getInstance().startCameraStream(camera, 0);
 
         BluePipeline elementPipeTeam = new BluePipeline();
@@ -174,8 +174,6 @@ public class LobsterBlueRight extends LinearOpMode {
                 case AUTOMATIC:
                     visionPortal.resumeStreaming();
                     sleep(20);
-
-                    arm.moveArm(0.55);
 
                     if(zone == 1) {
                         drive.followTrajectorySequence(pathLeftSpike1);
