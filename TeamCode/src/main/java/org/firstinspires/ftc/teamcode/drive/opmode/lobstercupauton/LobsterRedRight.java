@@ -143,7 +143,7 @@ public class LobsterRedRight extends LinearOpMode {
         TrajectorySequence pathRightSpike = drive.trajectorySequenceBuilder(start)
                 .lineToConstantHeading(new Vector2d(29.00, -40.00))
                 .waitSeconds(0.8)
-                .lineToLinearHeading(new Pose2d(41.50, -40.00, Math.toRadians(180.00)))
+                .lineToLinearHeading(new Pose2d(41.50, -42.00, Math.toRadians(180.00)))
                 .build();
 
         initAprilTag();
@@ -213,8 +213,7 @@ public class LobsterRedRight extends LinearOpMode {
                     Pose2d current = drive.getPoseEstimate();
 
                     TrajectorySequence park = drive.trajectorySequenceBuilder(current)
-                            .lineToConstantHeading(new Vector2d(50.00, -13.00))
-                            .lineToConstantHeading(new Vector2d(65.50, -13.00))
+                            .lineToConstantHeading(new Vector2d(48.00, -66.00))
                             .build();
 
                     drive.followTrajectorySequenceAsync(park);

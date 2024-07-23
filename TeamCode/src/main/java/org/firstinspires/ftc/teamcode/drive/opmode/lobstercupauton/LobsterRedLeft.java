@@ -137,18 +137,20 @@ public class LobsterRedLeft extends LinearOpMode {
                 .lineToLinearHeading(new Pose2d(-48.00, -62, Math.toRadians(0.00)))
                 .build();
         TrajectorySequence pathLeftSpike2 = drive.trajectorySequenceBuilder(pathLeftSpike1.end())
-                .lineToConstantHeading(new Vector2d(24.00, -62))
+                .lineToConstantHeading(new Vector2d(24.00, -61))
                 .lineToLinearHeading(new Pose2d(38, -32, Math.toRadians(180.00)))
                 .build();
+
         TrajectorySequence pathMiddleSpike1 = drive.trajectorySequenceBuilder(start)
                 .lineToConstantHeading(new Vector2d(-39.00, -34.50))
                 .waitSeconds(0.8)
                 .lineToLinearHeading(new Pose2d(-48.00, -62, Math.toRadians(0.00)))
                 .build();
         TrajectorySequence pathMiddleSpike2 = drive.trajectorySequenceBuilder(pathMiddleSpike1.end())
-                .lineToConstantHeading(new Vector2d(24.00, -63.00))
+                .lineToConstantHeading(new Vector2d(24.00, -62.00))
                 .lineToLinearHeading(new Pose2d(38, -36.00, Math.toRadians(180.00)))
                 .build();
+
         TrajectorySequence pathRightSpike1 = drive.trajectorySequenceBuilder(new Pose2d(-39.87, -65.50, Math.toRadians(90.00)))
                 .splineTo(new Vector2d(-35.00, -34.00), Math.toRadians(0.00))
                 .waitSeconds(0.8)
@@ -228,6 +230,20 @@ public class LobsterRedLeft extends LinearOpMode {
                     arm.raise();
                     waitSeconds(0.8);
                     slides.moveToPosition(0, linearError);
+
+                    driverState = DriverState.PARK;
+
+                    break;
+                case PARK:
+
+                    Pose2d current = drive.getPoseEstimate();
+
+                    TrajectorySequence park = drive.trajectorySequenceBuilder(current)
+                            .lineToConstantHeading(new Vector2d(48.00, -13.00))
+                            .lineToConstantHeading(new Vector2d(65.50, -13.00))
+                            .build();
+
+                    drive.followTrajectorySequenceAsync(park);
 
                     driverState = DriverState.DONE;
 

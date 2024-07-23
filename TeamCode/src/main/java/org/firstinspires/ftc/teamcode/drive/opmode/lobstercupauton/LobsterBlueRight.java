@@ -134,29 +134,29 @@ public class LobsterBlueRight extends LinearOpMode {
                 .splineTo(new Vector2d(-33.00, 38.00), Math.toRadians(0.00))
                 .waitSeconds(0.8)
                 .lineToConstantHeading(new Vector2d(-42.00, 38.00))
-                .lineToConstantHeading(new Vector2d(-48.00, 62))
+                .lineToConstantHeading(new Vector2d(-48.00, 60))
                 .build();
         TrajectorySequence pathLeftSpike2 = drive.trajectorySequenceBuilder(pathLeftSpike1.end())
-                .lineToConstantHeading(new Vector2d(24.00, 62))
+                .lineToConstantHeading(new Vector2d(24.00, 60))
                 .lineToLinearHeading(new Pose2d(36, 44, Math.toRadians(180.00)))
                 .build();
         TrajectorySequence pathMiddleSpike1 = drive.trajectorySequenceBuilder(start)
-                .lineToConstantHeading(new Vector2d(-37.00, 36.00))
+                .lineToConstantHeading(new Vector2d(-35.00, 36.00))
                 .waitSeconds(0.8)
-                .lineToLinearHeading(new Pose2d(-48.00, 62, Math.toRadians(0.00)))
+                .lineToLinearHeading(new Pose2d(-48.00, 61, Math.toRadians(0.00)))
                 .build();
         TrajectorySequence pathMiddleSpike2 = drive.trajectorySequenceBuilder(pathMiddleSpike1.end())
                 .lineToConstantHeading(new Vector2d(24.00, 62))
                 .lineToLinearHeading(new Pose2d(38.00, 36.00, Math.toRadians(180.00)))
                 .build();
         TrajectorySequence pathRightSpike1 = drive.trajectorySequenceBuilder(start)
-                .lineToConstantHeading(new Vector2d(-52.50, 42.00))
+                .lineToConstantHeading(new Vector2d(-54.0, 42.00))
                 .waitSeconds(0.8)
                 .lineToLinearHeading(new Pose2d(-48.00, 60, Math.toRadians(0.00)))
                 .build();
         TrajectorySequence pathRightSpike2 = drive.trajectorySequenceBuilder(pathRightSpike1.end())
-                .lineToConstantHeading(new Vector2d(24.00, 60))
-                .lineToLinearHeading(new Pose2d(38.0, 33.0, Math.toRadians(180.00)))
+                .lineToConstantHeading(new Vector2d(24.00, 59))
+                .lineToLinearHeading(new Pose2d(38.0, 32.0, Math.toRadians(180.00)))
                 .build();
 
         initAprilTag();
